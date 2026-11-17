@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FolderInputIcon } from "lucide-react";
 import { invalidateMyWork } from "@/lib/invalidate-my-work";
+import { invalidateTaskRelations } from "@/lib/invalidate-task-relations";
 import { useTranslation } from "react-i18next";
 import { handleTaskBlockedError } from "@/components/task/task-blocked-dialog-store";
 import moveTask from "@/fetchers/task/move-task";
@@ -14,6 +15,7 @@ export function useMoveTask() {
     mutationFn: moveTask,
     onSuccess: (result, variables) => {
       invalidateMyWork(queryClient);
+      void invalidateTaskRelations(queryClient, variables.taskId);
       toast.success(t("tasks:move.success"), { icon: FolderInputIcon });
       queryClient.invalidateQueries({
         queryKey: ["external-links", variables.taskId],

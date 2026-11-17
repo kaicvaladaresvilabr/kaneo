@@ -254,6 +254,7 @@ export function HomeTabView({
                 status={task.status}
                 statusIcon={task.statusIcon}
                 statusColor={task.statusColor}
+                priority={task.priority}
                 last={i === upNext.length - 1}
                 onPress={() =>
                   router.push({

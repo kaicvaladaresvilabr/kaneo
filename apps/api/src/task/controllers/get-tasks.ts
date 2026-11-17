@@ -33,6 +33,7 @@ import {
 import { getBlockerCounts } from "../get-blocker-counts";
 import { getBlockingCounts } from "../get-blocking-counts";
 import { getSubtaskCounts } from "../get-subtask-counts";
+import { isSubtask } from "../is-subtask";
 import { taskIsCompleted } from "../task-is-completed";
 
 export type GetTasksOptions = {
@@ -181,6 +182,7 @@ async function getTasksPage(
 
   const taskSelection = {
     id: taskTable.id,
+    isSubtask: options.publicOnly ? sql<boolean>`false` : isSubtask,
     title: taskTable.title,
     number: taskTable.number,
     description: boardDescription,
@@ -494,6 +496,7 @@ async function getTasksPage(
       description: project.description,
       descriptionDeferred: project.descriptionDeferred,
       isPublic: project.isPublic,
+      includeSubtasks: project.includeSubtasks,
       workspaceId: project.workspaceId,
       backgroundVersion: project.backgroundVersion,
       columns,

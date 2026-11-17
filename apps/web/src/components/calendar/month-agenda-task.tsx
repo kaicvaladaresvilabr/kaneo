@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/cn";
 import { formatDateShort } from "@/lib/format";
 import type { CalendarTask } from "./calendar-task-bar";
+import CalendarSubtasks from "./calendar-subtasks";
 import { useCalendarTaskTone } from "./use-calendar-task-tone";
 
 type MonthAgendaTaskProps = {
@@ -44,6 +45,7 @@ export function MonthAgendaTask({
       <span className="text-xs text-muted-foreground">
         {taskKey ? `${taskKey} · ${range}` : range}
       </span>
+      <CalendarSubtasks subtasks={task.subtasks} />
     </button>
   );
 }

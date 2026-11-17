@@ -232,7 +232,10 @@
 			"passwordRequired": "Digite sua senha.",
 			"passwordTooShort": "Use pelo menos 8 caracteres.",
 			"disposableEmail": "Use um endereço de e-mail permanente. Endereços temporários não podem criar contas.",
-			"continueWithEmail": "Continuar com e-mail"
+			"continueWithEmail": "Continuar com e-mail",
+			"captchaChecking": "Fazendo uma verificação de segurança rápida antes de continuar.",
+			"captchaFailed": "A verificação de segurança não carregou, então o login está pausado. Verifique sua conexão ou bloqueador de conteúdo.",
+			"captchaRetry": "Tentar novamente"
 		},
 		"checkEmail": {
 			"pageTitle": "Verifique seu e-mail",
@@ -390,8 +393,6 @@
 				}
 			},
 			"progress": "Etapa {{current}} de {{total}}",
-			"welcome": "Boas-vindas, {{name}}",
-			"settingUp": "Configurando {{name}}",
 			"continue": "Continuar",
 			"signedInAs": "Conectado como {{email}}",
 			"signOut": "Sair",
@@ -407,7 +408,7 @@
 				"title": "Comece seu primeiro projeto",
 				"description": "Vamos adicionar algumas tarefas iniciais para você se orientar. Renomeie ou exclua quando quiser.",
 				"label": "Nome do projeto",
-				"numbered": "As tarefas serão numeradas"
+				"ticketStart": "Os IDs das tarefas começarão em {{ticket}}."
 			},
 			"invite": {
 				"title": "Traga sua equipe",
@@ -436,7 +437,6 @@
 				"paymentNote": "Os pagamentos são processados pela Creem."
 			},
 			"ready": {
-				"eyebrow": "Tudo pronto",
 				"title": "{{name}} está pronto",
 				"description": "Veja o que configuramos. Você pode alterar tudo depois.",
 				"workspace": "Espaço de trabalho",
@@ -451,9 +451,6 @@
 				"open": "Abrir {{name}}"
 			},
 			"preview": {
-				"live": "Prévia ao vivo de {{name}}",
-				"liveNoName": "Prévia ao vivo",
-				"ready": "{{name}} está pronto",
 				"untitled": "Seu espaço de trabalho"
 			}
 		},
@@ -3834,7 +3831,11 @@
 		},
 		"board": {
 			"reorderFailed": "Could not move task. Please try again.",
-			"keyboardInstructions": "Pressione Espaço para pré-visualizar e Enter para abrir esta tarefa. Use Alt ou Option com as setas para movê-la."
+			"keyboardInstructions": "Pressione Espaço para pré-visualizar e Enter para abrir esta tarefa. Use Alt ou Option com as setas para movê-la.",
+			"loadErrorTitle": "Este quadro não carregou",
+			"loadErrorDescription": "Algo deu errado ao buscar as tarefas. Verifique sua conexão e tente novamente.",
+			"refreshError": "Não foi possível atualizar este quadro, então ele pode estar desatualizado.",
+			"tryAgain": "Tentar novamente"
 		},
 		"recurrence": {
 			"daily_many": "A cada {{count}} dias",
@@ -3869,7 +3870,9 @@
 			"checklistProgress": "Progresso da checklist",
 			"dependencyBlocks": "Bloqueio de dependência",
 			"projectBackground": "Fundo do projeto",
-			"layout": "Layout"
+			"layout": "Layout",
+			"includeSubtasks": "Incluir subtarefas",
+			"useProjectDefault": "Usar o padrão do projeto"
 		},
 		"filterBar": {
 			"label": "Filtros ativos",
@@ -3916,6 +3919,35 @@
 			"startsOn": "Começa em {{date}}",
 			"beforeStart": "{{date}} é antes da data de início",
 			"afterDue": "{{date}} é depois do prazo"
+		},
+		"dateFilter": {
+			"startDate": "Data de início",
+			"noDate": "Sem data",
+			"condition": "Condição de data",
+			"exact": "Data exata",
+			"range": "Intervalo de datas",
+			"before": "Antes de",
+			"after": "Depois de",
+			"apply": "Aplicar filtro de data",
+			"exactValue": "Em {{date}}",
+			"beforeValue": "Antes de {{date}}",
+			"afterValue": "Depois de {{date}}",
+			"rangeValue": "{{date}} – {{end}}"
+		},
+		"timeTracking": {
+			"empty": "Nenhum tempo registrado ainda.",
+			"loadError": "Não foi possível carregar os registros de tempo.",
+			"retry": "Tentar novamente",
+			"running": "Em andamento",
+			"start": "Iniciar cronômetro",
+			"startError": "Não foi possível iniciar o cronômetro.",
+			"stop": "Parar cronômetro",
+			"stopError": "Não foi possível parar o cronômetro.",
+			"title": "Controle de tempo",
+			"unknownUser": "Desconhecido",
+			"durationSeconds": "{{seconds, number}}s",
+			"durationMinutes": "{{minutes, number}}min",
+			"durationHoursMinutes": "{{hours, number}}h {{minutes, number}}min"
 		}
 	},
 	"invitations": {
@@ -4261,7 +4293,8 @@
 			"title": "Gerenciamento de projetos",
 			"titleAccent": "que não se torna o projeto.",
 			"description": "Gerenciamento de projetos de código aberto com quadros, diagramas de Gantt e integração com GitHub. Self-host gratuito com SSO incluído, ou deixe o Kaneo Cloud lidar com o hospedagem.",
-			"pricingCta": "Ver preços"
+			"pricingCta": "Ver preços",
+			"appStore": "App Store"
 		},
 		"navigation": {
 			"product": "Produto",
@@ -4391,6 +4424,11 @@
 				"question": "Clientes de IA podem trabalhar com a Kaneo?",
 				"answer": "Sim. O Kaneo disponibiliza um servidor MCP por meio do pacote @kaneo/mcp e de um endpoint HTTP. Clientes de IA compatíveis podem ler e atualizar tarefas utilizando uma chave de API vinculada a um usuário, respeitando as permissões do espaço de trabalho.",
 				"link": "Leia o guia MCP"
+			},
+			"mobile": {
+				"answer": "Sim. O Kaneo está na App Store para iPhone e iPad, e o Android chega em breve. O aplicativo é gratuito para contas do Kaneo Cloud. Conectá-lo a um servidor auto-hospedado é uma compra única de US$ 9,99 por pessoa e, como o restante do Kaneo, o aplicativo é de código aberto.",
+				"link": "Baixar na App Store",
+				"question": "Existe um aplicativo móvel?"
 			}
 		},
 		"comparison": {
@@ -4464,6 +4502,21 @@
 				"passwordChanged": "Senha alterada",
 				"photoRemoved": "Foto removida",
 				"photoUpdated": "Foto atualizada"
+			},
+			"deleteAccount": {
+				"confirm": "Excluir conta",
+				"confirmLabel": "Digite {{email}} para confirmar",
+				"description": "Exclui permanentemente sua conta e os dados dela.",
+				"modalDescription": "Isso exclui sua conta permanentemente e não pode ser desfeito. Espaços de trabalho dos quais só você participa são excluídos junto. Nos demais, suas tarefas permanecem e ficam sem responsável, e seus comentários são removidos.",
+				"modalTitle": "Excluir sua conta?",
+				"noPassword": "Esta conta não tem senha. Deixe o campo vazio.",
+				"password": "Senha",
+				"passwordHint": "Deixe em branco se você entra sem senha.",
+				"sectionTitle": "Zona de perigo",
+				"sessionTooOld": "Para sua segurança, informe sua senha ou saia e entre de novo antes de excluir a conta.",
+				"success": "Sua conta foi excluída",
+				"title": "Excluir conta",
+				"wrongPassword": "Essa senha não está correta."
 			}
 		},
 		"activity": {
@@ -4549,21 +4602,20 @@
 		"editor": {
 			"attachment": "Anexo",
 			"bold": "Negrito",
-			"boldPlaceholder": "negrito",
 			"code": "Código",
-			"codePlaceholder": "código",
-			"description": "Descrição",
 			"heading": "Título",
 			"insertImage": "Inserir imagem",
 			"italic": "Itálico",
-			"italicPlaceholder": "itálico",
 			"link": "Link",
-			"linkPlaceholder": "link",
 			"list": "Lista",
-			"nothingToPreview": "Nada para visualizar",
 			"placeholder": "Adicione uma descrição… Você pode usar Markdown.",
-			"preview": "Prévia",
-			"write": "Escrever"
+			"applyLink": "Aplicar",
+			"checklist": "Checklist",
+			"linkUrl": "URL",
+			"numberedList": "Lista numerada",
+			"quote": "Citação",
+			"removeLink": "Remover link",
+			"hideKeyboard": "Ocultar teclado"
 		},
 		"errors": {
 			"apiKeyRejected": "Essa chave de API foi rejeitada.",
@@ -5025,7 +5077,16 @@
 			},
 			"tagline": "Gerenciamento de projetos simples. Conecte-se ao Kaneo Cloud ou à sua própria instância.",
 			"togglePassword": "Alternar visibilidade da senha",
-			"useApiKey": "Usar uma chave de API"
+			"useApiKey": "Usar uma chave de API",
+			"unlock": {
+				"buy": "Desbloquear por {{price}}",
+				"buyNoPrice": "Desbloquear",
+				"message": "Entrar no Kaneo Cloud está sempre incluído. Conectar o aplicativo a um servidor auto-hospedado é uma compra única que apoia o desenvolvimento do Kaneo.",
+				"nothingToRestore": "Nenhuma compra anterior foi encontrada para esta conta da loja.",
+				"restore": "Restaurar compra",
+				"title": "Conecte seu próprio servidor",
+				"unavailable": "As compras não estão disponíveis agora. Tente de novo mais tarde."
+			}
 		},
 		"taskDetail": {
 			"activity": {
@@ -5083,7 +5144,6 @@
 			"screen": {
 				"addDescription": "Adicionar uma descrição…",
 				"copyLink": "Copiar link",
-				"editDescription": "Editar descrição",
 				"editTitle": "Editar título",
 				"linkCopied": "Link copiado",
 				"more": "Mais"

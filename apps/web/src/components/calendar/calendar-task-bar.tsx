@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/cn";
 import { formatDateShort } from "@/lib/format";
 import type { CalendarTaskColorInput } from "./calendar-task-color";
+import CalendarSubtasks from "./calendar-subtasks";
 import type { PackableTask, WeekSegment } from "./month-grid-model";
 import { useCalendarTaskTone } from "./use-calendar-task-tone";
 
@@ -11,6 +12,7 @@ export type CalendarTask = PackableTask &
     title: string;
     number: number | null;
     status: string;
+    subtasks?: readonly { id: string; title: string }[];
   };
 
 type CalendarTaskBarProps = {
@@ -69,6 +71,8 @@ export default function CalendarTaskBar({
       onClick={() => onOpenTask(task.id)}
       className={cn(
         "z-10 mb-0.5 flex h-6 min-w-0 items-center overflow-hidden border px-1.5 text-left text-[11px] font-medium leading-none text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:h-5",
+        task.subtasks?.length &&
+          "h-auto flex-col items-start gap-1 py-1 sm:h-auto",
         tone.className,
         // Bars that run past a week edge lose their cap there so the two halves
         // read as one continuous span across rows.
@@ -76,7 +80,8 @@ export default function CalendarTaskBar({
         continuesAfter ? "rounded-r-none border-r-0" : "mr-1 rounded-r-md",
       )}
     >
-      <span className="truncate">{task.title}</span>
+      <span className="w-full truncate">{task.title}</span>
+      <CalendarSubtasks subtasks={task.subtasks} />
     </button>
   );
 }

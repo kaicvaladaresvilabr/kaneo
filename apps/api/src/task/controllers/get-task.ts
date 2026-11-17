@@ -13,11 +13,13 @@ import { boardDescription, descriptionDeferred } from "../description-pages";
 import { getBlockerCounts } from "../get-blocker-counts";
 import { getBlockingCounts } from "../get-blocking-counts";
 import { getSubtaskCounts } from "../get-subtask-counts";
+import { isSubtask } from "../is-subtask";
 
 async function getTask(taskId: string, board = false, userId?: string) {
   const task = await db
     .select({
       id: taskTable.id,
+      isSubtask,
       title: taskTable.title,
       number: taskTable.number,
       description: board ? boardDescription : taskTable.description,

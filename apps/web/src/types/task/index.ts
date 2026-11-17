@@ -42,6 +42,7 @@ type Task = {
   assigneeImage?: string | null;
   projectId: string;
   columnId?: string | null;
+  isSubtask?: boolean;
   subtaskCounts?: { completed: number; total: number };
   blockerCounts?: { completed: number; total: number };
   blockingCounts?: { completed: number; total: number };

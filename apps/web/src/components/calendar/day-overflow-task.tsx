@@ -1,6 +1,7 @@
 import type { JSX } from "react";
 import { formatDateShort } from "@/lib/format";
 import type { CalendarTask } from "./calendar-task-bar";
+import CalendarSubtasks from "./calendar-subtasks";
 import { useCalendarTaskTone } from "./use-calendar-task-tone";
 
 type DayOverflowTaskProps = {
@@ -36,6 +37,7 @@ export function DayOverflowTask({
         {formatDateShort(task.scheduleStart)} –{" "}
         {formatDateShort(task.scheduleEnd)}
       </span>
+      <CalendarSubtasks subtasks={task.subtasks} />
     </button>
   );
 }

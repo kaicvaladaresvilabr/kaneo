@@ -47,6 +47,7 @@ export const taskWithAssigneeSchema = taskSchema
       description:
         "The referenced workflow column; null for virtual statuses and legacy tasks without a column reference.",
     }),
+    isSubtask: z.boolean().optional(),
     subtaskCounts: z
       .object({ completed: z.number(), total: z.number() })
       .optional(),
@@ -148,6 +149,7 @@ export const boardTaskSchema = z
     assigneeId: z.string().nullable(),
     assigneeImage: z.string().nullable(),
     projectId: z.string(),
+    isSubtask: z.boolean().optional(),
     subtaskCounts: z
       .object({
         completed: z.number().int().nonnegative(),
@@ -207,6 +209,7 @@ export const boardSchema = z
             "True when a project description above 64 KiB is omitted; use project detail or public project description pages for full text.",
         }),
         isPublic: z.boolean().nullable(),
+        includeSubtasks: z.boolean().optional(),
         workspaceId: z.string(),
         backgroundVersion: z.string().nullable(),
         columns: z.array(boardColumnSchema),
