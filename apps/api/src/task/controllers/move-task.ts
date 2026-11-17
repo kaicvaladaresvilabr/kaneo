@@ -13,6 +13,7 @@ import {
 import { publishEvent } from "../../events";
 import { assertProjectAccess } from "../../project-access/assert-project-access";
 import { filterUsersWithProjectAccess } from "../../project-access/filter-users-with-project-access";
+import { assertCanCompleteTasks } from "../assert-can-complete-task";
 import { claimTaskNumber } from "./claim-task-numbers";
 import { nextTaskPosition } from "./next-task-position";
 
@@ -136,6 +137,14 @@ async function moveTask({
           message: "Project was moved to another workspace, please try again",
         });
     }
+    await assertCanCompleteTasks(tx, [
+      {
+        taskId,
+        projectId: destinationProjectId,
+        currentStatus: existingTask.status,
+        nextStatus: resolvedColumn.slug,
+      },
+    ]);
     const nextTaskNumber = await claimTaskNumber(destinationProjectId, tx);
     const nextPosition = await nextTaskPosition(
       tx,

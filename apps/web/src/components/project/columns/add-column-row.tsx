@@ -1,11 +1,17 @@
 import { Plus } from "lucide-react";
 import { type FocusEvent, type KeyboardEvent, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { ColumnColorPicker } from "@/components/project/columns/column-color-picker";
 import { ColumnIconPicker } from "@/components/project/columns/column-icon-picker";
 import { getColumnIcon } from "@/lib/column";
+import { DEFAULT_COLUMN_COLOR } from "@/lib/column-color";
 
 type AddColumnRowProps = {
-  onCreate: (column: { name: string; icon: string }) => Promise<boolean>;
+  onCreate: (column: {
+    name: string;
+    icon: string;
+    color: string;
+  }) => Promise<boolean>;
 };
 
 const DEFAULT_ICON = "Circle";
@@ -15,6 +21,7 @@ export function AddColumnRow({ onCreate }: AddColumnRowProps) {
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState("");
   const [icon, setIcon] = useState(DEFAULT_ICON);
+  const [color, setColor] = useState(DEFAULT_COLUMN_COLOR);
   const [saving, setSaving] = useState(false);
   const pickerOpen = useRef(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -23,6 +30,7 @@ export function AddColumnRow({ onCreate }: AddColumnRowProps) {
     setEditing(false);
     setName("");
     setIcon(DEFAULT_ICON);
+    setColor(DEFAULT_COLUMN_COLOR);
   };
 
   const submit = async () => {
@@ -30,11 +38,12 @@ export function AddColumnRow({ onCreate }: AddColumnRowProps) {
     if (!trimmed || saving) return;
 
     setSaving(true);
-    const created = await onCreate({ name: trimmed, icon });
+    const created = await onCreate({ name: trimmed, icon, color });
     setSaving(false);
     if (created) {
       setName("");
       setIcon(DEFAULT_ICON);
+      setColor(DEFAULT_COLUMN_COLOR);
     }
     inputRef.current?.focus();
   };
@@ -84,8 +93,17 @@ export function AddColumnRow({ onCreate }: AddColumnRowProps) {
           if (!open) inputRef.current?.focus();
         }}
       >
-        {getColumnIcon("", false, icon)}
+        {getColumnIcon("", false, icon, color)}
       </ColumnIconPicker>
+      <ColumnColorPicker
+        selected={color}
+        label={t("settings:columnEditor.pickColorTitle")}
+        onSelect={setColor}
+        onOpenChange={(open) => {
+          pickerOpen.current = open;
+          if (!open) inputRef.current?.focus();
+        }}
+      />
       <input
         ref={inputRef}
         autoFocus

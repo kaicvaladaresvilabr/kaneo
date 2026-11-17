@@ -34,6 +34,32 @@ describe("httpExceptionResponse", () => {
     });
   });
 
+  it("keeps unfinished blockers on a TASK_BLOCKED ApiError", async () => {
+    const blockers = [
+      {
+        id: "blocker-1",
+        title: "Write the spec",
+        number: 12,
+        projectId: "project-1",
+        status: "to-do",
+      },
+    ];
+    const response = await httpExceptionResponse(
+      new ApiError(409, {
+        message: "This task is blocked by unfinished work",
+        code: "TASK_BLOCKED",
+        blockers,
+      }),
+    );
+
+    expect(response.status).toBe(409);
+    expect(await response.json()).toEqual({
+      message: "This task is blocked by unfinished work",
+      code: "TASK_BLOCKED",
+      blockers,
+    });
+  });
+
   it("converts a text response body and keeps its headers", async () => {
     const response = await httpExceptionResponse(
       new HTTPException(429, {

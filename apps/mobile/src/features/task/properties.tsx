@@ -14,6 +14,7 @@ import type { WorkspaceMember } from "@/lib/api/types";
 import { daysOverdue, formatDate, isOverdue, toApiDate } from "@/lib/format";
 import { useAction } from "@/lib/query";
 import {
+  columnColor,
   PRIORITIES,
   priorityLabel,
   STATUS_ARCHIVED,
@@ -103,6 +104,7 @@ export function Properties({
           icon={column?.icon}
           isFinal={column?.isFinal}
           size={14}
+          color={column ? columnColor(column.color) : undefined}
         />
         <Txt variant="meta" weight="medium">
           {statusName(task.status, columns)}
@@ -230,6 +232,7 @@ export function Properties({
                 status={col.slug}
                 icon={col.icon}
                 isFinal={col.isFinal}
+                color={columnColor(col.color)}
               />
             ),
           })),

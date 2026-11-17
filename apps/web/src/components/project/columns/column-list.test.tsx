@@ -42,6 +42,7 @@ vi.mock("@/hooks/queries/column/use-get-columns", () => ({
         name: "To Do",
         slug: "to-do",
         icon: null,
+        color: null,
         isFinal: false,
         position: 0,
       },
@@ -50,6 +51,7 @@ vi.mock("@/hooks/queries/column/use-get-columns", () => ({
         name: "Done",
         slug: "done",
         icon: null,
+        color: null,
         isFinal: true,
         position: 1,
       },
@@ -168,10 +170,27 @@ describe("ColumnList", () => {
     await waitFor(() =>
       expect(m.createColumn).toHaveBeenCalledWith({
         projectId: "p1",
-        data: { name: "Review", icon: "Circle" },
+        data: { name: "Review", icon: "Circle", color: "blue" },
       }),
     );
     await waitFor(() => expect(input).toHaveValue(""));
+  });
+
+  it("saves a picked column color", async () => {
+    render(<ColumnList projectId="p1" />);
+    fireEvent.click(
+      screen.getAllByRole("button", {
+        name: "settings:columnEditor.pickColorTitle",
+      })[0],
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Forest" }));
+    await waitFor(() =>
+      expect(m.updateColumn).toHaveBeenCalledWith({
+        id: "c1",
+        projectId: "p1",
+        data: { color: "green" },
+      }),
+    );
   });
 
   it("is read-only without permission to update projects", () => {

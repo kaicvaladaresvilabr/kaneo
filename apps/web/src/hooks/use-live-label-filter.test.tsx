@@ -49,6 +49,7 @@ const project: ProjectWithTasks = {
       slug: "to-do",
       name: "To do",
       icon: null,
+      color: null,
       isFinal: false,
       tasks: [task],
     },

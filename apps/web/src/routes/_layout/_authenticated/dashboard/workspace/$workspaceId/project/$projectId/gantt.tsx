@@ -10,6 +10,7 @@ import {
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
+import { attachCalendarColumnColors } from "@/components/calendar/calendar-task-color";
 import ProjectLayout from "@/components/common/project-layout";
 import { GanttTaskBar } from "@/components/gantt/gantt-task-bar";
 import {
@@ -18,6 +19,7 @@ import {
   parseTaskDate,
 } from "@/components/gantt/timeline";
 import PageTitle from "@/components/page-title";
+import { CalendarTaskColorControl } from "@/components/project/display/calendar-task-color-control";
 import { DisplaySection } from "@/components/project/display/display-section";
 import { WeekStartControl } from "@/components/project/display/week-start-control";
 import { ActiveFiltersBar } from "@/components/project/task-filters/active-filters-bar";
@@ -30,6 +32,7 @@ import { Button } from "@/components/ui/button";
 import { useGetTasks } from "@/hooks/queries/task/use-get-tasks";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/cn";
+import { formatDate, formatDateMedium } from "@/lib/format";
 import { getStatusLabel } from "@/lib/i18n/domain";
 import { useUserPreferencesStore } from "@/store/user-preferences";
 
@@ -114,7 +117,7 @@ function RouteComponent() {
   );
 
   const parsedTasks = useMemo(() => {
-    return allTasks
+    const scheduled = allTasks
       .map((task) => {
         const parsedStart =
           parseTaskDate(task.startDate) ?? parseTaskDate(task.dueDate);
@@ -137,7 +140,9 @@ function RouteComponent() {
         (left, right) =>
           left.scheduleStart.getTime() - right.scheduleStart.getTime(),
       );
-  }, [allTasks]);
+
+    return attachCalendarColumnColors(scheduled, project?.columns ?? []);
+  }, [allTasks, project?.columns]);
 
   const scheduledTasks = useMemo(() => {
     const visibleIds = new Set(
@@ -254,6 +259,7 @@ function RouteComponent() {
               </DisplaySection>
               <DisplaySection>
                 <WeekStartControl />
+                <CalendarTaskColorControl />
               </DisplaySection>
             </>
           }
@@ -294,20 +300,25 @@ function RouteComponent() {
                 >
                   <ChevronLeft className="size-4" />
                 </Button>
-                <input
-                  type="date"
-                  aria-label={t("tasks:gantt.periodStart")}
-                  className="h-9 min-w-0 rounded-md border border-border bg-background px-2 text-base sm:h-8 sm:text-sm"
-                  min={format(timeline.minimumStart, "yyyy-MM-dd")}
-                  max={format(timeline.maximumStart, "yyyy-MM-dd")}
-                  value={format(timeline.rangeStart, "yyyy-MM-dd")}
-                  onChange={(event) => {
-                    const date = parseTaskDate(event.target.value);
-                    if (date) showDate(date);
-                  }}
-                />
+                <label className="relative inline-flex h-9 min-w-0 cursor-pointer items-center rounded-md border border-border bg-background px-2 text-base sm:h-8 sm:text-sm">
+                  <input
+                    type="date"
+                    aria-label={t("tasks:gantt.periodStart")}
+                    className="absolute inset-0 cursor-pointer opacity-0"
+                    min={format(timeline.minimumStart, "yyyy-MM-dd")}
+                    max={format(timeline.maximumStart, "yyyy-MM-dd")}
+                    value={format(timeline.rangeStart, "yyyy-MM-dd")}
+                    onChange={(event) => {
+                      const date = parseTaskDate(event.target.value);
+                      if (date) showDate(date);
+                    }}
+                  />
+                  <span aria-hidden="true" className="pointer-events-none">
+                    {formatDateMedium(timeline.rangeStart)}
+                  </span>
+                </label>
                 <span className="hidden text-xs text-muted-foreground sm:inline">
-                  – {format(timeline.rangeEnd, "MMM d, yyyy")}
+                  – {formatDateMedium(timeline.rangeEnd)}
                 </span>
                 <Button
                   variant="outline"
@@ -422,7 +433,7 @@ function RouteComponent() {
                         )}
                       >
                         <div className="h-4 text-[10px] font-medium text-muted-foreground">
-                          {showMonth ? format(day, "MMM") : ""}
+                          {showMonth ? formatDate(day, { month: "short" }) : ""}
                         </div>
                         <div
                           className={cn(
@@ -431,7 +442,7 @@ function RouteComponent() {
                               "bg-primary text-primary-foreground",
                           )}
                         >
-                          {format(day, "d")}
+                          {formatDate(day, { day: "numeric" })}
                         </div>
                       </div>
                     );
@@ -457,10 +468,22 @@ function RouteComponent() {
                     <div
                       key={`bg-line-${day.toISOString()}`}
                       className={cn(
-                        "h-full min-h-0 border-r border-border/60",
+                        "relative h-full min-h-0 border-r border-border/60",
                         isWeekend(day) && "bg-muted/25",
                       )}
-                    />
+                    >
+                      {isToday(day) ? (
+                        <>
+                          <div
+                            className="pointer-events-none absolute inset-y-0 left-1/2 z-10 w-0.5 -translate-x-1/2 bg-destructive"
+                            aria-hidden="true"
+                          />
+                          <span className="sr-only">
+                            {t("tasks:gantt.todayLine")}
+                          </span>
+                        </>
+                      ) : null}
+                    </div>
                   ))}
                 </div>
 
@@ -503,8 +526,8 @@ function RouteComponent() {
                                 {task.title}
                               </p>
                               <p className="w-full truncate text-[11px] leading-tight text-muted-foreground">
-                                {format(task.scheduleStart, "MMM d, yyyy")} -{" "}
-                                {format(task.scheduleEnd, "MMM d, yyyy")}
+                                {formatDateMedium(task.scheduleStart)} -{" "}
+                                {formatDateMedium(task.scheduleEnd)}
                                 {task.assigneeName
                                   ? ` • ${task.assigneeName}`
                                   : ""}

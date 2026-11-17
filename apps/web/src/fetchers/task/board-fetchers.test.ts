@@ -27,6 +27,7 @@ function data(page: number) {
         slug: "todo",
         name: "To do",
         icon: null,
+        color: null,
         isFinal: false,
         tasks: [
           {

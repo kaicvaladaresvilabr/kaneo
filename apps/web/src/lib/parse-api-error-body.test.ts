@@ -10,6 +10,15 @@ describe("parseApiErrorBody", () => {
           code: "VALIDATION_ERROR",
           issues: [{ path: "body.title", message: "Required" }],
           missingPermissions: ["task:update"],
+          blockers: [
+            {
+              id: "blocker-1",
+              title: "Write the spec",
+              number: 12,
+              projectId: "project-1",
+              status: "to-do",
+            },
+          ],
         }),
       ),
     ).toEqual({
@@ -17,6 +26,15 @@ describe("parseApiErrorBody", () => {
       code: "VALIDATION_ERROR",
       issues: [{ path: "body.title", message: "Required" }],
       missingPermissions: ["task:update"],
+      blockers: [
+        {
+          id: "blocker-1",
+          title: "Write the spec",
+          number: 12,
+          projectId: "project-1",
+          status: "to-do",
+        },
+      ],
     });
   });
 
@@ -28,6 +46,7 @@ describe("parseApiErrorBody", () => {
           code: 3,
           issues: [{ path: 1 }],
           missingPermissions: [true],
+          blockers: [{ id: 1 }],
         }),
       ),
     ).toEqual({ message: "Nope" });

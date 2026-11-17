@@ -1255,7 +1255,8 @@
 			"deleteTitle": "“{{name}}” silinsin?",
 			"doneHeader": "Tamamlanıb",
 			"dragAria": "{{name}} sütununun sırasını dəyiş",
-			"reorderError": "Sütunların sırasını dəyişmək alınmadı"
+			"reorderError": "Sütunların sırasını dəyişmək alınmadı",
+			"pickColorTitle": "Pick column color"
 		},
 		"githubIntegration": {
 			"toast": {
@@ -3408,7 +3409,8 @@
 				"related": "Əlaqəlidir"
 			},
 			"blockedBy": "Bloklayan",
-			"parentPlaceholder": "Əsas tapşırığı təyin et…"
+			"parentPlaceholder": "Əsas tapşırığı təyin et…",
+			"removeDependency": "Remove dependency"
 		},
 		"subtasks": {
 			"title": "Alt tapşırıqlar",
@@ -3589,7 +3591,11 @@
 			"loadError": "Tapşırıqları yükləmək alınmadı.",
 			"dayTasksAriaLabel": "{{date}} tarixi üçün bütün tapşırıqları göstər",
 			"taskAriaLabel": "{{title}}, {{range}}: tapşırığı aç",
-			"noTasksThisMonth": "Bu ay heç nə planlaşdırılmayıb"
+			"noTasksThisMonth": "Bu ay heç nə planlaşdırılmayıb",
+			"taskColor": "Task color",
+			"taskColorColumn": "Workflow column",
+			"taskColorLabel": "Label",
+			"taskColorNone": "None"
 		},
 		"gantt": {
 			"searchPlaceholder": "Tarixi təyin edilmiş tapşırıqları axtar...",
@@ -3609,7 +3615,8 @@
 			"previousPeriod": "Previous period",
 			"nextPeriod": "Next period",
 			"periodStart": "Timeline start date",
-			"showTaskDates": "Show task dates"
+			"showTaskDates": "Show task dates",
+			"todayLine": "Today"
 		},
 		"delete": {
 			"title": "Tapşırıq silinsin?",
@@ -3781,7 +3788,8 @@
 			"showOnRows": "Sətirlərdə göstər",
 			"checklistProgress": "Yoxlama siyahısının gedişatı",
 			"projectBackground": "Layihə fonu",
-			"layout": "Düzən"
+			"layout": "Düzən",
+			"dependencyBlocks": "Dependency blocking"
 		},
 		"filterBar": {
 			"label": "Aktiv süzgəclər",
@@ -3825,6 +3833,15 @@
 			"startsOn": "Başlayır: {{date}}",
 			"beforeStart": "{{date}} başlama tarixindən əvvəldir",
 			"afterDue": "{{date}} son tarixdən sonradır"
+		},
+		"blocked": {
+			"description": "Finish these blocking tasks first.",
+			"openTask": "Open {{title}}",
+			"title": "This task can't be completed",
+			"openCount_one": "Blocked by {{count}} open task",
+			"openCount_other": "Blocked by {{count}} open tasks",
+			"blocksCount_one": "Blocks {{count}} open task",
+			"blocksCount_other": "Blocks {{count}} open tasks"
 		}
 	},
 	"invitations": {

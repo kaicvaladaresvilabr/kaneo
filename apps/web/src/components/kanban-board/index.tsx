@@ -18,6 +18,7 @@ import {
 import { useIsFetching, useQueryClient } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
 import reorderTasks, { type TaskReorder } from "@/fetchers/task/reorder-tasks";
+import { handleTaskBlockedError } from "@/components/task/task-blocked-dialog-store";
 import { toast } from "@/lib/toast";
 import { useTranslation } from "react-i18next";
 import { rollbackBoardReorder } from "./apply-reorder";
@@ -103,7 +104,9 @@ function KanbanBoard({
             setProject(restored);
         }
       }
-      toast.error(t("tasks:board.reorderFailed"));
+      if (!handleTaskBlockedError(_error)) {
+        toast.error(t("tasks:board.reorderFailed"));
+      }
       void queryClient.invalidateQueries({ queryKey: ["tasks", project.id] });
     },
   });

@@ -49,6 +49,7 @@ import { ReferenceStatusButton } from "./sections/reference-status-button";
 import { type RelationKind, RelationTag } from "./sections/relation-tag";
 import { SectionAddButton } from "./sections/section-add-button";
 import { SectionHeader } from "./sections/section-header";
+import { SectionRemoveButton } from "./sections/section-remove-button";
 import { TaskReferenceRow } from "./sections/task-reference-row";
 import { useProjectSlugs } from "./sections/use-project-slugs";
 import SubtaskStatusPopover from "./subtask-status-popover";
@@ -177,18 +178,25 @@ export default function TaskRelations({
     return new Set<string>();
   }, [projectData]);
 
-  const columnIconBySlug = useMemo(() => {
-    const icons = new Map<string, string | null | undefined>();
-    if (!projectData) return icons;
+  const columnStyleBySlug = useMemo(() => {
+    const styles = new Map<
+      string,
+      { icon?: string | null; color?: string | null }
+    >();
+    if (!projectData) return styles;
     if ("columns" in projectData && Array.isArray(projectData.columns)) {
       for (const col of projectData.columns as Array<{
         id: string;
+        slug?: string;
         icon?: string | null;
+        color?: string | null;
       }>) {
-        icons.set(col.id, col.icon);
+        const style = { icon: col.icon, color: col.color };
+        styles.set(col.id, style);
+        if (col.slug) styles.set(col.slug, style);
       }
     }
-    return icons;
+    return styles;
   }, [projectData]);
 
   const filteredTasks = allTasks.filter(
@@ -306,7 +314,8 @@ export default function TaskRelations({
                           {getColumnIcon(
                             item.task.status,
                             isFinal,
-                            columnIconBySlug.get(item.task.status),
+                            columnStyleBySlug.get(item.task.status)?.icon,
+                            columnStyleBySlug.get(item.task.status)?.color,
                           )}
                         </ReferenceStatusButton>
                       </SubtaskStatusPopover>
@@ -319,6 +328,19 @@ export default function TaskRelations({
                     done={isFinal}
                     onOpen={() => handleNavigateToTask(item.task.id)}
                     tag={<RelationTag kind={item.kind} />}
+                    action={
+                      canEdit ? (
+                        <SectionRemoveButton
+                          title={t("tasks:relations.removeDependency")}
+                          aria-label={t("tasks:relations.removeDependency")}
+                          className="opacity-100 transition-opacity duration-150 ease-out pointer-fine:opacity-0 pointer-fine:group-hover:opacity-100 pointer-fine:group-focus-within:opacity-100"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            handleRemoveRelation(item.id);
+                          }}
+                        />
+                      ) : undefined
+                    }
                     assignee={
                       <ReferenceAssigneeButton
                         tasks={[taskObj]}
@@ -397,7 +419,8 @@ export default function TaskRelations({
                             {getColumnIcon(
                               item.status,
                               false,
-                              columnIconBySlug.get(item.status),
+                              columnStyleBySlug.get(item.status)?.icon,
+                              columnStyleBySlug.get(item.status)?.color,
                             )}
                             <span className="text-xs text-muted-foreground shrink-0 font-mono">
                               {project?.slug}-{item.number}

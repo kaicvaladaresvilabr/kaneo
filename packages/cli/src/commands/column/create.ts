@@ -98,7 +98,9 @@ export const columnCreate = Command.make(
       Flag.optional,
     ),
     color: Flag.String("color").pipe(
-      Flag.withDescription("Hex color, for example #3b82f6"),
+      Flag.withDescription(
+        "Palette name such as blue, or a hex color such as #3b82f6",
+      ),
       Flag.optional,
     ),
   },

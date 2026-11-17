@@ -25,10 +25,34 @@ export type ProjectPlacement = {
 };
 
 export const DEFAULT_PROJECT_COLUMNS = [
-  { name: "To Do", slug: "to-do", position: 0, isFinal: false },
-  { name: "In Progress", slug: "in-progress", position: 1, isFinal: false },
-  { name: "In Review", slug: "in-review", position: 2, isFinal: false },
-  { name: "Done", slug: "done", position: 3, isFinal: true },
+  {
+    name: "To Do",
+    slug: "to-do",
+    position: 0,
+    isFinal: false,
+    color: "blue",
+  },
+  {
+    name: "In Progress",
+    slug: "in-progress",
+    position: 1,
+    isFinal: false,
+    color: "blue",
+  },
+  {
+    name: "In Review",
+    slug: "in-review",
+    position: 2,
+    isFinal: false,
+    color: "blue",
+  },
+  {
+    name: "Done",
+    slug: "done",
+    position: 3,
+    isFinal: true,
+    color: "blue",
+  },
 ] as const;
 
 async function seedDefaultColumns(tx: Transaction, projectId: string) {
@@ -39,6 +63,7 @@ async function seedDefaultColumns(tx: Transaction, projectId: string) {
       slug: col.slug,
       position: col.position,
       isFinal: col.isFinal,
+      color: col.color,
     });
   }
 }

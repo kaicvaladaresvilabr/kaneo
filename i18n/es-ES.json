@@ -893,7 +893,8 @@
 			"deleteTitle": "¿Eliminar “{{name}}”?",
 			"doneHeader": "Hecho",
 			"dragAria": "Reordenar {{name}}",
-			"reorderError": "Error al reordenar las columnas"
+			"reorderError": "Error al reordenar las columnas",
+			"pickColorTitle": "Pick column color"
 		},
 		"githubIntegration": {
 			"toast": {
@@ -3462,7 +3463,8 @@
 				"blocked_by": "bloqueada por"
 			},
 			"blockedBy": "Bloqueada por",
-			"parentPlaceholder": "Establecer tarea principal…"
+			"parentPlaceholder": "Establecer tarea principal…",
+			"removeDependency": "Remove dependency"
 		},
 		"subtasks": {
 			"title": "Sub-tareas",
@@ -3642,7 +3644,8 @@
 			"previousPeriod": "Previous period",
 			"nextPeriod": "Next period",
 			"periodStart": "Timeline start date",
-			"showTaskDates": "Show task dates"
+			"showTaskDates": "Show task dates",
+			"todayLine": "Today"
 		},
 		"delete": {
 			"title": "¿Eliminar tarea?",
@@ -3803,7 +3806,11 @@
 			"title": "Calendario",
 			"today": "Hoy",
 			"loadError": "No se pudieron cargar las tareas.",
-			"noTasksThisMonth": "No hay nada planificado este mes"
+			"noTasksThisMonth": "No hay nada planificado este mes",
+			"taskColor": "Task color",
+			"taskColorColumn": "Workflow column",
+			"taskColorLabel": "Label",
+			"taskColorNone": "None"
 		},
 		"descriptionSearchLoading": "Searching full descriptions…",
 		"descriptionSearchError": "Description search failed. Results may be incomplete.",
@@ -3850,7 +3857,8 @@
 			"showOnRows": "Mostrar en filas",
 			"checklistProgress": "Progreso de la lista",
 			"projectBackground": "Fondo del proyecto",
-			"layout": "Diseño"
+			"layout": "Diseño",
+			"dependencyBlocks": "Dependency blocking"
 		},
 		"filterBar": {
 			"label": "Filtros activos",
@@ -3897,6 +3905,17 @@
 			"startsOn": "Empieza: {{date}}",
 			"beforeStart": "{{date}} es anterior a la fecha de inicio",
 			"afterDue": "{{date}} es posterior a la fecha límite"
+		},
+		"blocked": {
+			"description": "Finish these blocking tasks first.",
+			"openTask": "Open {{title}}",
+			"title": "This task can't be completed",
+			"openCount_many": "Blocked by {{count}} open tasks",
+			"openCount_one": "Blocked by {{count}} open task",
+			"openCount_other": "Blocked by {{count}} open tasks",
+			"blocksCount_many": "Blocks {{count}} open tasks",
+			"blocksCount_one": "Blocks {{count}} open task",
+			"blocksCount_other": "Blocks {{count}} open tasks"
 		}
 	},
 	"invitations": {

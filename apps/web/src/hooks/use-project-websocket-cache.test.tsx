@@ -343,6 +343,88 @@ it("preserves newer parent progress when an earlier parent refresh finishes last
   expect(task?.subtaskCounts).toEqual({ completed: 2, total: 2 });
 });
 
+it("does not overwrite a target's newer blocker progress with an older blocker response", async () => {
+  let finish!: (value: unknown) => void;
+  mocks.getTask
+    .mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve;
+        }),
+    )
+    .mockResolvedValueOnce({
+      id: "b",
+      projectId: "p",
+      status: "todo",
+      blockedTargetCounts: [{ taskId: "a", completed: 1, total: 1 }],
+    });
+  renderHook(() => useProjectWebSocket("p"));
+  Socket.current.message("TASK_UPDATED", { taskId: "old-blocker" });
+  Socket.current.message("TASK_UPDATED", { taskId: "b" });
+  await Promise.resolve();
+  await Promise.resolve();
+  await Promise.resolve();
+  finish({
+    id: "old-blocker",
+    projectId: "p",
+    status: "todo",
+    blockedTargetCounts: [{ taskId: "a", completed: 0, total: 1 }],
+  });
+  await Promise.resolve();
+  await Promise.resolve();
+  await Promise.resolve();
+  const task = (
+    mocks.board as {
+      columns: { tasks: { id: string; blockerCounts?: unknown }[] }[];
+    }
+  ).columns[0].tasks.find((task) => task.id === "a");
+  expect(task?.blockerCounts).toEqual({ completed: 1, total: 1 });
+  expect(mocks.client.invalidateQueries).toHaveBeenCalledWith({
+    queryKey: ["tasks", "p"],
+  });
+});
+
+it("does not overwrite a source's newer blocking progress with an older target response", async () => {
+  let finish!: (value: unknown) => void;
+  mocks.getTask
+    .mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve;
+        }),
+    )
+    .mockResolvedValueOnce({
+      id: "b",
+      projectId: "p",
+      status: "todo",
+      blockingSourceCounts: [{ taskId: "a", completed: 1, total: 1 }],
+    });
+  renderHook(() => useProjectWebSocket("p"));
+  Socket.current.message("TASK_UPDATED", { taskId: "old-target" });
+  Socket.current.message("TASK_UPDATED", { taskId: "b" });
+  await Promise.resolve();
+  await Promise.resolve();
+  await Promise.resolve();
+  finish({
+    id: "old-target",
+    projectId: "p",
+    status: "todo",
+    blockingSourceCounts: [{ taskId: "a", completed: 0, total: 1 }],
+  });
+  await Promise.resolve();
+  await Promise.resolve();
+  await Promise.resolve();
+  const task = (
+    mocks.board as {
+      columns: { tasks: { id: string; blockingCounts?: unknown }[] }[];
+    }
+  ).columns[0].tasks.find((task) => task.id === "a");
+  expect(task?.blockingCounts).toEqual({ completed: 1, total: 1 });
+  expect(mocks.client.invalidateQueries).toHaveBeenCalledWith({
+    queryKey: ["tasks", "p"],
+  });
+});
+
 it("bounds per-task reads during a thousand-event burst and reconciles once", async () => {
   vi.useFakeTimers();
   try {

@@ -1,6 +1,9 @@
 import { addDays, differenceInCalendarDays, startOfDay } from "date-fns";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type CSSProperties } from "react";
 import { useTranslation } from "react-i18next";
+import type { CalendarTaskColorInput } from "@/components/calendar/calendar-task-color";
+import { useCalendarTaskTone } from "@/components/calendar/use-calendar-task-tone";
+import { AssigneeAvatar } from "@/components/task/properties/assignee-avatar";
 import { useUpdateTask } from "@/hooks/mutations/task/use-update-task";
 import { cn } from "@/lib/cn";
 import { toast } from "@/lib/toast";
@@ -14,10 +17,18 @@ const MIN_INLINE_LABEL_PX = 120;
 // the task sheet.
 const MIN_TOUCH_RESIZABLE_PX = 120;
 
-type ScheduledTask = Task & {
-  scheduleStart: Date;
-  scheduleEnd: Date;
-};
+const GANTT_TASK_TINTED_BORDER =
+  "border-[color-mix(in_oklab,var(--calendar-task-color)_40%,transparent)] hover:border-[color-mix(in_oklab,var(--calendar-task-color)_55%,transparent)]";
+const GANTT_TASK_TINTED_FILL =
+  "bg-[color-mix(in_oklab,var(--calendar-task-color)_16%,transparent)] group-hover:bg-[color-mix(in_oklab,var(--calendar-task-color)_24%,transparent)]";
+const GANTT_TASK_TINTED_HANDLE =
+  "border-[color-mix(in_oklab,var(--calendar-task-color)_15%,transparent)] bg-[color-mix(in_oklab,var(--calendar-task-color)_8%,transparent)] hover:bg-[color-mix(in_oklab,var(--calendar-task-color)_18%,transparent)]";
+
+type ScheduledTask = Task &
+  CalendarTaskColorInput & {
+    scheduleStart: Date;
+    scheduleEnd: Date;
+  };
 
 type GanttTaskBarProps = {
   task: ScheduledTask;
@@ -64,6 +75,8 @@ export function GanttTaskBar({
 }: GanttTaskBarProps) {
   const { t } = useTranslation();
   const { mutateAsync: updateTask } = useUpdateTask();
+  const tone = useCalendarTaskTone(task);
+  const tinted = Boolean(tone.color);
   const [dragDisplay, setDragDisplay] = useState<{
     start: Date;
     end: Date;
@@ -310,8 +323,19 @@ export function GanttTaskBar({
       }}
     >
       <div
-        style={{ gridColumn: `${lineStart} / ${lineEnd}` }}
-        className="group pointer-events-auto relative mx-1 flex min-h-[44px] min-w-0 items-stretch overflow-hidden rounded-md border border-primary/25 bg-background text-left text-sm font-medium leading-none text-foreground shadow-sm transition-colors hover:border-primary/40 sm:h-11 sm:min-h-0"
+        style={
+          {
+            gridColumn: `${lineStart} / ${lineEnd}`,
+            ...tone.style,
+          } as CSSProperties
+        }
+        data-calendar-task-color={tone.source}
+        className={cn(
+          "group pointer-events-auto relative mx-1 flex min-h-[44px] min-w-0 items-stretch overflow-hidden rounded-md border bg-background text-left text-sm font-medium leading-none text-foreground shadow-sm transition-colors sm:h-11 sm:min-h-0",
+          tinted
+            ? GANTT_TASK_TINTED_BORDER
+            : "border-primary/25 hover:border-primary/40",
+        )}
       >
         {showResizeHandles && (
           <button
@@ -320,7 +344,10 @@ export function GanttTaskBar({
             disabled={!startIsVisible}
             onPointerDown={handleResizeLeftPointerDown}
             className={cn(
-              "relative z-20 shrink-0 cursor-ew-resize touch-none border-r border-primary/15 bg-primary/8 hover:bg-primary/18",
+              "relative z-20 shrink-0 cursor-ew-resize touch-none border-r",
+              tinted
+                ? GANTT_TASK_TINTED_HANDLE
+                : "border-primary/15 bg-primary/8 hover:bg-primary/18",
               "min-h-[44px] w-6 sm:min-h-0 sm:w-2",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
             )}
@@ -329,7 +356,7 @@ export function GanttTaskBar({
         <button
           type="button"
           aria-label={t("tasks:gantt.taskAriaLabel", { title: task.title })}
-          className="relative z-10 min-h-[44px] min-w-0 flex-1 cursor-grab touch-manipulation overflow-hidden px-2 text-left active:cursor-grabbing sm:min-h-0 sm:px-2.5"
+          className="relative z-10 flex min-h-[44px] min-w-0 flex-1 cursor-grab items-center gap-1.5 overflow-hidden px-2 text-left touch-manipulation active:cursor-grabbing sm:min-h-0 sm:px-2.5"
           onPointerDown={handleMovePointerDown}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
@@ -338,10 +365,26 @@ export function GanttTaskBar({
             }
           }}
         >
-          <div className="absolute inset-0 z-0 bg-primary/12 transition-colors group-hover:bg-primary/18" />
+          <div
+            className={cn(
+              "absolute inset-0 z-0 transition-colors",
+              tinted
+                ? GANTT_TASK_TINTED_FILL
+                : "bg-primary/12 group-hover:bg-primary/18",
+            )}
+          />
+          <span aria-hidden="true" className="relative z-10 shrink-0">
+            <AssigneeAvatar
+              name={task.assigneeName}
+              image={task.assigneeImage}
+              assigned={Boolean(task.assigneeId || task.assigneeName)}
+              className="size-6"
+              fallbackClassName="text-[9px]"
+            />
+          </span>
           <span
             className={cn(
-              "relative z-10 block truncate",
+              "relative z-10 block min-w-0 truncate",
               labelOutside && "sr-only",
             )}
           >
@@ -355,7 +398,10 @@ export function GanttTaskBar({
             disabled={!endIsVisible}
             onPointerDown={handleResizeRightPointerDown}
             className={cn(
-              "relative z-20 shrink-0 cursor-ew-resize touch-none border-l border-primary/15 bg-primary/8 hover:bg-primary/18",
+              "relative z-20 shrink-0 cursor-ew-resize touch-none border-l",
+              tinted
+                ? GANTT_TASK_TINTED_HANDLE
+                : "border-primary/15 bg-primary/8 hover:bg-primary/18",
               "min-h-[44px] w-6 sm:min-h-0 sm:w-2",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
             )}

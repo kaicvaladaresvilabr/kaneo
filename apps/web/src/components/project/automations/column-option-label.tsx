@@ -4,7 +4,7 @@ import { getColumnIcon } from "@/lib/column";
 export function ColumnOptionLabel({ column }: { column: ProjectColumn }) {
   return (
     <span className="flex min-w-0 items-center gap-2">
-      {getColumnIcon(column.slug, column.isFinal, column.icon)}
+      {getColumnIcon(column.slug, column.isFinal, column.icon, column.color)}
       <span className="truncate">{column.name}</span>
     </span>
   );

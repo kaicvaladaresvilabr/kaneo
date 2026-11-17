@@ -5,6 +5,8 @@ import TaskPriorityPopover from "@/components/task/task-priority-popover";
 import { TaskPullRequests } from "@/components/task/task-pull-requests";
 import { TaskRecurrenceBadge } from "@/components/task/task-recurrence-badge";
 import { AssigneeButton } from "@/components/task-chips/assignee-button";
+import { BlockedChip } from "@/components/task-chips/blocked-chip";
+import { BlocksChip } from "@/components/task-chips/blocks-chip";
 import { ChecklistChip } from "@/components/task-chips/checklist-chip";
 import { DueDateChip } from "@/components/task-chips/due-date-chip";
 import { LabelChips } from "@/components/task-chips/label-chips";
@@ -49,6 +51,7 @@ export function TaskRowBody({
     showLabels,
     showTaskNumbers,
     showTaskItemCounts,
+    showDependencyBlocks,
   } = useUserPreferencesStore();
   const cardFields = useTaskCardFields(task.projectId, task.id);
   const priorityLabel = `${t("tasks:priority.label")}: ${getPriorityLabel(task.priority ?? "")}`;
@@ -80,6 +83,20 @@ export function TaskRowBody({
       <div className="flex min-w-0 flex-1 items-center gap-2">
         <span className="truncate text-foreground text-sm">{task.title}</span>
         <div className="flex shrink-0 items-center gap-0.5">
+          {showDependencyBlocks && (
+            <BlockedChip
+              task={task}
+              workspaceId={workspaceId}
+              className={inlineMetaClass}
+            />
+          )}
+          {showDependencyBlocks && (
+            <BlocksChip
+              task={task}
+              workspaceId={workspaceId}
+              className={inlineMetaClass}
+            />
+          )}
           <SubtasksChip
             task={task}
             workspaceId={workspaceId}

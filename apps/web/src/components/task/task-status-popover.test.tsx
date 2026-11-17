@@ -53,6 +53,7 @@ describe("TaskStatusPopover", () => {
           slug: "to-do",
           name: "Ready",
           icon: null,
+          color: null,
           isFinal: false,
         },
       ],

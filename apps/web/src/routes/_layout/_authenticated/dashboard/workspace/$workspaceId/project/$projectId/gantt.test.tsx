@@ -53,9 +53,25 @@ vi.mock("@/hooks/use-mobile", () => ({
 }));
 
 vi.mock("@/store/user-preferences", () => ({
+  WEEK_START_DAYS: [0, 1, 6],
+  isWeekStartDay: (value: number) => value === 0 || value === 1 || value === 6,
+  CALENDAR_TASK_COLORS: ["column", "label", "none"],
+  isCalendarTaskColor: (value: unknown) =>
+    value === "column" || value === "label" || value === "none",
   useUserPreferencesStore: (
-    selector: (state: { weekStartsOn: number }) => unknown,
-  ) => selector({ weekStartsOn: 0 }),
+    selector: (state: {
+      weekStartsOn: number;
+      setWeekStartsOn: (value: number) => void;
+      calendarTaskColor: string;
+      setCalendarTaskColor: (value: string) => void;
+    }) => unknown,
+  ) =>
+    selector({
+      weekStartsOn: 0,
+      setWeekStartsOn: vi.fn(),
+      calendarTaskColor: "column",
+      setCalendarTaskColor: vi.fn(),
+    }),
 }));
 
 vi.mock("@/components/common/project-layout", () => ({
@@ -246,6 +262,7 @@ describe("Gantt jump-to-today", () => {
 
     const button = screen.getByRole("button", { name: "Jump to today" });
     expect(button).toBeDisabled();
+    expect(screen.queryByText("Today")).not.toBeInTheDocument();
     expect(scrollIntoView).not.toHaveBeenCalled();
 
     fireEvent.click(button);
@@ -273,6 +290,7 @@ describe("Gantt jump-to-today", () => {
 
     const button = screen.getByRole("button", { name: "Jump to today" });
     expect(button).not.toBeDisabled();
+    expect(screen.getByText("Today")).toBeInTheDocument();
 
     fireEvent.click(button);
 

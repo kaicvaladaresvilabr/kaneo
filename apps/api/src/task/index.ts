@@ -184,7 +184,9 @@ const bulkUpdateTasksRoute = createRoute({
       "No access to the project, or missing the permission the operation needs",
     ),
     404: errorResponse("No tasks found"),
-    409: errorResponse("Tasks changed projects; retry the operation"),
+    409: errorResponse(
+      "Tasks changed projects, or a task is blocked by unfinished work",
+    ),
   },
 });
 
@@ -278,7 +280,7 @@ const reorderTasksRoute = createRoute({
       "Project not found, or tasks do not belong to the project",
     ),
     409: errorResponse(
-      "Board changed or task moved; refresh before reordering",
+      "Board changed, task moved, or a task is blocked by unfinished work",
     ),
   },
 });
@@ -415,7 +417,9 @@ const moveTaskRoute = createRoute({
       "No access to the project, or missing task:update permission",
     ),
     404: errorResponse("Task or destination project not found"),
-    409: errorResponse("Task or project moved concurrently; retry the move"),
+    409: errorResponse(
+      "Task or project moved concurrently, or the task is blocked by unfinished work",
+    ),
   },
 });
 
@@ -447,6 +451,9 @@ const updateTaskRoute = createRoute({
       "No access to the project, or missing task:update or task:assign permission",
     ),
     404: errorResponse("Task not found"),
+    409: errorResponse(
+      "Task order changed, or the task is blocked by unfinished work",
+    ),
   },
 });
 
@@ -549,6 +556,7 @@ const updateTaskStatusRoute = createRoute({
       "No access to the project, or missing task:update permission",
     ),
     404: errorResponse("Task not found"),
+    409: errorResponse("The task is blocked by unfinished work"),
   },
 });
 

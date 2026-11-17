@@ -17,6 +17,8 @@ import { ContextMenu, ContextMenuTrigger } from "@/components/ui/context-menu";
 import { CardFieldList } from "@/components/custom-fields/card-field-list";
 import { CheckboxMark } from "@/components/custom-fields/checkbox-mark";
 import { AssigneeButton } from "@/components/task-chips/assignee-button";
+import { BlockedChip } from "@/components/task-chips/blocked-chip";
+import { BlocksChip } from "@/components/task-chips/blocks-chip";
 import { ChecklistChip } from "@/components/task-chips/checklist-chip";
 import { DueDateChip } from "@/components/task-chips/due-date-chip";
 import { LabelChips } from "@/components/task-chips/label-chips";
@@ -69,6 +71,7 @@ function TaskCardContent({
     showLabels,
     showTaskNumbers,
     showTaskItemCounts,
+    showDependencyBlocks,
   } = useUserPreferencesStore();
 
   const [isDeleteTaskModalOpen, setIsDeleteTaskModalOpen] = useState<
@@ -194,6 +197,12 @@ function TaskCardContent({
             {!taskIsCompleted && (
               <div className="mt-2.5 flex flex-wrap items-center gap-1 empty:hidden">
                 {showPriority && hasPriority && <PriorityChip task={task} />}
+                {showDependencyBlocks && (
+                  <BlockedChip task={task} workspaceId={workspaceId} />
+                )}
+                {showDependencyBlocks && (
+                  <BlocksChip task={task} workspaceId={workspaceId} />
+                )}
                 {showDueDates && <DueDateChip task={task} />}
                 <TaskRecurrenceBadge task={task} />
                 <SubtasksChip task={task} workspaceId={workspaceId} />

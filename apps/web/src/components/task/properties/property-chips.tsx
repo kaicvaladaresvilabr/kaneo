@@ -61,7 +61,12 @@ export function PropertyChips({
       <div className="flex flex-wrap items-center gap-1.5">
         <TaskStatusPopover task={task}>
           <button type="button" data-task-action="status" className={chip}>
-            {getColumnIcon(task.status ?? "", status.isFinal, status.icon)}
+            {getColumnIcon(
+              task.status ?? "",
+              status.isFinal,
+              status.icon,
+              status.color,
+            )}
             <span className="truncate">{status.label}</span>
           </button>
         </TaskStatusPopover>

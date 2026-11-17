@@ -8,6 +8,7 @@ import {
   sameDay,
   today,
 } from "@/lib/format";
+import { columnColor } from "@/lib/style";
 import { useColors } from "@/theme";
 
 import { StatusIcon } from "./icons";
@@ -26,6 +27,7 @@ export function TaskRow({
   dueDate,
   status,
   statusIcon,
+  statusColor,
   onPress,
   last,
   compact,
@@ -39,6 +41,8 @@ export function TaskRow({
   status?: string;
   /** The column's own icon name, when it has one. */
   statusIcon?: string | null;
+  /** Palette name or hex for the column color. */
+  statusColor?: string | null;
   onPress?: () => void;
   last?: boolean;
   /** One-line title, used inside grouped cards. */
@@ -64,7 +68,13 @@ export function TaskRow({
     >
       {status ? (
         <View style={{ width: 16, paddingTop: compact ? 0 : 2 }}>
-          <StatusIcon status={status} icon={statusIcon} />
+          <StatusIcon
+            status={status}
+            icon={statusIcon}
+            color={
+              statusColor !== undefined ? columnColor(statusColor) : undefined
+            }
+          />
         </View>
       ) : null}
       <View style={{ flex: 1, gap: compact ? 2 : 4 }}>

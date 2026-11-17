@@ -2,12 +2,14 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { addMonths, startOfMonth, subMonths } from "date-fns";
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { attachCalendarColumnColors } from "@/components/calendar/calendar-task-color";
 import CalendarToolbar from "@/components/calendar/calendar-toolbar";
 import MonthAgenda from "@/components/calendar/month-agenda";
 import MonthGrid from "@/components/calendar/month-grid";
 import { buildMonthWeeks } from "@/components/calendar/month-grid-model";
 import ProjectLayout from "@/components/common/project-layout";
 import PageTitle from "@/components/page-title";
+import { CalendarTaskColorControl } from "@/components/project/display/calendar-task-color-control";
 import { DisplaySection } from "@/components/project/display/display-section";
 import { WeekStartControl } from "@/components/project/display/week-start-control";
 import { ActiveFiltersBar } from "@/components/project/task-filters/active-filters-bar";
@@ -59,8 +61,12 @@ function RouteComponent() {
 
   const allScheduledTasks = useMemo(() => toScheduledTasks(project), [project]);
   const scheduledTasks = useMemo(
-    () => toScheduledTasks(view.filters.filteredProject),
-    [view.filters.filteredProject],
+    () =>
+      attachCalendarColumnColors(
+        toScheduledTasks(view.filters.filteredProject),
+        project?.columns ?? [],
+      ),
+    [project?.columns, view.filters.filteredProject],
   );
 
   const weeks = useMemo(
@@ -111,6 +117,7 @@ function RouteComponent() {
               </DisplaySection>
               <DisplaySection>
                 <WeekStartControl />
+                <CalendarTaskColorControl />
               </DisplaySection>
             </>
           }

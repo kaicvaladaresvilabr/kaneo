@@ -56,7 +56,7 @@ import { useMembers, useWorkspaceLabels, useWorkspaces } from "@/lib/hooks";
 import { qk, useAction } from "@/lib/query";
 import { useRealtime } from "@/lib/realtime";
 import { useRequiredSession } from "@/lib/session";
-import { STATUS_ARCHIVED, STATUS_PLANNED } from "@/lib/style";
+import { columnColor, STATUS_ARCHIVED, STATUS_PLANNED } from "@/lib/style";
 import { font, inset, useColors } from "@/theme";
 
 const LANE_GAP = 12;
@@ -315,6 +315,7 @@ export default function BoardScreen() {
               icon={l.icon}
               isFinal={l.isFinal}
               size={14}
+              color={l.color !== undefined ? columnColor(l.color) : undefined}
             />
             <Txt variant="meta" weight="medium" tone={active ? "ink" : "muted"}>
               {l.name}
@@ -465,6 +466,11 @@ export default function BoardScreen() {
                     icon={lane.icon}
                     isFinal={lane.isFinal}
                     size={14}
+                    color={
+                      lane.color !== undefined
+                        ? columnColor(lane.color)
+                        : undefined
+                    }
                   />
                 }
               />

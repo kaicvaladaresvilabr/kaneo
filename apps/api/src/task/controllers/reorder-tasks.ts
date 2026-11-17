@@ -3,6 +3,7 @@ import { HTTPException } from "hono/http-exception";
 import db from "../../database";
 import { columnTable, projectTable, taskTable } from "../../database/schema";
 import { publishEvent } from "../../events";
+import { assertCanCompleteTasks } from "../assert-can-complete-task";
 import { assertValidTaskStatus } from "../validate-task-fields";
 import { assertTaskPosition } from "./next-task-position";
 import { publishTaskMutation } from "./task-mutation-effects";
@@ -92,6 +93,19 @@ export default async function reorderTasks(
       throw new HTTPException(404, {
         message: "Tasks must belong to the requested project",
       });
+    const beforeById = new Map(before.map((task) => [task.id, task]));
+    await assertCanCompleteTasks(
+      tx,
+      tasks.map((task) => {
+        const prior = beforeById.get(task.id)!;
+        return {
+          taskId: task.id,
+          projectId,
+          currentStatus: prior.status,
+          nextStatus: task.status ?? prior.status,
+        };
+      }),
+    );
     const values = tasks.map((task) => ({
       id: task.id,
       position: task.position,

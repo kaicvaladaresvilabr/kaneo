@@ -6,6 +6,7 @@ type StatusColumn = {
   slug: string;
   name: string;
   icon?: string | null;
+  color?: string | null;
   isFinal: boolean;
 };
 
@@ -16,7 +17,7 @@ export function statusMenuOptions(
   return columns.map((column) => ({
     value: column.slug,
     label: getStatusDisplayLabel(column.slug, column.name),
-    icon: getColumnIcon(column.slug, column.isFinal, column.icon),
+    icon: getColumnIcon(column.slug, column.isFinal, column.icon, column.color),
     selected: column.slug === current,
   }));
 }

@@ -97,7 +97,12 @@ export function useFilterSubjects({
             options: columns.map((column) => ({
               value: column.id,
               label: column.name,
-              icon: getColumnIcon(column.id, column.isFinal, column.icon),
+              icon: getColumnIcon(
+                column.id,
+                column.isFinal,
+                column.icon,
+                column.color,
+              ),
               count: counts.status[column.id],
             })),
           }),

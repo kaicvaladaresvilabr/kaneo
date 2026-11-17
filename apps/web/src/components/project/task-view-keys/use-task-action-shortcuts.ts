@@ -17,6 +17,7 @@ import type getProjects from "@/fetchers/project/get-projects";
 import { useBulkOperations } from "@/hooks/mutations/task/use-bulk-operations";
 import useActiveWorkspace from "@/hooks/queries/workspace/use-active-workspace";
 import { useWorkspacePermission } from "@/hooks/use-workspace-permission";
+import { handleTaskBlockedError } from "@/components/task/task-blocked-dialog-store";
 import { generateLink } from "@/lib/generate-link";
 import { useShortcut } from "@/lib/shortcuts/use-shortcut";
 import { getTaskPath } from "@/lib/task-link";
@@ -76,7 +77,8 @@ export function useTaskActionShortcuts(selection: TaskSelectionStore) {
       await action(target.ids);
       toast.message(success(target.ids.length), { icon });
       if (target.fromSelection) selection.getState().clearSelection();
-    } catch {
+    } catch (caught) {
+      if (handleTaskBlockedError(caught)) return;
       toast.error(error);
     }
   };

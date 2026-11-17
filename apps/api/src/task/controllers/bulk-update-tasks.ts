@@ -18,6 +18,7 @@ import { removeLabelFromGitHub } from "../../plugins/github/utils/sync-label-to-
 import { removeLabelFromGitlab } from "../../plugins/gitlab/utils/sync-label-to-gitlab";
 import { assertAssignableUser } from "../../utils/assert-assignable-user";
 import { publishTaskMutation } from "./task-mutation-effects";
+import { assertCanCompleteTasks } from "../assert-can-complete-task";
 import { getSubtaskParentProjects } from "../get-subtask-parent-projects";
 import {
   assertValidPriority,
@@ -122,12 +123,25 @@ async function bulkUpdateTasks({
       }
       const { updatedTasks, beforeById } = await db.transaction(async (tx) => {
         const before = await tx
-          .select({ id: taskTable.id, status: taskTable.status })
+          .select({
+            id: taskTable.id,
+            status: taskTable.status,
+            projectId: taskTable.projectId,
+          })
           .from(taskTable)
           .where(inArray(taskTable.id, foundIds))
           .orderBy(asc(taskTable.id))
           .for("update");
         const beforeById = new Map(before.map((task) => [task.id, task]));
+        await assertCanCompleteTasks(
+          tx,
+          before.map((task) => ({
+            taskId: task.id,
+            projectId: task.projectId,
+            currentStatus: task.status,
+            nextStatus: value,
+          })),
+        );
         const result: Array<{
           id: string;
           projectId: string;

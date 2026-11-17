@@ -257,10 +257,12 @@ export const api = {
   columns: (projectId: string) => get<Column[]>(`api/column/${projectId}`),
   createColumn: (
     projectId: string,
-    body: { name: string; isFinal?: boolean },
+    body: { name: string; isFinal?: boolean; color?: string },
   ) => post<Column>(`api/column/${projectId}`, body),
-  updateColumn: (id: string, body: { name?: string; isFinal?: boolean }) =>
-    put<Column>(`api/column/${id}`, body),
+  updateColumn: (
+    id: string,
+    body: { name?: string; isFinal?: boolean; color?: string | null },
+  ) => put<Column>(`api/column/${id}`, body),
   deleteColumn: (id: string) => del<unknown>(`api/column/${id}`),
   reorderColumns: (
     projectId: string,

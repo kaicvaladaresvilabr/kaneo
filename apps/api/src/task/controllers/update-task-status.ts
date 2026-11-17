@@ -3,6 +3,7 @@ import { HTTPException } from "hono/http-exception";
 import { withLockedTask } from "./with-locked-task";
 import { columnTable, taskTable } from "../../database/schema";
 import { publishEvent } from "../../events";
+import { assertCanCompleteTasks } from "../assert-can-complete-task";
 import { publishTaskMutation } from "./task-mutation-effects";
 import { assertValidTaskStatus } from "../validate-task-fields";
 
@@ -19,6 +20,14 @@ async function updateTaskStatus({
     id,
     async (tx, existingTask) => {
       await assertValidTaskStatus(status, existingTask.projectId, tx);
+      await assertCanCompleteTasks(tx, [
+        {
+          taskId: id,
+          projectId: existingTask.projectId,
+          currentStatus: existingTask.status,
+          nextStatus: status,
+        },
+      ]);
 
       const column = await tx.query.columnTable.findFirst({
         where: and(

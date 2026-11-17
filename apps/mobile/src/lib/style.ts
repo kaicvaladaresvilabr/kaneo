@@ -140,6 +140,12 @@ export function labelColor(value?: string | null): string {
   return "#A1A1A1";
 }
 
+export const DEFAULT_COLUMN_COLOR = "blue";
+
+export function columnColor(value?: string | null): string {
+  return labelColor(value?.trim() || DEFAULT_COLUMN_COLOR);
+}
+
 export const WORKSPACE_ROLES = ["admin", "member", "viewer"];
 
 // Getters resolve the text on read; custom roles have no hint and stay undefined.

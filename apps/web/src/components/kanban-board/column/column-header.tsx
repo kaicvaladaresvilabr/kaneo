@@ -6,6 +6,7 @@ import CreateTaskModal from "@/components/shared/modals/create-task-modal";
 import { useUpdateTask } from "@/hooks/mutations/task/use-update-task";
 import { useWorkspacePermission } from "@/hooks/use-workspace-permission";
 import { getColumnIcon } from "@/lib/column";
+import { resolveColumnColor } from "@/lib/column-color";
 import { toast } from "@/lib/toast";
 import useProjectStore from "@/store/project";
 import type { ProjectWithTasks } from "@/types/project";
@@ -59,8 +60,13 @@ export function ColumnHeader({
   return (
     <div className="flex h-8 items-center justify-between gap-2">
       <div className="flex min-w-0 items-center gap-2">
-        <span className="text-chip-icon">
-          {getColumnIcon(column.id, column.isFinal, column.icon)}
+        <span
+          aria-hidden="true"
+          className="h-4 w-1 shrink-0 rounded-full"
+          style={{ backgroundColor: resolveColumnColor(column.color) }}
+        />
+        <span>
+          {getColumnIcon(column.id, column.isFinal, column.icon, column.color)}
         </span>
         <span className="truncate font-medium text-[13px] text-board-title leading-5">
           {column.name}

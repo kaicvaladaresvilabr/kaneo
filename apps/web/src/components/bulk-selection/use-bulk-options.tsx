@@ -19,7 +19,7 @@ export function useBulkOptions(actions: BulkActions) {
     const columnOptions: OptionMenuItem[] = columns.map((column) => ({
       value: column.id,
       label: column.name,
-      icon: getColumnIcon(column.id, column.isFinal, column.icon),
+      icon: getColumnIcon(column.id, column.isFinal, column.icon, column.color),
     }));
     const priorityOptions: OptionMenuItem[] = PRIORITIES.map((priority) => ({
       value: priority,

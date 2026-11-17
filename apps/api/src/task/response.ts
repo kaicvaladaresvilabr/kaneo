@@ -50,6 +50,38 @@ export const taskWithAssigneeSchema = taskSchema
     subtaskCounts: z
       .object({ completed: z.number(), total: z.number() })
       .optional(),
+    blockerCounts: z
+      .object({ completed: z.number(), total: z.number() })
+      .optional()
+      .openapi({
+        description:
+          "Incoming blocking tasks in the workspace; completed means a final column in the blocker project.",
+      }),
+    blockingCounts: z
+      .object({ completed: z.number(), total: z.number() })
+      .optional()
+      .openapi({
+        description:
+          "Outgoing blocked tasks in the workspace; completed means a final column in the blocked project.",
+      }),
+    blockedTargetCounts: z
+      .array(
+        z.object({
+          taskId: z.string(),
+          completed: z.number(),
+          total: z.number(),
+        }),
+      )
+      .optional(),
+    blockingSourceCounts: z
+      .array(
+        z.object({
+          taskId: z.string(),
+          completed: z.number(),
+          total: z.number(),
+        }),
+      )
+      .optional(),
     parentSubtaskCounts: z
       .array(
         z.object({
@@ -125,6 +157,24 @@ export const boardTaskSchema = z
         description:
           "Direct subtasks in the workspace; completed means a final column in the child project. Public boards count only children in public projects.",
       }),
+    blockerCounts: z
+      .object({
+        completed: z.number().int().nonnegative(),
+        total: z.number().int().nonnegative(),
+      })
+      .openapi({
+        description:
+          "Incoming blocking tasks in the workspace; completed means a final column in the blocker project. Public boards count only blockers in public projects.",
+      }),
+    blockingCounts: z
+      .object({
+        completed: z.number().int().nonnegative(),
+        total: z.number().int().nonnegative(),
+      })
+      .openapi({
+        description:
+          "Outgoing blocked tasks in the workspace; completed means a final column in the blocked project. Public boards count only blocked tasks in public projects.",
+      }),
     labels: z.array(taskLabelSchema),
     externalLinks: z.array(taskExternalLinkSchema),
   })
@@ -136,6 +186,7 @@ export const boardColumnSchema = z
     slug: z.string(),
     name: z.string(),
     icon: z.string().nullable(),
+    color: z.string().nullable(),
     isFinal: z.boolean(),
     position: z.number().optional(),
     tasks: z.array(boardTaskSchema),
@@ -303,6 +354,7 @@ export const assignedTasksSchema = z
               "The column's display name. Null for tasks outside a column, such as planned ones.",
           }),
           statusIcon: z.string().nullable(),
+          statusColor: z.string().nullable(),
           priority: z.string().openapi({ description: priorityDescription }),
           dueDate: nullableResponseTimestamp,
           projectName: z.string(),

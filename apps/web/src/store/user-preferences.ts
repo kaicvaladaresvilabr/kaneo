@@ -8,6 +8,15 @@ export function isWeekStartDay(value: number): value is WeekStartDay {
   return WEEK_START_DAYS.some((day) => day === value);
 }
 
+export const CALENDAR_TASK_COLORS = ["column", "label", "none"] as const;
+export type CalendarTaskColor = (typeof CALENDAR_TASK_COLORS)[number];
+
+export function isCalendarTaskColor(
+  value: unknown,
+): value is CalendarTaskColor {
+  return CALENDAR_TASK_COLORS.some((source) => source === value);
+}
+
 export type TaskLayout = "board" | "list" | "calendar" | "gantt";
 
 export type PriorityIconStyle = "marks" | "classic";
@@ -51,6 +60,8 @@ type UserPreferencesStore = {
   showTaskItemCounts: boolean;
   setShowTaskItemCounts: (show: boolean) => void;
   toggleTaskItemCounts: () => void;
+  showDependencyBlocks: boolean;
+  setShowDependencyBlocks: (show: boolean) => void;
   hiddenCardFieldIds: string[];
   toggleCardFieldHidden: (fieldId: string) => void;
   resetDisplayPreferences: () => void;
@@ -60,6 +71,9 @@ type UserPreferencesStore = {
 
   weekStartsOn: WeekStartDay;
   setWeekStartsOn: (weekStartsOn: WeekStartDay) => void;
+
+  calendarTaskColor: CalendarTaskColor;
+  setCalendarTaskColor: (calendarTaskColor: CalendarTaskColor) => void;
 
   priorityIconStyle: PriorityIconStyle;
   setPriorityIconStyle: (style: PriorityIconStyle) => void;
@@ -134,6 +148,8 @@ export const useUserPreferencesStore = create<UserPreferencesStore>()(
       setShowTaskItemCounts: (show) => set({ showTaskItemCounts: show }),
       toggleTaskItemCounts: () =>
         set((state) => ({ showTaskItemCounts: !state.showTaskItemCounts })),
+      showDependencyBlocks: true,
+      setShowDependencyBlocks: (show) => set({ showDependencyBlocks: show }),
       hiddenCardFieldIds: [],
       toggleCardFieldHidden: (fieldId) =>
         set((state) => ({
@@ -150,6 +166,7 @@ export const useUserPreferencesStore = create<UserPreferencesStore>()(
           showTaskNumbers: true,
           showPriority: true,
           showTaskItemCounts: true,
+          showDependencyBlocks: true,
         }),
 
       sidebarDefaultOpen: true,
@@ -157,6 +174,9 @@ export const useUserPreferencesStore = create<UserPreferencesStore>()(
 
       weekStartsOn: 0,
       setWeekStartsOn: (weekStartsOn) => set({ weekStartsOn }),
+
+      calendarTaskColor: "column",
+      setCalendarTaskColor: (calendarTaskColor) => set({ calendarTaskColor }),
 
       priorityIconStyle: "marks",
       setPriorityIconStyle: (priorityIconStyle) => set({ priorityIconStyle }),
@@ -167,6 +187,12 @@ export const useUserPreferencesStore = create<UserPreferencesStore>()(
       onRehydrateStorage: () => (state) => {
         if (state && !isWeekStartDay(state.weekStartsOn)) {
           state.setWeekStartsOn(0);
+        }
+        if (state && !isCalendarTaskColor(state.calendarTaskColor)) {
+          state.setCalendarTaskColor("column");
+        }
+        if (state && typeof state.showDependencyBlocks !== "boolean") {
+          state.setShowDependencyBlocks(true);
         }
       },
     },

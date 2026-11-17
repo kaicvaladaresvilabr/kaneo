@@ -79,6 +79,7 @@ export async function createProjectFixture({
         slug: col.slug,
         position: col.position,
         isFinal: col.isFinal,
+        color: col.color,
       })
       .returning();
     if (inserted) {

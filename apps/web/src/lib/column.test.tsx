@@ -23,4 +23,11 @@ describe("stored column icons", () => {
     expect(getColumnIcon("in-progress").type).toBe(CircleDot);
     expect(getColumnIcon("done").type).toBe(CheckCircle2);
   });
+
+  it("tints icons with the column color and defaults to blue", () => {
+    const colored = getColumnIcon("to-do", false, "Circle", "green");
+    const fallback = getColumnIcon("to-do", false, "Circle");
+    expect(colored.props.style.color).not.toBe(fallback.props.style.color);
+    expect(fallback.props.style.color).toBeTruthy();
+  });
 });

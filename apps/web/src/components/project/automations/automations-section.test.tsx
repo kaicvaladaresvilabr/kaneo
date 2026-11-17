@@ -65,8 +65,22 @@ vi.mock("@/hooks/queries/column/use-get-columns", () => ({
   useGetColumns: () => ({
     isLoading: false,
     data: [
-      { id: "c1", name: "To Do", slug: "to-do", icon: null, isFinal: false },
-      { id: "c2", name: "Done", slug: "done", icon: null, isFinal: true },
+      {
+        id: "c1",
+        name: "To Do",
+        slug: "to-do",
+        icon: null,
+        color: null,
+        isFinal: false,
+      },
+      {
+        id: "c2",
+        name: "Done",
+        slug: "done",
+        icon: null,
+        color: null,
+        isFinal: true,
+      },
     ],
   }),
 }));

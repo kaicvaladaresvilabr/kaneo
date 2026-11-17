@@ -9,6 +9,7 @@ import { memo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/cn";
 import { getColumnIcon } from "@/lib/column";
+import { resolveColumnColor } from "@/lib/column-color";
 import { EASE_OUT } from "@/lib/motion";
 import type { SubtaskRow } from "@/lib/subtask-tree";
 import type { ProjectWithTasks } from "@/types/project";
@@ -71,7 +72,10 @@ const ListColumnSection = memo(function ListColumnSection({
         showDropIndicator && "border-l-4 border-l-ring bg-accent/35",
       )}
     >
-      <div className="flex items-center justify-between py-2 px-4 bg-muted/60 border-b border-border/50">
+      <div
+        className="flex items-center justify-between border-b border-border/50 border-l-[3px] bg-muted/60 px-4 py-2"
+        style={{ borderLeftColor: resolveColumnColor(column.color) }}
+      >
         <button
           type="button"
           onClick={() => {
@@ -88,7 +92,12 @@ const ListColumnSection = memo(function ListColumnSection({
             )}
           />
           <div className="flex items-center gap-2 h-4">
-            {getColumnIcon(column.id, column.isFinal, column.icon)}
+            {getColumnIcon(
+              column.id,
+              column.isFinal,
+              column.icon,
+              column.color,
+            )}
             <div className="flex items-center gap-1">
               <span className="mt-1 mr-1">{column.name}</span>
               <span className="text-xs text-muted-foreground mt-0.5">

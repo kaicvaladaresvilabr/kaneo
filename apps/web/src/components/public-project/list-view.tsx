@@ -1,4 +1,5 @@
 import { getColumnIcon } from "@/lib/column";
+import { resolveColumnColor } from "@/lib/column-color";
 import type { ProjectWithTasks } from "@/types/project";
 import type Task from "@/types/task";
 import { PublicTaskRow } from "./task-row";
@@ -17,9 +18,17 @@ export function PublicListView({ project, onTaskClick }: PublicListViewProps) {
         {columns.map((column) => {
           return (
             <div key={column.id} className="space-y-4">
-              <div className="flex items-center gap-3 px-2">
+              <div
+                className="flex items-center gap-3 border-l-[3px] px-2"
+                style={{ borderLeftColor: resolveColumnColor(column.color) }}
+              >
                 <span className="flex [&_svg]:!h-5 [&_svg]:!w-5">
-                  {getColumnIcon(column.id, column.isFinal, column.icon)}
+                  {getColumnIcon(
+                    column.id,
+                    column.isFinal,
+                    column.icon,
+                    column.color,
+                  )}
                 </span>
                 <h3 className="font-semibold text-lg text-foreground">
                   {column.name}
@@ -43,7 +52,12 @@ export function PublicListView({ project, onTaskClick }: PublicListViewProps) {
                 {column.tasks.length === 0 && (
                   <div className="text-center text-sm text-muted-foreground py-8 bg-muted/50 rounded-lg border border-border">
                     <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center mx-auto mb-2">
-                      {getColumnIcon(column.id, column.isFinal, column.icon)}
+                      {getColumnIcon(
+                        column.id,
+                        column.isFinal,
+                        column.icon,
+                        column.color,
+                      )}
                     </div>
                     No tasks in {column.name.toLowerCase()}
                   </div>

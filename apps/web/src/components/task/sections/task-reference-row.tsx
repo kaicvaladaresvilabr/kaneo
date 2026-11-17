@@ -10,6 +10,7 @@ type TaskReferenceRowProps = ComponentProps<"div"> & {
   onOpen: () => void;
   tag?: ReactNode;
   assignee: ReactNode;
+  action?: ReactNode;
 };
 
 export function TaskReferenceRow({
@@ -20,6 +21,7 @@ export function TaskReferenceRow({
   onOpen,
   tag,
   assignee,
+  action,
   className,
   ...props
 }: TaskReferenceRowProps) {
@@ -44,6 +46,7 @@ export function TaskReferenceRow({
       </button>
       {tag}
       {assignee}
+      {action}
     </div>
   );
 }

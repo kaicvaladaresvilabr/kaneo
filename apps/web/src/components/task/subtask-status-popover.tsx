@@ -12,6 +12,7 @@ import { useWorkspacePermission } from "@/hooks/use-workspace-permission";
 import { toast } from "@/lib/toast";
 import type Task from "@/types/task";
 import { statusMenuOptions } from "./menus/status-menu-options";
+import { handleTaskBlockedError } from "./task-blocked-dialog-store";
 
 type SubtaskStatusPopoverProps = {
   tasks: Task[];
@@ -43,6 +44,7 @@ export default function SubtaskStatusPopover({
         tasks.map((task) => updateTaskStatus({ ...task, status })),
       );
     } catch (error) {
+      if (handleTaskBlockedError(error)) return;
       toast.error(
         error instanceof Error
           ? error.message

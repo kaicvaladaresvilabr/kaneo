@@ -43,6 +43,12 @@ export function CardFieldToggles() {
       pressed: preferences.showTaskItemCounts,
       onPressedChange: preferences.setShowTaskItemCounts,
     },
+    {
+      id: "dependencyBlocks",
+      label: t("tasks:display.dependencyBlocks"),
+      pressed: preferences.showDependencyBlocks,
+      onPressedChange: preferences.setShowDependencyBlocks,
+    },
   ];
 
   return (

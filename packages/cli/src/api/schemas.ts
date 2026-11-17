@@ -80,6 +80,8 @@ export const BoardColumn = Schema.Struct({
   id: Schema.String,
   slug: Schema.String,
   name: Schema.String,
+  icon: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  color: Schema.optionalKey(Schema.NullOr(Schema.String)),
   isFinal: Schema.Boolean,
   tasks: Schema.Array(BoardTask),
 });

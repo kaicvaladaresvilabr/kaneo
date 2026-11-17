@@ -159,8 +159,8 @@ const STATUS_ICONS: Record<string, string> = {
 
 /**
  * A workflow column's icon, resolved like the web app: the column's own icon, then the default for
- * its slug, then a check for final columns and a plain circle for the rest. Always muted; Kaneo keeps
- * status monochrome and saves color for priority, due dates and labels.
+ * its slug, then a check for final columns and a plain circle for the rest. Pass `color` to tint it
+ * with the column palette; virtual statuses stay muted.
  */
 export function StatusIcon({
   status,

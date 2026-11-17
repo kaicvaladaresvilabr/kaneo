@@ -30,8 +30,10 @@ import {
   descriptionDeferred,
   projectDescriptionDeferred,
 } from "../description-pages";
-import { taskIsCompleted } from "../task-is-completed";
+import { getBlockerCounts } from "../get-blocker-counts";
+import { getBlockingCounts } from "../get-blocking-counts";
 import { getSubtaskCounts } from "../get-subtask-counts";
+import { taskIsCompleted } from "../task-is-completed";
 
 export type GetTasksOptions = {
   publicOnly?: boolean;
@@ -209,13 +211,29 @@ async function getTasksPage(
 
   const taskIds = paginatedTasks.map((task) => task.id);
 
-  const subtaskCounts = await getSubtaskCounts(
-    db,
-    taskIds,
-    project.workspaceId,
-    options.publicOnly ?? false,
-    userId,
-  );
+  const [subtaskCounts, blockerCounts, blockingCounts] = await Promise.all([
+    getSubtaskCounts(
+      db,
+      taskIds,
+      project.workspaceId,
+      options.publicOnly ?? false,
+      userId,
+    ),
+    getBlockerCounts(
+      db,
+      taskIds,
+      project.workspaceId,
+      options.publicOnly ?? false,
+      userId,
+    ),
+    getBlockingCounts(
+      db,
+      taskIds,
+      project.workspaceId,
+      options.publicOnly ?? false,
+      userId,
+    ),
+  ]);
 
   const labelsData =
     taskIds.length > 0
@@ -428,12 +446,18 @@ async function getTasksPage(
     name: column.name,
     position: column.position,
     icon: column.icon,
+    color: column.color,
     isFinal: column.isFinal,
     tasks: paginatedTasks
       .filter((task) => task.status === column.slug)
       .map((task) => ({
         ...task,
         subtaskCounts: subtaskCounts.get(task.id) ?? { completed: 0, total: 0 },
+        blockerCounts: blockerCounts.get(task.id) ?? { completed: 0, total: 0 },
+        blockingCounts: blockingCounts.get(task.id) ?? {
+          completed: 0,
+          total: 0,
+        },
         labels: taskLabelsMap.get(task.id) || [],
         externalLinks: taskExternalLinksMap.get(task.id) || [],
       })),
@@ -444,6 +468,8 @@ async function getTasksPage(
     .map((task) => ({
       ...task,
       subtaskCounts: subtaskCounts.get(task.id) ?? { completed: 0, total: 0 },
+      blockerCounts: blockerCounts.get(task.id) ?? { completed: 0, total: 0 },
+      blockingCounts: blockingCounts.get(task.id) ?? { completed: 0, total: 0 },
       labels: taskLabelsMap.get(task.id) || [],
       externalLinks: taskExternalLinksMap.get(task.id) || [],
     }));
@@ -453,6 +479,8 @@ async function getTasksPage(
     .map((task) => ({
       ...task,
       subtaskCounts: subtaskCounts.get(task.id) ?? { completed: 0, total: 0 },
+      blockerCounts: blockerCounts.get(task.id) ?? { completed: 0, total: 0 },
+      blockingCounts: blockingCounts.get(task.id) ?? { completed: 0, total: 0 },
       labels: taskLabelsMap.get(task.id) || [],
       externalLinks: taskExternalLinksMap.get(task.id) || [],
     }));

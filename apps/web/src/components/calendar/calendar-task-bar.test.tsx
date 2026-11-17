@@ -1,12 +1,25 @@
 import enUS from "@i18n/en-US.json";
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vite-plus/test";
+import { resolveColumnColor } from "@/lib/column-color";
+import { resolveLabelColor } from "@/lib/label-color";
 import CalendarTaskBar from "./calendar-task-bar";
+
+const preferences = vi.hoisted(() => ({
+  calendarTaskColor: "column" as "column" | "label" | "none",
+}));
 
 afterEach(() => {
   cleanup();
   document.body.innerHTML = "";
+  preferences.calendarTaskColor = "column";
 });
+
+vi.mock("@/store/user-preferences", () => ({
+  useUserPreferencesStore: (
+    select: (state: { calendarTaskColor: string }) => unknown,
+  ) => select(preferences),
+}));
 
 // Formats from local parts, so the expected label does not move with the
 // runner's timezone the way toISOString would.
@@ -51,6 +64,8 @@ const segment = {
     title: "Design review",
     number: 12,
     status: "in-review",
+    columnColor: "yellow",
+    labels: [{ color: "red" }],
     scheduleStart: new Date(2026, 7, 10),
     scheduleEnd: new Date(2026, 7, 12),
   },
@@ -90,26 +105,51 @@ describe("CalendarTaskBar", () => {
     expect(label).not.toMatch(/\{\{\w+\}\}/);
   });
 
-  it.each([
-    ["to-do", "bg-slate-500/15"],
-    ["in-progress", "bg-blue-500/15"],
-    ["in-review", "bg-amber-500/15"],
-    ["done", "bg-emerald-500/15"],
-    ["custom-status", "bg-primary/12"],
-  ])("uses the %s status color", (status, expectedClass) => {
+  it("tints the bar with the workflow column color by default", () => {
     render(
       <CalendarTaskBar
-        segment={{
-          ...segment,
-          task: { ...segment.task, status },
-        }}
+        segment={segment}
         projectSlug="KAN"
         onOpenTask={vi.fn()}
       />,
     );
 
     const taskBar = screen.getByRole("button");
-    expect(taskBar).toHaveAttribute("data-task-status", status);
-    expect(taskBar).toHaveClass(expectedClass);
+    expect(taskBar).toHaveAttribute("data-calendar-task-color", "column");
+    expect(taskBar.style.getPropertyValue("--calendar-task-color")).toBe(
+      resolveColumnColor("yellow"),
+    );
+  });
+
+  it("tints the bar with the first label when that source is selected", () => {
+    preferences.calendarTaskColor = "label";
+    render(
+      <CalendarTaskBar
+        segment={segment}
+        projectSlug="KAN"
+        onOpenTask={vi.fn()}
+      />,
+    );
+
+    const taskBar = screen.getByRole("button");
+    expect(taskBar).toHaveAttribute("data-calendar-task-color", "label");
+    expect(taskBar.style.getPropertyValue("--calendar-task-color")).toBe(
+      resolveLabelColor("red"),
+    );
+  });
+
+  it("drops the tint when color is turned off", () => {
+    preferences.calendarTaskColor = "none";
+    render(
+      <CalendarTaskBar
+        segment={segment}
+        projectSlug="KAN"
+        onOpenTask={vi.fn()}
+      />,
+    );
+
+    const taskBar = screen.getByRole("button");
+    expect(taskBar).toHaveAttribute("data-calendar-task-color", "none");
+    expect(taskBar.style.getPropertyValue("--calendar-task-color")).toBe("");
   });
 });

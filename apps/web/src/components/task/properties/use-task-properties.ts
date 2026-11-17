@@ -31,6 +31,7 @@ export function useTaskProperties(
       label: getStatusDisplayLabel(task?.status ?? "", statusColumn?.name),
       isFinal: statusColumn?.isFinal ?? false,
       icon: statusColumn?.icon,
+      color: statusColumn?.color,
     },
     assignee: workspaceUsers?.members?.find(
       (member) => member.userId === task?.userId,

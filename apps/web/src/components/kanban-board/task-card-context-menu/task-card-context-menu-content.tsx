@@ -41,6 +41,7 @@ import { toast } from "@/lib/toast";
 import useProjectStore from "@/store/project";
 import type Task from "@/types/task";
 import { PriorityGlyph } from "@/components/task-chips/priority-glyph";
+import { handleTaskBlockedError } from "@/components/task/task-blocked-dialog-store";
 import { DueDateSubmenu } from "./due-date-submenu";
 
 type TaskCardContext = {
@@ -70,12 +71,14 @@ export default function TaskCardContextMenuContent({
           slug: col.id,
           name: col.name,
           icon: col.icon,
+          color: col.color,
           isFinal: col.isFinal,
         }))
       : columnsData.map((col) => ({
           slug: col.slug,
           name: col.name,
           icon: col.icon,
+          color: col.color,
           isFinal: col.isFinal,
         }));
   const { data: projectMembers } = useGetProjectMembers({
@@ -161,6 +164,7 @@ export default function TaskCardContextMenuContent({
           });
       }
     } catch (error) {
+      if (handleTaskBlockedError(error)) return;
       toast.error(
         error instanceof Error ? error.message : t("tasks:update.error"),
       );
@@ -224,7 +228,7 @@ export default function TaskCardContextMenuContent({
                 closeOnClick
                 className="[&_svg]:text-muted-foreground"
               >
-                {getColumnIcon(col.slug, col.isFinal, col.icon)}
+                {getColumnIcon(col.slug, col.isFinal, col.icon, col.color)}
                 <span>{col.name}</span>
               </ContextMenuCheckboxItem>
             ))}

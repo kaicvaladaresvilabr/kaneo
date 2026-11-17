@@ -30,7 +30,7 @@ export function AssignedTaskRow({
         className="shrink-0"
         title={getStatusDisplayLabel(task.status, task.statusName ?? undefined)}
       >
-        {getColumnIcon(task.status, false, task.statusIcon)}
+        {getColumnIcon(task.status, false, task.statusIcon, task.statusColor)}
       </span>
       <span className="hidden w-16 shrink-0 truncate font-medium text-muted-foreground text-xs sm:block">
         {task.number == null

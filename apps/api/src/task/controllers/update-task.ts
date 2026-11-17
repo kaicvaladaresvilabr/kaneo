@@ -12,6 +12,7 @@ import {
   getProjectWorkspaceId,
 } from "../../utils/assert-assignable-user";
 import { boardDescription, descriptionDeferred } from "../description-pages";
+import { assertCanCompleteTasks } from "../assert-can-complete-task";
 import { assertValidTaskStatus } from "../validate-task-fields";
 import { assertTaskPosition } from "./next-task-position";
 
@@ -114,6 +115,15 @@ async function updateTask(
         message: "Task order changed; refresh before updating",
       });
     existingTask = locked;
+
+    await assertCanCompleteTasks(tx, [
+      {
+        taskId: id,
+        projectId,
+        currentStatus: locked.status,
+        nextStatus: status,
+      },
+    ]);
 
     const [task] = await tx
       .update(taskTable)

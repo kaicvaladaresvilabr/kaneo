@@ -1002,7 +1002,8 @@
 			"deleteTitle": "Hapus “{{name}}”?",
 			"doneHeader": "Selesai",
 			"dragAria": "Ubah urutan {{name}}",
-			"reorderError": "Gagal mengubah urutan kolom"
+			"reorderError": "Gagal mengubah urutan kolom",
+			"pickColorTitle": "Pick column color"
 		},
 		"githubIntegration": {
 			"toast": {
@@ -3354,7 +3355,8 @@
 				"related": "terkait dengan"
 			},
 			"blockedBy": "Diblokir oleh",
-			"parentPlaceholder": "Atur tugas induk…"
+			"parentPlaceholder": "Atur tugas induk…",
+			"removeDependency": "Remove dependency"
 		},
 		"subtasks": {
 			"title": "Subtugas",
@@ -3537,7 +3539,8 @@
 			"previousPeriod": "Previous period",
 			"nextPeriod": "Next period",
 			"periodStart": "Timeline start date",
-			"showTaskDates": "Show task dates"
+			"showTaskDates": "Show task dates",
+			"todayLine": "Today"
 		},
 		"delete": {
 			"title": "Hapus Tugas?",
@@ -3666,7 +3669,11 @@
 			"title": "Kalender",
 			"today": "Hari ini",
 			"loadError": "Gagal memuat tugas.",
-			"noTasksThisMonth": "Tidak ada yang terjadwal bulan ini"
+			"noTasksThisMonth": "Tidak ada yang terjadwal bulan ini",
+			"taskColor": "Task color",
+			"taskColorColumn": "Workflow column",
+			"taskColorLabel": "Label",
+			"taskColorNone": "None"
 		},
 		"descriptionSearchLoading": "Searching full descriptions…",
 		"descriptionSearchError": "Description search failed. Results may be incomplete.",
@@ -3712,7 +3719,8 @@
 			"showOnRows": "Tampilkan di baris",
 			"checklistProgress": "Progres daftar periksa",
 			"projectBackground": "Latar belakang proyek",
-			"layout": "Tata letak"
+			"layout": "Tata letak",
+			"dependencyBlocks": "Dependency blocking"
 		},
 		"filterBar": {
 			"label": "Filter aktif",
@@ -3753,6 +3761,13 @@
 			"startsOn": "Mulai {{date}}",
 			"beforeStart": "{{date}} sebelum tanggal mulai",
 			"afterDue": "{{date}} setelah tenggat"
+		},
+		"blocked": {
+			"description": "Finish these blocking tasks first.",
+			"openTask": "Open {{title}}",
+			"title": "This task can't be completed",
+			"openCount_other": "Blocked by {{count}} open tasks",
+			"blocksCount_other": "Blocks {{count}} open tasks"
 		}
 	},
 	"invitations": {

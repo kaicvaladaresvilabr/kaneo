@@ -34,5 +34,20 @@ export const apiErrorSchema = z
           "Permissions the caller lacks for this route, as resource:action, for MISSING_PERMISSION and API_KEY_SCOPE.",
         example: ["task:update"],
       }),
+    blockers: z
+      .array(
+        z.object({
+          id: z.string(),
+          title: z.string(),
+          number: z.number().int().nullable(),
+          projectId: z.string(),
+          status: z.string(),
+        }),
+      )
+      .optional()
+      .openapi({
+        description:
+          "Unfinished tasks that block completion, for TASK_BLOCKED.",
+      }),
   })
   .openapi("ApiError");

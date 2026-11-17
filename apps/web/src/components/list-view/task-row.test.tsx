@@ -105,6 +105,7 @@ vi.mock("@/store/user-preferences", () => ({
     showDueDates: true,
     showLabels: true,
     showTaskNumbers: true,
+    showDependencyBlocks: true,
   }),
 }));
 
@@ -345,6 +346,48 @@ describe("TaskRow", () => {
       ).toHaveTextContent("2/5");
       expect(useExternalLinks).not.toHaveBeenCalled();
       expect(useGetLabelsByTask).not.toHaveBeenCalled();
+    },
+  );
+
+  it.each(["board", "list"])(
+    "shows open dependency blocking on the %s view",
+    (view) => {
+      const blocked = {
+        ...task,
+        blockerCounts: { completed: 1, total: 3 },
+      };
+      render(
+        view === "board" ? (
+          <TaskCard task={blocked} />
+        ) : (
+          <TaskRow task={blocked} projectSlug="kan" />
+        ),
+      );
+
+      expect(
+        screen.getByRole("button", { name: "tasks:blocked.openCount" }),
+      ).toHaveTextContent("2");
+    },
+  );
+
+  it.each(["board", "list"])(
+    "shows open outgoing blocks on the %s view",
+    (view) => {
+      const blocking = {
+        ...task,
+        blockingCounts: { completed: 1, total: 3 },
+      };
+      render(
+        view === "board" ? (
+          <TaskCard task={blocking} />
+        ) : (
+          <TaskRow task={blocking} projectSlug="kan" />
+        ),
+      );
+
+      expect(
+        screen.getByRole("button", { name: "tasks:blocked.blocksCount" }),
+      ).toHaveTextContent("2");
     },
   );
 

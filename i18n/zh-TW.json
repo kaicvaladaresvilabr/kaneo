@@ -1245,7 +1245,8 @@
 			"deleteTitle": "要刪除「{{name}}」嗎？",
 			"doneHeader": "完成",
 			"dragAria": "重新排序 {{name}}",
-			"reorderError": "無法重新排序欄位"
+			"reorderError": "無法重新排序欄位",
+			"pickColorTitle": "Pick column color"
 		},
 		"githubIntegration": {
 			"toast": {
@@ -3354,7 +3355,8 @@
 				"related": "相關於"
 			},
 			"blockedBy": "被封鎖於",
-			"parentPlaceholder": "設定父任務…"
+			"parentPlaceholder": "設定父任務…",
+			"removeDependency": "Remove dependency"
 		},
 		"subtasks": {
 			"title": "子任務",
@@ -3531,7 +3533,11 @@
 			"loadError": "載入任務失敗。",
 			"dayTasksAriaLabel": "查看 {{date}} 的所有任務",
 			"taskAriaLabel": "{{title}}，{{range}}：開啟任務",
-			"noTasksThisMonth": "本月沒有排程"
+			"noTasksThisMonth": "本月沒有排程",
+			"taskColor": "Task color",
+			"taskColorColumn": "Workflow column",
+			"taskColorLabel": "Label",
+			"taskColorNone": "None"
 		},
 		"gantt": {
 			"searchPlaceholder": "搜尋已排程的任務…",
@@ -3551,7 +3557,8 @@
 			"previousPeriod": "上一個期間",
 			"nextPeriod": "下一個期間",
 			"periodStart": "時間軸開始日期",
-			"showTaskDates": "顯示任務日期"
+			"showTaskDates": "顯示任務日期",
+			"todayLine": "Today"
 		},
 		"delete": {
 			"title": "刪除任務？",
@@ -3712,7 +3719,8 @@
 			"showOnRows": "在列中顯示",
 			"checklistProgress": "檢查清單進度",
 			"projectBackground": "專案背景",
-			"layout": "版面配置"
+			"layout": "版面配置",
+			"dependencyBlocks": "Dependency blocking"
 		},
 		"filterBar": {
 			"label": "已套用的篩選",
@@ -3753,6 +3761,13 @@
 			"startsOn": "開始於 {{date}}",
 			"beforeStart": "{{date}} 早於開始日期",
 			"afterDue": "{{date}} 晚於截止日期"
+		},
+		"blocked": {
+			"description": "Finish these blocking tasks first.",
+			"openTask": "Open {{title}}",
+			"title": "This task can't be completed",
+			"openCount_other": "Blocked by {{count}} open tasks",
+			"blocksCount_other": "Blocks {{count}} open tasks"
 		}
 	},
 	"invitations": {

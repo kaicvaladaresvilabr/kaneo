@@ -14,9 +14,10 @@ describe("parseColor", () => {
     expect(color("#abc")).toBe("#aabbcc");
   });
 
-  it("clears with none and rejects other words", () => {
+  it("clears with none, accepts palette names, and rejects other words", () => {
     expect(color("none")).toBeNull();
-    expect(color("blue")).toBe("invalid");
+    expect(color("blue")).toBe("blue");
+    expect(color("Ocean")).toBe("invalid");
     expect(color("#12345")).toBe("invalid");
   });
 });

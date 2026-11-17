@@ -108,7 +108,9 @@ export const columnEdit = Command.make(
       Flag.optional,
     ),
     color: Flag.String("color").pipe(
-      Flag.withDescription("Hex color such as #3b82f6, or none to clear it"),
+      Flag.withDescription(
+        "Palette name such as blue, hex such as #3b82f6, or none to clear it",
+      ),
       Flag.optional,
     ),
     icon: Flag.String("icon").pipe(

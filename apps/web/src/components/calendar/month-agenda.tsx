@@ -2,12 +2,10 @@ import { isBefore, isToday, startOfToday } from "date-fns";
 import { type JSX, useLayoutEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/cn";
-import { formatDate, formatDateShort } from "@/lib/format";
-import {
-  type CalendarTask,
-  getCalendarTaskStatusClass,
-} from "./calendar-task-bar";
+import { formatDate } from "@/lib/format";
+import type { CalendarTask } from "./calendar-task-bar";
 import { buildMonthAgenda } from "./month-agenda-model";
+import { MonthAgendaTask } from "./month-agenda-task";
 
 type MonthAgendaProps = {
   tasks: CalendarTask[];
@@ -78,37 +76,15 @@ export default function MonthAgenda({
               </span>
             </h3>
             <ul className="flex flex-col gap-1.5 px-3 pb-3">
-              {dayTasks.map((task) => {
-                const taskKey =
-                  projectSlug && task.number != null
-                    ? `${projectSlug}-${task.number}`
-                    : undefined;
-                const range = `${formatDateShort(task.scheduleStart)} – ${formatDateShort(task.scheduleEnd)}`;
-                return (
-                  <li key={task.id}>
-                    <button
-                      type="button"
-                      onClick={() => onOpenTask(task.id)}
-                      aria-label={t("tasks:calendar.taskAriaLabel", {
-                        title: task.title,
-                        range,
-                      })}
-                      data-task-status={task.status}
-                      className={cn(
-                        "flex min-h-11 w-full flex-col justify-center gap-0.5 rounded-md border px-3 py-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                        getCalendarTaskStatusClass(task.status),
-                      )}
-                    >
-                      <span className="text-sm font-medium text-foreground">
-                        {task.title}
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        {taskKey ? `${taskKey} · ${range}` : range}
-                      </span>
-                    </button>
-                  </li>
-                );
-              })}
+              {dayTasks.map((task) => (
+                <li key={task.id}>
+                  <MonthAgendaTask
+                    task={task}
+                    projectSlug={projectSlug}
+                    onOpenTask={onOpenTask}
+                  />
+                </li>
+              ))}
             </ul>
           </li>
         );

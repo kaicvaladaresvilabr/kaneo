@@ -1026,7 +1026,8 @@
 			"deleteTitle": "Удалить «{{name}}»?",
 			"doneHeader": "Готово",
 			"dragAria": "Изменить порядок: {{name}}",
-			"reorderError": "Не удалось изменить порядок колонок"
+			"reorderError": "Не удалось изменить порядок колонок",
+			"pickColorTitle": "Pick column color"
 		},
 		"githubIntegration": {
 			"toast": {
@@ -3524,7 +3525,8 @@
 				"blocked_by": "заблокирована"
 			},
 			"blockedBy": "Блокируется",
-			"parentPlaceholder": "Задать родительскую задачу…"
+			"parentPlaceholder": "Задать родительскую задачу…",
+			"removeDependency": "Remove dependency"
 		},
 		"subtasks": {
 			"title": "Подзадачи",
@@ -3727,7 +3729,8 @@
 			"previousPeriod": "Previous period",
 			"nextPeriod": "Next period",
 			"periodStart": "Timeline start date",
-			"showTaskDates": "Show task dates"
+			"showTaskDates": "Show task dates",
+			"todayLine": "Today"
 		},
 		"delete": {
 			"title": "Удалить задачу?",
@@ -3901,7 +3904,11 @@
 			"title": "Календарь",
 			"today": "Сегодня",
 			"loadError": "Не удалось загрузить задачи.",
-			"noTasksThisMonth": "В этом месяце ничего не запланировано"
+			"noTasksThisMonth": "В этом месяце ничего не запланировано",
+			"taskColor": "Task color",
+			"taskColorColumn": "Workflow column",
+			"taskColorLabel": "Label",
+			"taskColorNone": "None"
 		},
 		"descriptionSearchLoading": "Searching full descriptions…",
 		"descriptionSearchError": "Description search failed. Results may be incomplete.",
@@ -3971,7 +3978,8 @@
 			"showOnRows": "Показывать в строках",
 			"checklistProgress": "Прогресс чек-листа",
 			"projectBackground": "Фон проекта",
-			"layout": "Макет"
+			"layout": "Макет",
+			"dependencyBlocks": "Dependency blocking"
 		},
 		"filterBar": {
 			"label": "Активные фильтры",
@@ -4021,6 +4029,19 @@
 			"startsOn": "Начало: {{date}}",
 			"beforeStart": "{{date}} раньше даты начала",
 			"afterDue": "{{date}} позже срока"
+		},
+		"blocked": {
+			"description": "Finish these blocking tasks first.",
+			"openTask": "Open {{title}}",
+			"title": "This task can't be completed",
+			"openCount_few": "Blocked by {{count}} open tasks",
+			"openCount_many": "Blocked by {{count}} open tasks",
+			"openCount_one": "Blocked by {{count}} open task",
+			"openCount_other": "Blocked by {{count}} open tasks",
+			"blocksCount_few": "Blocks {{count}} open tasks",
+			"blocksCount_many": "Blocks {{count}} open tasks",
+			"blocksCount_one": "Blocks {{count}} open task",
+			"blocksCount_other": "Blocks {{count}} open tasks"
 		}
 	},
 	"invitations": {

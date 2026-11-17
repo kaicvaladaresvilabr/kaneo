@@ -62,6 +62,7 @@ export type Lane = {
   status: string;
   name: string;
   icon?: string | null;
+  color?: string | null;
   isFinal: boolean;
   tasks: BoardTask[];
   total: number;
@@ -89,6 +90,7 @@ export function lanes(
       status: col.slug,
       name: col.name,
       icon: col.icon,
+      color: col.color ?? null,
       isFinal: !!col.isFinal,
       tasks: tasks.filter((t) => matches(f, t)),
       total: tasks.length,

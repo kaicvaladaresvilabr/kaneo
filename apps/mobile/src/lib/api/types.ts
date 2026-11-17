@@ -178,6 +178,7 @@ export type BoardColumn = {
   slug: string;
   name: string;
   icon?: string | null;
+  color?: string | null;
   isFinal?: boolean;
   position?: number | null;
   tasks?: BoardTask[];
@@ -240,6 +241,7 @@ export type AssignedTask = {
   status: string;
   statusName?: string | null;
   statusIcon?: string | null;
+  statusColor?: string | null;
   priority?: string | null;
   dueDate?: string | null;
   projectName: string;

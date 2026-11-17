@@ -34,6 +34,7 @@ import { api } from "@/lib/api/endpoints";
 import type { Column, CustomFieldDefinition } from "@/lib/api/types";
 import { useWorkspaces } from "@/lib/hooks";
 import { qk, useAction } from "@/lib/query";
+import { columnColor } from "@/lib/style";
 import { useColors } from "@/theme";
 
 export default function ProjectSettingsScreen() {
@@ -195,6 +196,7 @@ export default function ProjectSettingsScreen() {
                       icon={col.icon}
                       isFinal={col.isFinal}
                       size={14}
+                      color={columnColor(col.color)}
                     />
                     <Txt variant="body" style={{ flex: 1 }}>
                       {col.name}

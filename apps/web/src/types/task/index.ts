@@ -43,6 +43,8 @@ type Task = {
   projectId: string;
   columnId?: string | null;
   subtaskCounts?: { completed: number; total: number };
+  blockerCounts?: { completed: number; total: number };
+  blockingCounts?: { completed: number; total: number };
   labels?: TaskLabel[];
   externalLinks?: TaskExternalLink[];
   customFieldValues?: TaskCustomFieldValue[];

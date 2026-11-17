@@ -1018,7 +1018,8 @@
 			"deleteTitle": "Supprimer “{{name}}” ?",
 			"doneHeader": "Terminé",
 			"dragAria": "Réorganiser {{name}}",
-			"reorderError": "Échec de la réorganisation des colonnes"
+			"reorderError": "Échec de la réorganisation des colonnes",
+			"pickColorTitle": "Pick column color"
 		},
 		"githubIntegration": {
 			"toast": {
@@ -3462,7 +3463,8 @@
 				"related": "relatif à"
 			},
 			"blockedBy": "Bloquée par",
-			"parentPlaceholder": "Définir la tâche parente…"
+			"parentPlaceholder": "Définir la tâche parente…",
+			"removeDependency": "Remove dependency"
 		},
 		"subtasks": {
 			"title": "Sous-tâches",
@@ -3653,7 +3655,8 @@
 			"previousPeriod": "Période précédente",
 			"nextPeriod": "Période suivante",
 			"periodStart": "Date de début de la chronologie",
-			"showTaskDates": "Afficher les dates des tâches"
+			"showTaskDates": "Afficher les dates des tâches",
+			"todayLine": "Today"
 		},
 		"delete": {
 			"title": "Supprimer la tâche ?",
@@ -3788,7 +3791,11 @@
 			"title": "Calendrier",
 			"today": "Aujourd’hui",
 			"loadError": "Échec du chargement des tâches.",
-			"noTasksThisMonth": "Rien de planifié ce mois-ci"
+			"noTasksThisMonth": "Rien de planifié ce mois-ci",
+			"taskColor": "Task color",
+			"taskColorColumn": "Workflow column",
+			"taskColorLabel": "Label",
+			"taskColorNone": "None"
 		},
 		"descriptionSearchLoading": "Recherche dans les descriptions complètes…",
 		"descriptionSearchError": "La recherche dans les descriptions a échoué. Les résultats peuvent être incomplets.",
@@ -3850,7 +3857,8 @@
 			"showOnRows": "Afficher sur les lignes",
 			"checklistProgress": "Progression de la liste",
 			"projectBackground": "Arrière-plan du projet",
-			"layout": "Disposition"
+			"layout": "Disposition",
+			"dependencyBlocks": "Dependency blocking"
 		},
 		"filterBar": {
 			"label": "Filtres actifs",
@@ -3897,6 +3905,17 @@
 			"startsOn": "Commence le {{date}}",
 			"beforeStart": "{{date}} est avant la date de début",
 			"afterDue": "{{date}} est après l’échéance"
+		},
+		"blocked": {
+			"description": "Finish these blocking tasks first.",
+			"openTask": "Open {{title}}",
+			"title": "This task can't be completed",
+			"openCount_many": "Blocked by {{count}} open tasks",
+			"openCount_one": "Blocked by {{count}} open task",
+			"openCount_other": "Blocked by {{count}} open tasks",
+			"blocksCount_many": "Blocks {{count}} open tasks",
+			"blocksCount_one": "Blocks {{count}} open task",
+			"blocksCount_other": "Blocks {{count}} open tasks"
 		}
 	},
 	"invitations": {

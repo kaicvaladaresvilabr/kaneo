@@ -32,6 +32,7 @@ function errorBody(
       ...(error.missingPermissions
         ? { missingPermissions: error.missingPermissions }
         : {}),
+      ...(error.blockers ? { blockers: error.blockers } : {}),
     };
   }
   return {

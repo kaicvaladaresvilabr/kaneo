@@ -1335,7 +1335,8 @@
 			"deleteTitle": "Usunąć „{{name}}”?",
 			"doneHeader": "Ukończone",
 			"dragAria": "Zmień kolejność: {{name}}",
-			"reorderError": "Nie udało się zmienić kolejności kolumn"
+			"reorderError": "Nie udało się zmienić kolejności kolumn",
+			"pickColorTitle": "Pick column color"
 		},
 		"developer": "Deweloper",
 		"developerPage": {
@@ -3905,7 +3906,11 @@
 			"loadError": "Nie udało się załadować zadań.",
 			"dayTasksAriaLabel": "Pokaż wszystkie zadania z dnia {{date}}",
 			"taskAriaLabel": "{{title}}, {{range}}: otwórz zadanie",
-			"noTasksThisMonth": "Nic nie zaplanowano w tym miesiącu"
+			"noTasksThisMonth": "Nic nie zaplanowano w tym miesiącu",
+			"taskColor": "Task color",
+			"taskColorColumn": "Workflow column",
+			"taskColorLabel": "Label",
+			"taskColorNone": "None"
 		},
 		"gantt": {
 			"searchPlaceholder": "Szukaj zaplanowanych zadań...",
@@ -3925,7 +3930,8 @@
 			"previousPeriod": "Previous period",
 			"nextPeriod": "Next period",
 			"periodStart": "Timeline start date",
-			"showTaskDates": "Show task dates"
+			"showTaskDates": "Show task dates",
+			"todayLine": "Today"
 		},
 		"kanban": {
 			"addTask": "Dodaj zadanie",
@@ -4085,7 +4091,8 @@
 				"related": "powiązane z"
 			},
 			"blockedBy": "Zablokowane przez",
-			"parentPlaceholder": "Ustaw zadanie nadrzędne…"
+			"parentPlaceholder": "Ustaw zadanie nadrzędne…",
+			"removeDependency": "Remove dependency"
 		},
 		"sort": {
 			"ascending": "Rosnąco",
@@ -4207,7 +4214,8 @@
 			"showOnRows": "Pokaż w wierszach",
 			"checklistProgress": "Postęp listy kontrolnej",
 			"projectBackground": "Tło projektu",
-			"layout": "Układ"
+			"layout": "Układ",
+			"dependencyBlocks": "Dependency blocking"
 		},
 		"filterBar": {
 			"label": "Aktywne filtry",
@@ -4257,6 +4265,19 @@
 			"startsOn": "Początek: {{date}}",
 			"beforeStart": "{{date}} jest przed datą rozpoczęcia",
 			"afterDue": "{{date}} jest po terminie"
+		},
+		"blocked": {
+			"description": "Finish these blocking tasks first.",
+			"openTask": "Open {{title}}",
+			"title": "This task can't be completed",
+			"openCount_few": "Blocked by {{count}} open tasks",
+			"openCount_many": "Blocked by {{count}} open tasks",
+			"openCount_one": "Blocked by {{count}} open task",
+			"openCount_other": "Blocked by {{count}} open tasks",
+			"blocksCount_few": "Blocks {{count}} open tasks",
+			"blocksCount_many": "Blocks {{count}} open tasks",
+			"blocksCount_one": "Blocks {{count}} open task",
+			"blocksCount_other": "Blocks {{count}} open tasks"
 		}
 	},
 	"press": {

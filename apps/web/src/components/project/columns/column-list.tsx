@@ -48,7 +48,7 @@ export function ColumnList({ projectId }: ColumnListProps) {
 
   const update = async (
     id: string,
-    data: { name?: string; icon?: string; isFinal?: boolean },
+    data: { name?: string; icon?: string; color?: string; isFinal?: boolean },
     fallbackKey: string,
   ) => {
     try {
@@ -60,7 +60,11 @@ export function ColumnList({ projectId }: ColumnListProps) {
     }
   };
 
-  const create = async (data: { name: string; icon: string }) => {
+  const create = async (data: {
+    name: string;
+    icon: string;
+    color: string;
+  }) => {
     try {
       await createColumn({ projectId, data });
       return true;
@@ -107,6 +111,13 @@ export function ColumnList({ projectId }: ColumnListProps) {
                 void update(
                   column.id,
                   { icon },
+                  "settings:columnEditor.toastUpdateError",
+                )
+              }
+              onChangeColor={(color) =>
+                void update(
+                  column.id,
+                  { color },
                   "settings:columnEditor.toastUpdateError",
                 )
               }

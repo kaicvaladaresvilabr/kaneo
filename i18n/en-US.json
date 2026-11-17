@@ -1936,6 +1936,7 @@
 			"toastUpdateError": "Failed to update column",
 			"toastDeleteError": "Failed to delete column",
 			"pickIconTitle": "Pick column icon",
+			"pickColorTitle": "Pick column color",
 			"searchIconsPlaceholder": "Search icons...",
 			"markDoneAria": "Mark {{name}} as done column",
 			"newColumnPlaceholder": "Column name",
@@ -3400,6 +3401,7 @@
 			"noTasksFound": "No tasks found",
 			"openTask": "Open task",
 			"removeRelation": "Remove relation",
+			"removeDependency": "Remove dependency",
 			"related": "Related",
 			"blocks": "Blocks",
 			"selectTask": "Select a task to link",
@@ -3410,6 +3412,15 @@
 			},
 			"blockedBy": "Blocked by",
 			"parentPlaceholder": "Set parent task…"
+		},
+		"blocked": {
+			"title": "This task can't be completed",
+			"description": "Finish these blocking tasks first.",
+			"openTask": "Open {{title}}",
+			"openCount_one": "Blocked by {{count}} open task",
+			"openCount_other": "Blocked by {{count}} open tasks",
+			"blocksCount_one": "Blocks {{count}} open task",
+			"blocksCount_other": "Blocks {{count}} open tasks"
 		},
 		"subtasks": {
 			"progress": "{{completed}} of {{total}} subtasks completed",
@@ -3590,13 +3601,18 @@
 			"loadError": "Failed to load tasks.",
 			"dayTasksAriaLabel": "Show all tasks for {{date}}",
 			"taskAriaLabel": "{{title}}, {{range}}: open task",
-			"noTasksThisMonth": "Nothing scheduled this month"
+			"noTasksThisMonth": "Nothing scheduled this month",
+			"taskColor": "Task color",
+			"taskColorColumn": "Workflow column",
+			"taskColorLabel": "Label",
+			"taskColorNone": "None"
 		},
 		"gantt": {
 			"searchPlaceholder": "Search scheduled tickets...",
 			"pageTitle": "{{name}} / Gantt",
 			"title": "Gantt Timeline",
 			"jumpToToday": "Jump to today",
+			"todayLine": "Today",
 			"hideTasks": "Hide tasks",
 			"showTasks": "Show tasks",
 			"noTasks": "No scheduled tasks",
@@ -3780,6 +3796,7 @@
 			"showOnCards": "Show on cards",
 			"showOnRows": "Show on rows",
 			"checklistProgress": "Checklist progress",
+			"dependencyBlocks": "Dependency blocking",
 			"projectBackground": "Project background",
 			"layout": "Layout"
 		},

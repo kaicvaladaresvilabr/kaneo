@@ -25,6 +25,7 @@ import {
 import type { BoardTask, Label, WorkspaceMember } from "@/lib/api/types";
 import { ticketId } from "@/lib/format";
 import {
+  columnColor,
   PRIORITIES,
   priorityLabel,
   STATUS_ARCHIVED,
@@ -370,6 +371,11 @@ export function QuickActionsSheet({
                         status={l.status}
                         icon={l.icon}
                         isFinal={l.isFinal}
+                        color={
+                          l.color !== undefined
+                            ? columnColor(l.color)
+                            : undefined
+                        }
                       />
                       <Txt
                         variant="caption"

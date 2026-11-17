@@ -3,6 +3,7 @@ import { signOutState } from "./sign-out-state";
 import {
   type ApiErrorDetails,
   type ApiErrorIssue,
+  type TaskBlocker,
   parseApiErrorBody,
 } from "./parse-api-error-body";
 
@@ -22,6 +23,7 @@ export class HttpError extends Error {
   code?: string;
   issues?: ApiErrorIssue[];
   missingPermissions?: string[];
+  blockers?: TaskBlocker[];
 
   constructor(status: number, message: string, details: ApiErrorDetails = {}) {
     super(message);
@@ -30,6 +32,7 @@ export class HttpError extends Error {
     this.code = details.code;
     this.issues = details.issues;
     this.missingPermissions = details.missingPermissions;
+    this.blockers = details.blockers;
   }
 
   static async fromResponse(

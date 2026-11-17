@@ -1246,7 +1246,8 @@
 			"deleteTitle": "「{{name}}」を削除しますか？",
 			"doneHeader": "完了",
 			"dragAria": "{{name}} を並べ替え",
-			"reorderError": "カラムの並べ替えに失敗しました"
+			"reorderError": "カラムの並べ替えに失敗しました",
+			"pickColorTitle": "Pick column color"
 		},
 		"githubIntegration": {
 			"toast": {
@@ -3354,7 +3355,8 @@
 				"related": "関連"
 			},
 			"blockedBy": "ブロック元",
-			"parentPlaceholder": "親タスクを設定…"
+			"parentPlaceholder": "親タスクを設定…",
+			"removeDependency": "Remove dependency"
 		},
 		"subtasks": {
 			"title": "サブタスク",
@@ -3531,7 +3533,11 @@
 			"loadError": "タスクの読み込みに失敗しました。",
 			"dayTasksAriaLabel": "{{date}}のすべてのタスクを表示",
 			"taskAriaLabel": "{{title}}、{{range}}: タスクを開く",
-			"noTasksThisMonth": "今月の予定はありません"
+			"noTasksThisMonth": "今月の予定はありません",
+			"taskColor": "Task color",
+			"taskColorColumn": "Workflow column",
+			"taskColorLabel": "Label",
+			"taskColorNone": "None"
 		},
 		"gantt": {
 			"searchPlaceholder": "スケジュール済みのチケットを検索...",
@@ -3551,7 +3557,8 @@
 			"previousPeriod": "Previous period",
 			"nextPeriod": "Next period",
 			"periodStart": "Timeline start date",
-			"showTaskDates": "Show task dates"
+			"showTaskDates": "Show task dates",
+			"todayLine": "Today"
 		},
 		"delete": {
 			"title": "タスクを削除しますか？",
@@ -3712,7 +3719,8 @@
 			"showOnRows": "行に表示",
 			"checklistProgress": "チェックリストの進捗",
 			"projectBackground": "プロジェクトの背景",
-			"layout": "レイアウト"
+			"layout": "レイアウト",
+			"dependencyBlocks": "Dependency blocking"
 		},
 		"filterBar": {
 			"label": "適用中のフィルター",
@@ -3753,6 +3761,13 @@
 			"startsOn": "開始: {{date}}",
 			"beforeStart": "{{date}} は開始日より前です",
 			"afterDue": "{{date}} は期日より後です"
+		},
+		"blocked": {
+			"description": "Finish these blocking tasks first.",
+			"openTask": "Open {{title}}",
+			"title": "This task can't be completed",
+			"openCount_other": "Blocked by {{count}} open tasks",
+			"blocksCount_other": "Blocks {{count}} open tasks"
 		}
 	},
 	"invitations": {

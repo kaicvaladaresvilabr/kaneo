@@ -1010,7 +1010,8 @@
 			"deleteTitle": "“{{name}}” silinsin mi?",
 			"doneHeader": "Tamamlandı",
 			"dragAria": "{{name}} sütununu yeniden sırala",
-			"reorderError": "Sütunlar yeniden sıralanamadı"
+			"reorderError": "Sütunlar yeniden sıralanamadı",
+			"pickColorTitle": "Pick column color"
 		},
 		"githubIntegration": {
 			"toast": {
@@ -3408,7 +3409,8 @@
 				"related": "ilişkilidir"
 			},
 			"blockedBy": "Engelleyen",
-			"parentPlaceholder": "Üst talebi belirle…"
+			"parentPlaceholder": "Üst talebi belirle…",
+			"removeDependency": "Remove dependency"
 		},
 		"subtasks": {
 			"title": "Alt talepler",
@@ -3595,7 +3597,8 @@
 			"previousPeriod": "Previous period",
 			"nextPeriod": "Next period",
 			"periodStart": "Timeline start date",
-			"showTaskDates": "Show task dates"
+			"showTaskDates": "Show task dates",
+			"todayLine": "Today"
 		},
 		"delete": {
 			"title": "Talep Silinsin mi?",
@@ -3727,7 +3730,11 @@
 			"title": "Takvim",
 			"today": "Bugün",
 			"loadError": "Talepler yüklenemedi.",
-			"noTasksThisMonth": "Bu ay planlanmış bir şey yok"
+			"noTasksThisMonth": "Bu ay planlanmış bir şey yok",
+			"taskColor": "Task color",
+			"taskColorColumn": "Workflow column",
+			"taskColorLabel": "Label",
+			"taskColorNone": "None"
 		},
 		"descriptionSearchLoading": "Searching full descriptions…",
 		"descriptionSearchError": "Description search failed. Results may be incomplete.",
@@ -3781,7 +3788,8 @@
 			"showOnRows": "Satırlarda göster",
 			"checklistProgress": "Kontrol listesi ilerlemesi",
 			"projectBackground": "Proje arka planı",
-			"layout": "Düzen"
+			"layout": "Düzen",
+			"dependencyBlocks": "Dependency blocking"
 		},
 		"filterBar": {
 			"label": "Etkin filtreler",
@@ -3825,6 +3833,15 @@
 			"startsOn": "Başlangıç: {{date}}",
 			"beforeStart": "{{date}} başlangıç tarihinden önce",
 			"afterDue": "{{date}} bitiş tarihinden sonra"
+		},
+		"blocked": {
+			"description": "Finish these blocking tasks first.",
+			"openTask": "Open {{title}}",
+			"title": "This task can't be completed",
+			"openCount_one": "Blocked by {{count}} open task",
+			"openCount_other": "Blocked by {{count}} open tasks",
+			"blocksCount_one": "Blocks {{count}} open task",
+			"blocksCount_other": "Blocks {{count}} open tasks"
 		}
 	},
 	"invitations": {

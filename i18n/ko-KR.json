@@ -1002,7 +1002,8 @@
 			"deleteTitle": "“{{name}}”을(를) 삭제할까요?",
 			"doneHeader": "완료",
 			"dragAria": "{{name}} 순서 변경",
-			"reorderError": "컬럼 순서를 변경하지 못했습니다"
+			"reorderError": "컬럼 순서를 변경하지 못했습니다",
+			"pickColorTitle": "Pick column color"
 		},
 		"githubIntegration": {
 			"toast": {
@@ -3354,7 +3355,8 @@
 				"blocked_by": "차단됨"
 			},
 			"blockedBy": "차단한 작업",
-			"parentPlaceholder": "상위 작업 설정…"
+			"parentPlaceholder": "상위 작업 설정…",
+			"removeDependency": "Remove dependency"
 		},
 		"subtasks": {
 			"title": "하위 작업",
@@ -3531,7 +3533,11 @@
 			"loadError": "작업을 불러오지 못했습니다.",
 			"dayTasksAriaLabel": "{{date}}의 모든 작업 보기",
 			"taskAriaLabel": "{{title}}, {{range}}: 작업 열기",
-			"noTasksThisMonth": "이번 달 예정된 항목이 없습니다"
+			"noTasksThisMonth": "이번 달 예정된 항목이 없습니다",
+			"taskColor": "Task color",
+			"taskColorColumn": "Workflow column",
+			"taskColorLabel": "Label",
+			"taskColorNone": "None"
 		},
 		"gantt": {
 			"searchPlaceholder": "예약된 티켓 검색...",
@@ -3551,7 +3557,8 @@
 			"previousPeriod": "Previous period",
 			"nextPeriod": "Next period",
 			"periodStart": "Timeline start date",
-			"showTaskDates": "Show task dates"
+			"showTaskDates": "Show task dates",
+			"todayLine": "Today"
 		},
 		"delete": {
 			"title": "작업을 삭제하시겠습니까?",
@@ -3712,7 +3719,8 @@
 			"showOnRows": "행에 표시",
 			"checklistProgress": "체크리스트 진행률",
 			"projectBackground": "프로젝트 배경",
-			"layout": "레이아웃"
+			"layout": "레이아웃",
+			"dependencyBlocks": "Dependency blocking"
 		},
 		"filterBar": {
 			"label": "적용된 필터",
@@ -3753,6 +3761,13 @@
 			"startsOn": "시작: {{date}}",
 			"beforeStart": "{{date}}은(는) 시작일 이전입니다",
 			"afterDue": "{{date}}은(는) 마감일 이후입니다"
+		},
+		"blocked": {
+			"description": "Finish these blocking tasks first.",
+			"openTask": "Open {{title}}",
+			"title": "This task can't be completed",
+			"openCount_other": "Blocked by {{count}} open tasks",
+			"blocksCount_other": "Blocks {{count}} open tasks"
 		}
 	},
 	"invitations": {

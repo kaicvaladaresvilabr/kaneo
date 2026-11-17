@@ -1,6 +1,7 @@
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { ColumnColorPicker } from "@/components/project/columns/column-color-picker";
 import { ColumnIconPicker } from "@/components/project/columns/column-icon-picker";
 import type { ProjectColumn } from "@/components/project/columns/types";
 import { InlineNameInput } from "@/components/project/inline-name-input";
@@ -11,12 +12,14 @@ import { Switch } from "@/components/ui/switch";
 import { DEFAULT_COLUMN_ICON_NAMES } from "@/constants/column-icons";
 import { cn } from "@/lib/cn";
 import { getColumnIcon } from "@/lib/column";
+import { DEFAULT_COLUMN_COLOR } from "@/lib/column-color";
 
 type ColumnRowProps = {
   column: ProjectColumn;
   canEdit: boolean;
   onRename: (name: string) => Promise<boolean>;
   onChangeIcon: (icon: string) => void;
+  onChangeColor: (color: string) => void;
   onToggleFinal: (isFinal: boolean) => Promise<void>;
   onDelete: () => void;
 };
@@ -35,6 +38,7 @@ export function ColumnRow({
   canEdit,
   onRename,
   onChangeIcon,
+  onChangeColor,
   onToggleFinal,
   onDelete,
 }: ColumnRowProps) {
@@ -75,8 +79,14 @@ export function ColumnRow({
         disabled={!canEdit}
         onSelect={onChangeIcon}
       >
-        {getColumnIcon(column.slug, isFinal, column.icon)}
+        {getColumnIcon(column.slug, isFinal, column.icon, column.color)}
       </ColumnIconPicker>
+      <ColumnColorPicker
+        selected={column.color || DEFAULT_COLUMN_COLOR}
+        label={t("settings:columnEditor.pickColorTitle")}
+        disabled={!canEdit}
+        onSelect={onChangeColor}
+      />
       <InlineNameInput
         name={column.name}
         label={t("settings:columnEditor.renameAria", { name: column.name })}

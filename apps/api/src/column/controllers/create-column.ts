@@ -54,7 +54,7 @@ async function createColumn({
         slug: availableSlug(slug, new Set(columns.map((c) => c.slug))),
         position: Math.max(-1, ...columns.map((c) => c.position)) + 1,
         icon: icon || null,
-        color: color || null,
+        color: color?.trim() || "blue",
         isFinal: isFinal ?? false,
       })
       .returning();

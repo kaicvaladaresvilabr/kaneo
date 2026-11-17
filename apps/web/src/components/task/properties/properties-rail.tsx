@@ -59,7 +59,12 @@ export function PropertiesRail({
         <PropertyRow label={t("tasks:status.label")}>
           <TaskStatusPopover task={task}>
             <PropertyValue data-task-action="status" shortcutId="changeStatus">
-              {getColumnIcon(task.status ?? "", status.isFinal, status.icon)}
+              {getColumnIcon(
+                task.status ?? "",
+                status.isFinal,
+                status.icon,
+                status.color,
+              )}
               <span className="truncate">{status.label}</span>
             </PropertyValue>
           </TaskStatusPopover>

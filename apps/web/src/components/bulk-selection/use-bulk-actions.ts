@@ -16,6 +16,7 @@ import useActiveWorkspace from "@/hooks/queries/workspace/use-active-workspace";
 import useGetProjectMembers from "@/hooks/queries/workspace-users/use-get-project-members";
 import { useWorkspacePermission } from "@/hooks/use-workspace-permission";
 import { PriorityGlyph } from "@/components/task-chips/priority-glyph";
+import { handleTaskBlockedError } from "@/components/task/task-blocked-dialog-store";
 import { type ToastIcon, toast } from "@/lib/toast";
 import useProjectStore from "@/store/project";
 
@@ -63,7 +64,8 @@ export function useBulkActions(
       await action();
       toast.success(success, { icon });
       clearSelection();
-    } catch (_error) {
+    } catch (caught) {
+      if (handleTaskBlockedError(caught)) return;
       toast.error(error);
     }
   };

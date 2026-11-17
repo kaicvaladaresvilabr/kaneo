@@ -4,6 +4,7 @@ import { useUpdateTaskStatus } from "@/hooks/mutations/task/use-update-task-stat
 import { toast } from "@/lib/toast";
 import queryClient from "@/query-client";
 import type Task from "@/types/task";
+import { handleTaskBlockedError } from "./task-blocked-dialog-store";
 
 export function useToggleTaskCompletion() {
   const { t } = useTranslation();
@@ -26,6 +27,7 @@ export function useToggleTaskCompletion() {
       }
       await updateTaskStatus({ ...task, status: nextColumn.slug });
     } catch (error) {
+      if (handleTaskBlockedError(error)) return;
       toast.error(
         error instanceof Error
           ? error.message

@@ -70,6 +70,8 @@ export function useProjectWebSocket(projectId: string) {
     let healthyTimeout: ReturnType<typeof setTimeout> | null = null;
     let requestSequence = 0;
     const parentCountVersions = new Map<string, number>();
+    const blockerCountVersions = new Map<string, number>();
+    const blockingCountVersions = new Map<string, number>();
     let pingInterval: ReturnType<typeof setInterval> | null = null;
     let fallbackInterval: ReturnType<typeof setInterval> | null = null;
 
@@ -472,6 +474,10 @@ export function useProjectWebSocket(projectId: string) {
                     }
                     const staleOwnCounts =
                       (parentCountVersions.get(taskId) ?? 0) > sequence;
+                    const staleOwnBlockers =
+                      (blockerCountVersions.get(taskId) ?? 0) > sequence;
+                    const staleOwnBlocking =
+                      (blockingCountVersions.get(taskId) ?? 0) > sequence;
                     if (task.projectId === projectId)
                       patchSyncTaskTitles(
                         queryClient,
@@ -479,12 +485,25 @@ export function useProjectWebSocket(projectId: string) {
                         taskId,
                         task.title,
                       );
-                    const { subtaskCounts, ...taskFields } = task;
-                    if (staleOwnCounts)
+                    const {
+                      subtaskCounts,
+                      blockerCounts,
+                      blockingCounts,
+                      parentSubtaskCounts,
+                      blockedTargetCounts,
+                      blockingSourceCounts,
+                      ...taskFields
+                    } = task;
+                    if (staleOwnCounts || staleOwnBlockers || staleOwnBlocking)
                       void queryClient.invalidateQueries({
                         queryKey: ["tasks", projectId],
                       });
-                    else parentCountVersions.set(taskId, sequence);
+                    if (!staleOwnCounts)
+                      parentCountVersions.set(taskId, sequence);
+                    if (!staleOwnBlockers)
+                      blockerCountVersions.set(taskId, sequence);
+                    if (!staleOwnBlocking)
+                      blockingCountVersions.set(taskId, sequence);
                     queryClient.setQueryData<ProjectWithTasks>(
                       ["tasks", projectId],
                       (board) =>
@@ -492,6 +511,8 @@ export function useProjectWebSocket(projectId: string) {
                           ? (patchBoardTask(board, taskId, {
                               ...taskFields,
                               ...(!staleOwnCounts ? { subtaskCounts } : {}),
+                              ...(!staleOwnBlockers ? { blockerCounts } : {}),
+                              ...(!staleOwnBlocking ? { blockingCounts } : {}),
                               labels,
                               externalLinks: externalLinks.map((link) => ({
                                 ...link,
@@ -505,7 +526,7 @@ export function useProjectWebSocket(projectId: string) {
                             }) ?? board)
                           : board,
                     );
-                    for (const progress of task.parentSubtaskCounts ?? []) {
+                    for (const progress of parentSubtaskCounts ?? []) {
                       if (
                         (parentCountVersions.get(progress.taskId) ?? 0) >
                         sequence
@@ -523,6 +544,56 @@ export function useProjectWebSocket(projectId: string) {
                             ? (patchBoardTask(board, progress.taskId, {
                                 projectId,
                                 subtaskCounts: {
+                                  completed: progress.completed,
+                                  total: progress.total,
+                                },
+                              }) ?? board)
+                            : board,
+                      );
+                    }
+                    for (const progress of blockedTargetCounts ?? []) {
+                      if (
+                        (blockerCountVersions.get(progress.taskId) ?? 0) >
+                        sequence
+                      ) {
+                        void queryClient.invalidateQueries({
+                          queryKey: ["tasks", projectId],
+                        });
+                        continue;
+                      }
+                      blockerCountVersions.set(progress.taskId, sequence);
+                      queryClient.setQueryData<ProjectWithTasks>(
+                        ["tasks", projectId],
+                        (board) =>
+                          board
+                            ? (patchBoardTask(board, progress.taskId, {
+                                projectId,
+                                blockerCounts: {
+                                  completed: progress.completed,
+                                  total: progress.total,
+                                },
+                              }) ?? board)
+                            : board,
+                      );
+                    }
+                    for (const progress of blockingSourceCounts ?? []) {
+                      if (
+                        (blockingCountVersions.get(progress.taskId) ?? 0) >
+                        sequence
+                      ) {
+                        void queryClient.invalidateQueries({
+                          queryKey: ["tasks", projectId],
+                        });
+                        continue;
+                      }
+                      blockingCountVersions.set(progress.taskId, sequence);
+                      queryClient.setQueryData<ProjectWithTasks>(
+                        ["tasks", projectId],
+                        (board) =>
+                          board
+                            ? (patchBoardTask(board, progress.taskId, {
+                                projectId,
+                                blockingCounts: {
                                   completed: progress.completed,
                                   total: progress.total,
                                 },

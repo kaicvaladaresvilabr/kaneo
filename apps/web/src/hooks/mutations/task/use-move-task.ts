@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FolderInputIcon } from "lucide-react";
 import { invalidateMyWork } from "@/lib/invalidate-my-work";
 import { useTranslation } from "react-i18next";
+import { handleTaskBlockedError } from "@/components/task/task-blocked-dialog-store";
 import moveTask from "@/fetchers/task/move-task";
 import { toast } from "@/lib/toast";
 
@@ -47,6 +48,7 @@ export function useMoveTask() {
       });
     },
     onError: (error) => {
+      if (handleTaskBlockedError(error)) return;
       toast.error(
         error instanceof Error ? error.message : t("tasks:move.error"),
       );

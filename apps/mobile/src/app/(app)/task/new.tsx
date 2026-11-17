@@ -34,7 +34,12 @@ import { formatDate, toApiDate, toIsoDay, type Day } from "@/lib/format";
 import { useMembers, useWorkspaceLabels } from "@/lib/hooks";
 import { qk, useAction } from "@/lib/query";
 import { useRequiredSession } from "@/lib/session";
-import { PRIORITIES, priorityLabel, STATUS_PLANNED } from "@/lib/style";
+import {
+  columnColor,
+  PRIORITIES,
+  priorityLabel,
+  STATUS_PLANNED,
+} from "@/lib/style";
 import { font, useColors } from "@/theme";
 
 type Picker =
@@ -347,6 +352,11 @@ export default function NewTaskScreen() {
                   status={effectiveStatus}
                   icon={sortedColumns[statusIdx]?.icon}
                   isFinal={sortedColumns[statusIdx]?.isFinal}
+                  color={
+                    sortedColumns[statusIdx]
+                      ? columnColor(sortedColumns[statusIdx].color)
+                      : undefined
+                  }
                 />
                 {val(statusLabel)}
               </>,
@@ -540,6 +550,7 @@ export default function NewTaskScreen() {
                 status={col.slug}
                 icon={col.icon}
                 isFinal={col.isFinal}
+                color={columnColor(col.color)}
               />
             ),
           })),
