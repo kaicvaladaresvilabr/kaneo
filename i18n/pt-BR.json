@@ -1194,6 +1194,8 @@
 			"genericWebhookSectionSubtitle": "Envie eventos de tarefas do projeto para qualquer endpoint HTTP como JSON.",
 			"slackSectionTitle": "Integração com Slack",
 			"slackSectionSubtitle": "Envie atualizações de tarefas do projeto para um canal do Slack com um webhook de entrada.",
+			"teamsSectionTitle": "Integração com o Teams",
+			"teamsSectionSubtitle": "Envie atualizações de tarefas do projeto para um canal do Microsoft Teams com um webhook de fluxo.",
 			"telegramSectionTitle": "Integração com Telegram",
 			"telegramSectionSubtitle": "Envie atualizações de tarefas do projeto para um chat ou tópico do Telegram com um bot.",
 			"mattermostSectionSubtitle": "Send project task updates into a Mattermost channel with an incoming webhook.",
@@ -1352,6 +1354,24 @@
 			"webhookHint": "Crie um webhook de entrada no Slack e cole-o aqui.",
 			"connect": "Conectar Slack",
 			"update": "Atualizar Slack"
+		},
+		"teamsIntegration": {
+			"validation": {
+				"webhookInvalid": "Digite uma URL de webhook do Teams válida"
+			},
+			"toast": {
+				"saved": "Integração com o Teams salva com sucesso",
+				"saveError": "Falha ao salvar a integração com o Teams",
+				"enabled": "Notificações do Teams ativadas",
+				"disabled": "Notificações do Teams pausadas",
+				"updateError": "Falha ao atualizar a integração com o Teams",
+				"removed": "Integração com o Teams removida com sucesso",
+				"removeError": "Falha ao remover a integração com o Teams"
+			},
+			"webhookPlaceholder": "https://prod-00.westus.logic.azure.com/workflows/...",
+			"webhookHint": "No Teams, crie o fluxo “Enviar alertas de webhook para um canal” e cole a URL HTTP aqui.",
+			"connect": "Conectar Teams",
+			"update": "Atualizar Teams"
 		},
 		"discordIntegration": {
 			"validation": {
@@ -2296,7 +2316,8 @@
 				"membersNote": "Os assignees são correspondidos a membros de {{workspace}} por e-mail. Convide sua equipe primeiro para que suas tarefas permaneçam atribuídas.",
 				"membersNoteTrello": "Os assignees são correspondidos a membros de {{workspace}} por e-mail, ou por nome completo para Trello. Convide sua equipe primeiro para que suas tarefas permaneçam atribuídas.",
 				"selectAll": "Selecionar todos",
-				"membersNoteJira": "Os assignees são correspondidos a membros de {{workspace}} por e-mail, ou por nome completo quando o Jira esconde o e-mail. Convide sua equipe primeiro para que suas tarefas permaneçam atribuídas."
+				"membersNoteJira": "Os assignees são correspondidos a membros de {{workspace}} por e-mail, ou por nome completo quando o Jira esconde o e-mail. Convide sua equipe primeiro para que suas tarefas permaneçam atribuídas.",
+				"membersNoteAsana": "Os responsáveis são associados aos membros de {{workspace}} por e-mail ou pelo nome completo. Convide a equipe antes para as tarefas continuarem atribuídas."
 			},
 			"sources": {
 				"connect": "Conectar",
@@ -2327,6 +2348,10 @@
 				"jira": {
 					"description": "Projetos, problemas, sub-problemas, links e comentários. Cloud ou Data Center.",
 					"intro": "Cada projeto do Jira torna-se um projeto aqui, com seu workflow como colunas."
+				},
+				"asana": {
+					"description": "Projetos, seções e tarefas de um export JSON do Asana.",
+					"intro": "Cada projeto do Asana vira um projeto aqui, com as seções como colunas. Tarefas concluídas vão para uma coluna final."
 				}
 			},
 			"status": {
@@ -2454,6 +2479,12 @@
 				"urlDescription": "Copie-o do seu navegador. O Data Center também funciona.",
 				"urlLabel": "URL do site do Jira",
 				"urlPlaceholder": "https://seu-site.atlassian.net"
+			},
+			"asana": {
+				"fileDescription": "O arquivo JSON exportado do Asana.",
+				"fileLabel": "Export do Asana",
+				"fileTooLarge": "Este arquivo é grande demais para importar.",
+				"sectionDescription": "O Kaneo lê este arquivo só nesta importação e não o guarda."
 			}
 		},
 		"chatIntegrations": {
@@ -3333,6 +3364,26 @@
 			"editor": {
 				"ariaLabel": "Editor de descrição da tarefa",
 				"placeholder": "Escreva uma descrição...",
+				"toolbar": {
+					"insert": "Inserir",
+					"undo": "Desfazer",
+					"redo": "Refazer",
+					"paragraph": "Texto padrão",
+					"heading": "Título",
+					"bold": "Negrito",
+					"italic": "Itálico",
+					"strike": "Tachado",
+					"underline": "Sublinhado",
+					"link": "Link",
+					"code": "Código",
+					"bulletList": "Lista",
+					"more": "Mais formatação",
+					"orderedList": "Lista numerada",
+					"taskList": "Lista de tarefas",
+					"blockquote": "Citação",
+					"codeBlock": "Bloco de código",
+					"table": "Tabela"
+				},
 				"previewImage": "Pré-visualizar imagem",
 				"autoDetect": "Detecção automática",
 				"copyCode": "Copiar código",
@@ -3687,6 +3738,10 @@
 		},
 		"listView": {
 			"addTask": "Adicionar tarefa",
+			"addTaskRow": "Adicionar uma tarefa",
+			"taskNamePlaceholder": "Escrever o nome da tarefa",
+			"assignThisTask": "Atribuir esta tarefa",
+			"setDueDate": "Definir data de vencimento",
 			"archiveAllTooltip": "Arquivar todas as tarefas concluídas",
 			"noTasks": "Nenhuma tarefa",
 			"collapseSubtasks": "Ocultar subtarefas de {{title}}",

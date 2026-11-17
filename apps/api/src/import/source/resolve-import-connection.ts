@@ -65,6 +65,12 @@ export function resolveImportConnection(
         secrets: [input.apiKey],
         credentialHint: "Check the API key.",
       };
+    case "asana":
+      return {
+        connection: input,
+        secrets: [input.document],
+        credentialHint: "Check that the file is an Asana task export.",
+      };
   }
 }
 

@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
 import type { ImportUnit } from "@/components/import/import-unit-copy";
+import { AsanaLogo } from "@/components/import/source-logos/asana-logo";
 import { JiraLogo } from "@/components/import/source-logos/jira-logo";
 import { KaneoLogo } from "@/components/import/source-logos/kaneo-logo";
 import { LinearLogo } from "@/components/import/source-logos/linear-logo";
@@ -69,6 +70,14 @@ export const IMPORT_SOURCES: ImportSourceDefinition[] = [
     Logo: KaneoLogo,
     descriptionKey: "settings:workspaceImport.sources.kaneo.description",
     introKey: "settings:workspaceImport.sources.kaneo.intro",
+    unit: "project",
+  },
+  {
+    id: "asana",
+    name: "Asana",
+    Logo: AsanaLogo,
+    descriptionKey: "settings:workspaceImport.sources.asana.description",
+    introKey: "settings:workspaceImport.sources.asana.intro",
     unit: "project",
   },
 ];

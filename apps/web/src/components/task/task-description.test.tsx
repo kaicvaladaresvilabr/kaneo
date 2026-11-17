@@ -1,4 +1,4 @@
-import { fireEvent, render, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { type Editor, Extension } from "@tiptap/core";
 import TaskItem from "@tiptap/extension-task-item";
 import { EditorView } from "@tiptap/pm/view";
@@ -352,5 +352,49 @@ describe("TaskDescription", () => {
     });
     expect(popup.className).toContain("w-auto");
     expect(popup.className).not.toContain("w-full");
+  });
+
+  it("shows the formatting bar and border while the description is focused", async () => {
+    mocks.tasks.set("toolbar-task", {
+      id: "toolbar-task",
+      description: "Cura radier",
+    });
+    const coordsAtPos = vi
+      .spyOn(EditorView.prototype, "coordsAtPos")
+      .mockReturnValue({ left: 0, right: 0, top: 0, bottom: 0 });
+    const { container } = render(<TaskDescription taskId="toolbar-task" />);
+    try {
+      await waitFor(() => expect(mocks.editor?.isDestroyed).toBe(false));
+      expect(
+        screen.queryByRole("button", {
+          name: "tasks:detail.editor.toolbar.undo",
+        }),
+      ).toBeNull();
+
+      mocks.editor!.commands.focus();
+
+      const undo = await screen.findByRole("button", {
+        name: "tasks:detail.editor.toolbar.undo",
+      });
+      expect(undo).toBeInTheDocument();
+      expect(
+        container.querySelector(".kaneo-tiptap-shell")?.className,
+      ).toContain("border-border/80");
+
+      mocks.editor!.commands.blur();
+
+      await waitFor(() =>
+        expect(
+          screen.queryByRole("button", {
+            name: "tasks:detail.editor.toolbar.undo",
+          }),
+        ).toBeNull(),
+      );
+      expect(
+        container.querySelector(".kaneo-tiptap-shell")?.className,
+      ).not.toContain("border-border/80");
+    } finally {
+      coordsAtPos.mockRestore();
+    }
   });
 });

@@ -75,6 +75,7 @@ import { getPublicProject } from "./project/controllers/get-public-project";
 import { initializeScheduler, shutdownScheduler } from "./scheduler";
 import search from "./search";
 import slackIntegration from "./slack-integration";
+import teamsIntegration from "./teams-integration";
 import { getPrivateObject } from "./storage/s3";
 import task from "./task";
 import {
@@ -862,6 +863,7 @@ export function createApp() {
     mattermostIntegration,
   );
   const slackIntegrationApi = api.route("/slack-integration", slackIntegration);
+  const teamsIntegrationApi = api.route("/teams-integration", teamsIntegration);
   const telegramIntegrationApi = api.route(
     "/telegram-integration",
     telegramIntegration,
@@ -1005,6 +1007,7 @@ export function createApp() {
     searchApi,
     mattermostIntegrationApi,
     slackIntegrationApi,
+    teamsIntegrationApi,
     taskApi,
     taskRelationApi,
     telegramIntegrationApi,
@@ -1140,6 +1143,7 @@ const {
   publicProjectApi,
   searchApi,
   slackIntegrationApi,
+  teamsIntegrationApi,
   taskApi,
   taskRelationApi,
   telegramIntegrationApi,
@@ -1185,6 +1189,7 @@ export type AppType =
   | typeof discordIntegrationApi
   | typeof mattermostIntegrationApi
   | typeof slackIntegrationApi
+  | typeof teamsIntegrationApi
   | typeof telegramIntegrationApi
   | typeof taskRelationApi
   | typeof externalLinkApi

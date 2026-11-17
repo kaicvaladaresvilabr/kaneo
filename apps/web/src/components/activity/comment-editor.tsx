@@ -7,6 +7,7 @@ import {
 import { BubbleLinkEditor } from "@/components/editor/bubble-link-editor";
 import { selectionStartAnchor } from "@/components/editor/selection-start-anchor";
 import { TableToolbar } from "@/components/editor/table-toolbar";
+import { DescriptionToolbar } from "@/components/task/description-toolbar";
 import { createEditorExtensions } from "@/components/editor/extensions";
 import { insertUploadedAsset as insertEditorAsset } from "@/components/editor/insert-uploaded-asset";
 import { useEditorHighlighter } from "@/components/editor/use-editor-highlighter";
@@ -223,6 +224,8 @@ export default function CommentEditor({
     range?: SlashRange;
   } | null>(null);
   const [slashMenu, setSlashMenu] = useState<SlashMenuState | null>(null);
+  const [toolbarActive, setToolbarActive] = useState(false);
+  const toolbarMenuOpenRef = useRef(false);
   const {
     highlighter: shikiHighlighter,
     highlighterRef: shikiHighlighterRef,
@@ -941,12 +944,33 @@ export default function CommentEditor({
   useEffect(() => {
     if (!editor) return;
     const syncSlash = () => updateSlashMenu(editor);
+    const showToolbar = () => setToolbarActive(true);
+    const hideToolbar = ({ event }: { event: FocusEvent }) => {
+      const next = event.relatedTarget;
+      if (next instanceof Node && editorShellRef.current?.contains(next)) {
+        return;
+      }
+      if (
+        next instanceof Element &&
+        next.closest(
+          "[data-slot='menu-popup'], [data-slot='menu-positioner'], .kaneo-mention-popup",
+        )
+      ) {
+        return;
+      }
+      if (toolbarMenuOpenRef.current) return;
+      setToolbarActive(false);
+    };
     editor.on("selectionUpdate", syncSlash);
     editor.on("update", syncSlash);
+    editor.on("focus", showToolbar);
+    editor.on("blur", hideToolbar);
 
     return () => {
       editor.off("selectionUpdate", syncSlash);
       editor.off("update", syncSlash);
+      editor.off("focus", showToolbar);
+      editor.off("blur", hideToolbar);
     };
   }, [editor, updateSlashMenu]);
 
@@ -1787,6 +1811,17 @@ export default function CommentEditor({
             </form>
           )}
         </div>
+      )}
+      {editor && !readOnly && !disabled && toolbarActive && (
+        <DescriptionToolbar
+          editor={editor}
+          onLink={setLink}
+          onAttach={() => openImagePicker(editor)}
+          onMenuOpenChange={(open) => {
+            toolbarMenuOpenRef.current = open;
+            if (!open && !editor.isFocused) setToolbarActive(false);
+          }}
+        />
       )}
       <EditorContent
         editor={editor}

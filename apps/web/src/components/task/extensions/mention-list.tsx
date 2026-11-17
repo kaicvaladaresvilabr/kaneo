@@ -57,6 +57,9 @@ const MentionList = forwardRef<MentionListRef, MentionListProps>(
             type="button"
             key={item.id}
             className={`kaneo-mention-item${index === selected ? " is-active" : ""}`}
+            onMouseDown={(event) => {
+              event.preventDefault();
+            }}
             onClick={() => select(index)}
             onMouseEnter={() => setSelected(index)}
           >

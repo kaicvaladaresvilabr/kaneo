@@ -11,6 +11,7 @@ import useGetGithubIntegration from "@/hooks/queries/github-integration/use-get-
 import useGetGitlabIntegration from "@/hooks/queries/gitlab-integration/use-get-gitlab-integration";
 import useGetMattermostIntegration from "@/hooks/queries/mattermost-integration/use-get-mattermost-integration";
 import useGetSlackIntegration from "@/hooks/queries/slack-integration/use-get-slack-integration";
+import useGetTeamsIntegration from "@/hooks/queries/teams-integration/use-get-teams-integration";
 import useGetTelegramIntegration from "@/hooks/queries/telegram-integration/use-get-telegram-integration";
 
 // Shares query keys with the per-integration settings panels, so opening a
@@ -20,6 +21,7 @@ export function useIntegrationStatuses(projectId: string) {
   const gitea = useGetGiteaIntegration(projectId);
   const gitlab = useGetGitlabIntegration(projectId);
   const slack = useGetSlackIntegration(projectId);
+  const teams = useGetTeamsIntegration(projectId);
   const discord = useGetDiscordIntegration(projectId);
   const mattermost = useGetMattermostIntegration(projectId);
   const telegram = useGetTelegramIntegration(projectId);
@@ -60,6 +62,13 @@ export function useIntegrationStatuses(projectId: string) {
       isActive: slack.data?.isActive,
       detail: formatChannel(slack.data?.channelName),
     }),
+    teams: getIntegrationStatus({
+      queryStatus: teams.status,
+      hasData: teams.data !== undefined,
+      configured: Boolean(teams.data?.webhookConfigured),
+      isActive: teams.data?.isActive,
+      detail: formatChannel(teams.data?.channelName),
+    }),
     discord: getIntegrationStatus({
       queryStatus: discord.status,
       hasData: discord.data !== undefined,
@@ -93,6 +102,7 @@ export function useIntegrationStatuses(projectId: string) {
     gitea,
     gitlab,
     slack,
+    teams,
     discord,
     mattermost,
     telegram,

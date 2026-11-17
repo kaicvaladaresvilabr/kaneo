@@ -167,6 +167,7 @@
 							"core/integrations/slack",
 							"core/integrations/discord",
 							"core/integrations/mattermost",
+							"core/integrations/teams",
 							"core/integrations/telegram",
 							"core/integrations/outgoing-webhooks"
 						]

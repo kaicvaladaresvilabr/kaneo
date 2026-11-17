@@ -180,4 +180,26 @@ describe("buildConnection", () => {
       apiKey: "kaneo_1",
     });
   });
+
+  it("sends an Asana export and refuses an empty or oversized file", () => {
+    expect(buildConnection("asana", values({}), withServerKey)).toBeNull();
+    expect(
+      buildConnection(
+        "asana",
+        values({ document: '  {"data":[]}  ', fileName: "asana.json" }),
+        withServerKey,
+      ),
+    ).toEqual({ source: "asana", document: '{"data":[]}' });
+    expect(
+      buildConnection(
+        "asana",
+        values({
+          document: '{"data":[]}',
+          fileName: "asana.json",
+          documentTooLarge: true,
+        }),
+        withServerKey,
+      ),
+    ).toBeNull();
+  });
 });

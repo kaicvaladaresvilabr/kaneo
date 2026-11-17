@@ -1583,6 +1583,10 @@
 					"pickerName": "Another Kaneo",
 					"description": "Move projects between Kaneo Cloud and a self-hosted instance.",
 					"intro": "Projects from every workspace the key can see. Each one you pick is copied here."
+				},
+				"asana": {
+					"description": "Projects, sections and tasks from an Asana JSON export.",
+					"intro": "Each Asana project becomes a project here, with its sections as columns. Completed tasks go to a final column."
 				}
 			},
 			"history": {
@@ -1686,6 +1690,12 @@
 				"apiKeyDescription": "In that Kaneo, open Settings, then API Keys.",
 				"apiKeyPlaceholder": "Paste API key"
 			},
+			"asana": {
+				"sectionDescription": "Kaneo reads this file for this import and does not store it.",
+				"fileLabel": "Asana export",
+				"fileDescription": "The JSON file exported from Asana.",
+				"fileTooLarge": "This file is too large to import."
+			},
 			"select": {
 				"selectAll": "Select all",
 				"clear": "Clear",
@@ -1695,6 +1705,7 @@
 				"membersNote": "Assignees are matched to members of {{workspace}} by email. Invite your team first so their tasks stay assigned.",
 				"membersNoteTrello": "Assignees are matched to members of {{workspace}} by email, or by full name for Trello. Invite your team first so their tasks stay assigned.",
 				"membersNoteJira": "Assignees are matched to members of {{workspace}} by email, or by full name when Jira hides the email. Invite your team first so their tasks stay assigned.",
+				"membersNoteAsana": "Assignees are matched to members of {{workspace}} by email, or by full name. Invite your team first so their tasks stay assigned.",
 				"inviteMembers": "Invite members"
 			},
 			"units": {
@@ -1881,6 +1892,8 @@
 			"genericWebhookSectionSubtitle": "Send project task events to any HTTP endpoint as JSON.",
 			"slackSectionTitle": "Slack Integration",
 			"slackSectionSubtitle": "Send project task updates into a Slack channel with an incoming webhook.",
+			"teamsSectionTitle": "Teams Integration",
+			"teamsSectionSubtitle": "Send project task updates into a Microsoft Teams channel with a workflow webhook.",
 			"mattermostSectionTitle": "Mattermost Integration",
 			"mattermostSectionSubtitle": "Send project task updates into a Mattermost channel with an incoming webhook.",
 			"telegramSectionTitle": "Telegram Integration",
@@ -2146,6 +2159,24 @@
 			"webhookHint": "Create an incoming webhook in Slack and paste it here.",
 			"connect": "Connect Slack",
 			"update": "Update Slack"
+		},
+		"teamsIntegration": {
+			"validation": {
+				"webhookInvalid": "Enter a valid Teams webhook URL"
+			},
+			"toast": {
+				"saved": "Teams integration saved successfully",
+				"saveError": "Failed to save Teams integration",
+				"enabled": "Teams notifications enabled",
+				"disabled": "Teams notifications paused",
+				"updateError": "Failed to update Teams integration",
+				"removed": "Teams integration removed successfully",
+				"removeError": "Failed to remove Teams integration"
+			},
+			"webhookPlaceholder": "https://prod-00.westus.logic.azure.com/workflows/...",
+			"webhookHint": "In Teams, create a “Send webhook alerts to a channel” workflow and paste its HTTP URL here.",
+			"connect": "Connect Teams",
+			"update": "Update Teams"
 		},
 		"discordIntegration": {
 			"validation": {
@@ -3280,6 +3311,26 @@
 			"editor": {
 				"ariaLabel": "Task description editor",
 				"placeholder": "Write a description...",
+				"toolbar": {
+					"insert": "Insert",
+					"undo": "Undo",
+					"redo": "Redo",
+					"paragraph": "Normal text",
+					"heading": "Heading",
+					"bold": "Bold",
+					"italic": "Italic",
+					"strike": "Strikethrough",
+					"underline": "Underline",
+					"link": "Link",
+					"code": "Code",
+					"bulletList": "Bulleted list",
+					"more": "More formatting",
+					"orderedList": "Numbered list",
+					"taskList": "Task list",
+					"blockquote": "Quote",
+					"codeBlock": "Code block",
+					"table": "Table"
+				},
 				"previewImage": "Preview image",
 				"autoDetect": "Auto detect",
 				"copyCode": "Copy code",
@@ -3645,6 +3696,10 @@
 		},
 		"listView": {
 			"addTask": "Add task",
+			"addTaskRow": "Add a task",
+			"taskNamePlaceholder": "Write a task name",
+			"assignThisTask": "Assign this task",
+			"setDueDate": "Set a due date",
 			"archiveAllTooltip": "Archive all completed tasks",
 			"noTasks": "No tasks",
 			"expandSubtasks": "Show subtasks of {{title}}",

@@ -124,6 +124,7 @@ async function fixture(
       "generic-webhook",
       "mattermost",
       "slack",
+      "teams",
       "telegram",
     ].map((provider) => ({
       path: `/api/${provider}-integration/project/${project.id}`,

@@ -35,7 +35,6 @@ import useProjectStore from "@/store/project";
 import type { ProjectWithTasks } from "@/types/project";
 import BulkToolbar from "../bulk-selection/bulk-toolbar";
 import { ArchiveTasksModal } from "../shared/modals/archive-tasks-modal";
-import CreateTaskModal from "../shared/modals/create-task-modal";
 import ListColumnSection from "./list-column-section";
 
 type ListViewProps = {
@@ -63,8 +62,6 @@ function ListView({
     project.id,
     "list",
   );
-  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
-  const [activeColumn, setActiveColumn] = useState<string | null>(null);
   const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
   const [columnToArchive, setColumnToArchive] = useState<string | null>(null);
   const archiveColumn = project.columns.find(
@@ -325,11 +322,6 @@ function ListView({
       toggleAllSections(project.columns.map((column) => column.id)),
   });
 
-  const handleAddTask = useCallback((columnId: string) => {
-    setIsTaskModalOpen(true);
-    setActiveColumn(columnId);
-  }, []);
-
   const handleArchiveClick = useCallback(
     (column: ProjectWithTasks["columns"][number]) => {
       if (
@@ -421,6 +413,8 @@ function ListView({
             <ListColumnSection
               key={column.id}
               column={column}
+              projectId={project.id}
+              workspaceId={project.workspaceId}
               projectSlug={project.slug ?? ""}
               isExpanded={isExpanded(column.id)}
               showDropIndicator={
@@ -428,7 +422,6 @@ function ListView({
               }
               disableCollectionActions={disableCollectionActions}
               onToggle={toggleSection}
-              onAddTask={handleAddTask}
               onArchive={handleArchiveClick}
               rows={rowsByColumn.get(column.id) ?? []}
               onToggleTaskExpanded={toggleTaskExpanded}
@@ -469,12 +462,6 @@ function ListView({
         )}
       </DragOverlay>
 
-      <CreateTaskModal
-        open={isTaskModalOpen}
-        projectId={project.id}
-        onClose={() => setIsTaskModalOpen(false)}
-        status={activeColumn ?? "done"}
-      />
       <ArchiveTasksModal
         open={isArchiveModalOpen}
         onClose={() => {

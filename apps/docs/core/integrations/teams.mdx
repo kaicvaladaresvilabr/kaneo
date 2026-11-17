@@ -1,0 +1,58 @@
+---
+title: Microsoft Teams
+description: Send task notifications from Kaneo to a Microsoft Teams channel with a workflow webhook.
+---
+
+Kaneo can post task activity to a Teams channel. This uses the Teams workflow “Send webhook alerts to a channel”. There is no bot account or OAuth flow.
+
+## Create a Teams webhook
+
+1. In Microsoft Teams, open the channel that should receive the updates.
+2. Open **Workflows** and choose **Send webhook alerts to a channel**.
+3. Confirm the team and channel, then create the workflow.
+4. Copy the HTTP POST URL. It looks like one of these:
+
+```
+https://prod-00.westus.logic.azure.com:443/workflows/.../triggers/manual/paths/invoke?...
+https://<environment>.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/.../triggers/manual/paths/invoke?...
+```
+
+Older Office 365 connector URLs on `webhook.office.com` still work. Kaneo sends those a MessageCard. Current workflow URLs receive an Adaptive Card.
+
+## Connect Teams in Kaneo
+
+1. Open **Settings** in the sidebar.
+2. Under **Projects**, select the project you want to connect.
+3. Open the **Integrations** tab.
+4. Expand **Teams**.
+5. Paste the webhook URL.
+6. Optionally add a channel name. It is only a label in Kaneo.
+7. Choose which events to send. Turn on **Due date reminder** to set how many hours before the due date the channel is notified.
+8. Click **Connect**.
+
+Once connected you can pause the integration, change the events, or disconnect.
+
+## Supported events
+
+| Event | Default | Description |
+| --- | --- | --- |
+| Task created | On | A new task is created in the project |
+| Task status changed | On | A task moves to a different status column |
+| Task comment created | On | A new comment is added to a task |
+| Task priority changed | Off | A task's priority is changed |
+| Task title changed | Off | A task's title is edited |
+| Task description changed | Off | A task's description is edited |
+| Task deleted | Off | A task is deleted |
+| Task moved | Off | A task moves to another project |
+| Due date changed | Off | A task's due date is edited |
+| Assignee changed | Off | A task is assigned |
+| Task unassigned | Off | A task loses its assignee |
+| Due date reminder | Off | A reminder before the due date |
+
+The reminder lead time is stored in minutes. The form edits it in hours, from 5 minutes to 30 days. The default is 24 hours. Each Teams integration reminds on its own schedule, separate from personal due reminders and from a project webhook on the same task.
+
+Make sure [`KANEO_CLIENT_URL`](/core/installation/environment-variables) is set to your public Kaneo URL so the card's task link works.
+
+## Updating the webhook
+
+To change the webhook URL after connecting, paste the new URL and click **Save changes**. An empty URL keeps the current one.

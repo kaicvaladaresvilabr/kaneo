@@ -73,6 +73,7 @@ import { isInCodeBlockLanguagePicker } from "@/lib/is-in-codeblock-language-pick
 import { pasteMarkdown } from "@/lib/paste-markdown";
 import { toast } from "@/lib/toast";
 import { uploadTaskImage } from "@/lib/upload-task-image";
+import { DescriptionToolbar } from "./description-toolbar";
 import { ResizableImage } from "./extensions/resizable-image";
 import { SHIKI_CODEBLOCK_REFRESH_META } from "./extensions/shiki-code-block";
 import "tippy.js/dist/tippy.css";
@@ -702,6 +703,8 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
   }, [slashMenu]);
 
   const [isEditingLink, setIsEditingLink] = useState(false);
+  const [descriptionActive, setDescriptionActive] = useState(false);
+  const toolbarMenuOpenRef = useRef(false);
 
   const setLink = useCallback(() => {
     if (!canEditRef.current || !editor) return;
@@ -875,12 +878,32 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
     const onSelection = () => syncSlashMenu(editor);
     const onUpdate = () => syncSlashMenu(editor);
 
+    const showToolbar = () => setDescriptionActive(true);
+    const hideToolbar = ({ event }: { event: FocusEvent }) => {
+      const next = event.relatedTarget;
+      if (next instanceof Node && editorShellRef.current?.contains(next)) {
+        return;
+      }
+      if (
+        next instanceof Element &&
+        next.closest("[data-slot='menu-popup'], [data-slot='menu-positioner']")
+      ) {
+        return;
+      }
+      if (toolbarMenuOpenRef.current) return;
+      setDescriptionActive(false);
+    };
+
     editor.on("selectionUpdate", onSelection);
     editor.on("update", onUpdate);
+    editor.on("focus", showToolbar);
+    editor.on("blur", hideToolbar);
 
     return () => {
       editor.off("selectionUpdate", onSelection);
       editor.off("update", onUpdate);
+      editor.off("focus", showToolbar);
+      editor.off("blur", hideToolbar);
     };
   }, [editor, syncSlashMenu]);
 
@@ -1228,7 +1251,9 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
       data-task-action="description"
       aria-label={t("tasks:detail.editor.ariaLabel")}
       className={cn(
-        "kaneo-tiptap-shell group relative",
+        "kaneo-tiptap-shell group relative rounded-xl border border-transparent transition-[border-color,box-shadow] duration-150",
+        descriptionActive &&
+          "border-border/80 shadow-[0_0_0_2px_color-mix(in_srgb,var(--ring)_18%,transparent)]",
         isDragActive && "is-drag-active",
       )}
       onDragEnter={handleShellDragEnter}
@@ -1745,6 +1770,17 @@ export default function TaskDescription({ taskId }: TaskDescriptionProps) {
         </div>
       )}
 
+      {editor && canEdit && descriptionActive && (
+        <DescriptionToolbar
+          editor={editor}
+          onLink={setLink}
+          onAttach={() => openImagePicker(editor)}
+          onMenuOpenChange={(open) => {
+            toolbarMenuOpenRef.current = open;
+            if (!open && !editor.isFocused) setDescriptionActive(false);
+          }}
+        />
+      )}
       <EditorContent
         editor={editor}
         className="kaneo-tiptap-content"

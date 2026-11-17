@@ -1,3 +1,4 @@
+import { connectAsana, type AsanaCredentials } from "./asana/index.js";
 import { connectJira, type JiraCredentials } from "./jira/index.js";
 import { connectKaneo, type KaneoCredentials } from "./kaneo/index.js";
 import { connectLinear, type LinearCredentials } from "./linear/index.js";
@@ -16,7 +17,9 @@ export {
 } from "./keys.js";
 export { trelloAuthorizeUrl } from "./trello/index.js";
 export type * from "./types.js";
+export { ASANA_EXPORT_MAX_CHARS } from "./asana/index.js";
 export type {
+  AsanaCredentials,
   JiraCredentials,
   KaneoCredentials,
   LinearCredentials,
@@ -32,6 +35,7 @@ export const IMPORT_SOURCE_IDS = [
   "jira",
   "trello",
   "kaneo",
+  "asana",
 ] as const;
 
 export type ImportSourceId = (typeof IMPORT_SOURCE_IDS)[number];
@@ -43,6 +47,7 @@ export type ImportCredentials = {
   jira: JiraCredentials;
   trello: TrelloCredentials;
   kaneo: KaneoCredentials;
+  asana: AsanaCredentials;
 };
 
 export type ImportConnection = {
@@ -66,5 +71,7 @@ export function connectSource(
       return connectTrello(connection, options);
     case "kaneo":
       return connectKaneo(connection, options);
+    case "asana":
+      return connectAsana(connection);
   }
 }

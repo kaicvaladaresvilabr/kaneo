@@ -6231,6 +6231,19 @@
 										}
 									},
 									"required": ["pickerName", "description", "intro"]
+								},
+								"asana": {
+									"type": "object",
+									"additionalProperties": false,
+									"properties": {
+										"description": {
+											"type": "string"
+										},
+										"intro": {
+											"type": "string"
+										}
+									},
+									"required": ["description", "intro"]
 								}
 							},
 							"required": [
@@ -6243,7 +6256,8 @@
 								"trello",
 								"plane",
 								"planka",
-								"kaneo"
+								"kaneo",
+								"asana"
 							]
 						},
 						"history": {
@@ -6646,6 +6660,30 @@
 								"apiKeyPlaceholder"
 							]
 						},
+						"asana": {
+							"type": "object",
+							"additionalProperties": false,
+							"properties": {
+								"sectionDescription": {
+									"type": "string"
+								},
+								"fileLabel": {
+									"type": "string"
+								},
+								"fileDescription": {
+									"type": "string"
+								},
+								"fileTooLarge": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"sectionDescription",
+								"fileLabel",
+								"fileDescription",
+								"fileTooLarge"
+							]
+						},
 						"select": {
 							"type": "object",
 							"additionalProperties": false,
@@ -6674,6 +6712,9 @@
 								"membersNoteJira": {
 									"type": "string"
 								},
+								"membersNoteAsana": {
+									"type": "string"
+								},
 								"inviteMembers": {
 									"type": "string"
 								}
@@ -6687,6 +6728,7 @@
 								"membersNote",
 								"membersNoteTrello",
 								"membersNoteJira",
+								"membersNoteAsana",
 								"inviteMembers"
 							]
 						},
@@ -7376,6 +7418,7 @@
 						"plane",
 						"planka",
 						"kaneo",
+						"asana",
 						"select",
 						"units",
 						"counts",
@@ -7661,6 +7704,12 @@
 						"slackSectionSubtitle": {
 							"type": "string"
 						},
+						"teamsSectionTitle": {
+							"type": "string"
+						},
+						"teamsSectionSubtitle": {
+							"type": "string"
+						},
 						"mattermostSectionTitle": {
 							"type": "string"
 						},
@@ -7712,6 +7761,8 @@
 						"genericWebhookSectionSubtitle",
 						"slackSectionTitle",
 						"slackSectionSubtitle",
+						"teamsSectionTitle",
+						"teamsSectionSubtitle",
 						"mattermostSectionTitle",
 						"mattermostSectionSubtitle",
 						"telegramSectionTitle",
@@ -8667,6 +8718,78 @@
 					]
 				},
 				"slackIntegration": {
+					"type": "object",
+					"additionalProperties": false,
+					"properties": {
+						"validation": {
+							"type": "object",
+							"additionalProperties": false,
+							"properties": {
+								"webhookInvalid": {
+									"type": "string"
+								}
+							},
+							"required": ["webhookInvalid"]
+						},
+						"toast": {
+							"type": "object",
+							"additionalProperties": false,
+							"properties": {
+								"saved": {
+									"type": "string"
+								},
+								"saveError": {
+									"type": "string"
+								},
+								"enabled": {
+									"type": "string"
+								},
+								"disabled": {
+									"type": "string"
+								},
+								"updateError": {
+									"type": "string"
+								},
+								"removed": {
+									"type": "string"
+								},
+								"removeError": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"saved",
+								"saveError",
+								"enabled",
+								"disabled",
+								"updateError",
+								"removed",
+								"removeError"
+							]
+						},
+						"webhookPlaceholder": {
+							"type": "string"
+						},
+						"webhookHint": {
+							"type": "string"
+						},
+						"connect": {
+							"type": "string"
+						},
+						"update": {
+							"type": "string"
+						}
+					},
+					"required": [
+						"validation",
+						"toast",
+						"webhookPlaceholder",
+						"webhookHint",
+						"connect",
+						"update"
+					]
+				},
+				"teamsIntegration": {
 					"type": "object",
 					"additionalProperties": false,
 					"properties": {
@@ -11637,6 +11760,7 @@
 				"giteaIntegration",
 				"gitlabIntegration",
 				"slackIntegration",
+				"teamsIntegration",
 				"discordIntegration",
 				"mattermostIntegration",
 				"genericWebhookIntegration",
@@ -13439,6 +13563,86 @@
 								"placeholder": {
 									"type": "string"
 								},
+								"toolbar": {
+									"type": "object",
+									"additionalProperties": false,
+									"properties": {
+										"insert": {
+											"type": "string"
+										},
+										"undo": {
+											"type": "string"
+										},
+										"redo": {
+											"type": "string"
+										},
+										"paragraph": {
+											"type": "string"
+										},
+										"heading": {
+											"type": "string"
+										},
+										"bold": {
+											"type": "string"
+										},
+										"italic": {
+											"type": "string"
+										},
+										"strike": {
+											"type": "string"
+										},
+										"underline": {
+											"type": "string"
+										},
+										"link": {
+											"type": "string"
+										},
+										"code": {
+											"type": "string"
+										},
+										"bulletList": {
+											"type": "string"
+										},
+										"more": {
+											"type": "string"
+										},
+										"orderedList": {
+											"type": "string"
+										},
+										"taskList": {
+											"type": "string"
+										},
+										"blockquote": {
+											"type": "string"
+										},
+										"codeBlock": {
+											"type": "string"
+										},
+										"table": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"insert",
+										"undo",
+										"redo",
+										"paragraph",
+										"heading",
+										"bold",
+										"italic",
+										"strike",
+										"underline",
+										"link",
+										"code",
+										"bulletList",
+										"more",
+										"orderedList",
+										"taskList",
+										"blockquote",
+										"codeBlock",
+										"table"
+									]
+								},
 								"previewImage": {
 									"type": "string"
 								},
@@ -13833,6 +14037,7 @@
 							"required": [
 								"ariaLabel",
 								"placeholder",
+								"toolbar",
 								"previewImage",
 								"autoDetect",
 								"copyCode",
@@ -15021,6 +15226,18 @@
 						"addTask": {
 							"type": "string"
 						},
+						"addTaskRow": {
+							"type": "string"
+						},
+						"taskNamePlaceholder": {
+							"type": "string"
+						},
+						"assignThisTask": {
+							"type": "string"
+						},
+						"setDueDate": {
+							"type": "string"
+						},
 						"archiveAllTooltip": {
 							"type": "string"
 						},
@@ -15042,6 +15259,10 @@
 					},
 					"required": [
 						"addTask",
+						"addTaskRow",
+						"taskNamePlaceholder",
+						"assignThisTask",
+						"setDueDate",
 						"archiveAllTooltip",
 						"noTasks",
 						"expandSubtasks",

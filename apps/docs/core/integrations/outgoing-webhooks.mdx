@@ -1,9 +1,9 @@
 ---
 title: Outgoing webhooks
-description: Send task activity from a Kaneo project to Slack, Discord, Mattermost, Telegram, or any HTTP endpoint. Configure per-project notifications and optional signing.
+description: Send task activity from a Kaneo project to Slack, Discord, Mattermost, Teams, Telegram, or any HTTP endpoint. Configure per-project notifications and optional signing.
 ---
 
-Kaneo can notify external systems when tasks change in a project. Each integration is per project and uses either an incoming webhook URL from the service you connect (Slack, Discord, Mattermost), a bot token plus chat ID (Telegram), or your own HTTP listener (generic webhook).
+Kaneo can notify external systems when tasks change in a project. Each integration is per project and uses either an incoming webhook URL from the service you connect (Slack, Discord, Mattermost, Teams), a bot token plus chat ID (Telegram), or your own HTTP listener (generic webhook).
 
 <Info>
 These integrations are outgoing only: Kaneo posts to your URL when events occur. They are separate from [GitHub integration](/core/integrations/github/setup), which syncs issues and repositories.
@@ -56,6 +56,10 @@ Create an incoming webhook for a Discord channel (Channel settings → Integrati
 
 Use an HTTPS incoming webhook URL from your Mattermost instance. Follow the [Mattermost setup guide](/core/integrations/mattermost) for connection and event settings.
 
+## Microsoft Teams
+
+Create a Teams workflow named “Send webhook alerts to a channel” and paste its HTTP URL. Follow the [Teams setup guide](/core/integrations/teams). Teams uses the same extra events as the generic webhook, including a due-date reminder with its own lead time. Slack, Discord, Mattermost, and Telegram stay on the six-event table above.
+
 ## Telegram
 
 Create a Telegram bot with [`@BotFather`](https://t.me/BotFather), then add that bot to the destination chat, group, channel, or topic. Telegram requires:
@@ -87,7 +91,7 @@ Generic webhooks also support these events. They are off by default:
 | Task unassigned | `task.unassigned` |
 | Due-date reminder | `task.due_date_reminder` |
 
-When enabling due-date reminders, set how far ahead to send them. The default is 24 hours. These extra subscriptions are specific to the generic webhook integration; the chat integrations use the six-event table above.
+When enabling due-date reminders, set how far ahead to send them. The default is 24 hours. These extra subscriptions belong to the generic webhook and to Microsoft Teams. The other chat integrations use the six-event table above.
 
 The destination must use HTTP or HTTPS and be reachable from the API. Private network destinations are blocked unless the operator enables `KANEO_ALLOW_PRIVATE_WEBHOOK_DESTINATIONS`.
 

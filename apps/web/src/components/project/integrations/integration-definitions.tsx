@@ -6,6 +6,7 @@ import { GithubIcon } from "@/components/icons/github-icon";
 import { GitlabIcon } from "@/components/icons/gitlab-icon";
 import { MattermostIcon } from "@/components/icons/mattermost-icon";
 import { SlackIcon } from "@/components/icons/slack-icon";
+import { TeamsIcon } from "@/components/icons/teams-icon";
 import { TelegramIcon } from "@/components/icons/telegram-icon";
 import { DiscordIntegrationSettings } from "@/components/project/discord-integration-settings";
 import { GenericWebhookIntegrationSettings } from "@/components/project/generic-webhook-integration-settings";
@@ -14,6 +15,7 @@ import { GitHubIntegrationSettings } from "@/components/project/github-integrati
 import { GitlabIntegrationSettings } from "@/components/project/gitlab-integration/gitlab-integration-settings";
 import { MattermostIntegrationSettings } from "@/components/project/mattermost-integration-settings";
 import { SlackIntegrationSettings } from "@/components/project/slack-integration-settings";
+import { TeamsIntegrationSettings } from "@/components/project/teams-integration-settings";
 import { TelegramIntegrationSettings } from "@/components/project/telegram-integration-settings";
 
 export type IntegrationId =
@@ -21,6 +23,7 @@ export type IntegrationId =
   | "gitea"
   | "gitlab"
   | "slack"
+  | "teams"
   | "discord"
   | "mattermost"
   | "telegram"
@@ -72,6 +75,15 @@ export const INTEGRATIONS: IntegrationDefinition[] = [
     icon: SlackIcon,
     iconClassName: "",
     Settings: SlackIntegrationSettings,
+  },
+  {
+    id: "teams",
+    category: "chat",
+    name: "Teams",
+    descriptionKey: "settings:projectIntegrations.teamsSectionSubtitle",
+    icon: TeamsIcon,
+    iconClassName: "",
+    Settings: TeamsIntegrationSettings,
   },
   {
     id: "discord",

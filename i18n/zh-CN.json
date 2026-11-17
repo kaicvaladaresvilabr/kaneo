@@ -1189,7 +1189,9 @@
 			"connect": "连接",
 			"configure": "配置",
 			"done": "完成",
-			"turnedOffByAdmin": "Turned off by an administrator"
+			"turnedOffByAdmin": "Turned off by an administrator",
+			"teamsSectionSubtitle": "Send project task updates into a Microsoft Teams channel with a workflow webhook.",
+			"teamsSectionTitle": "Teams Integration"
 		},
 		"projectVisibility": {
 			"pageTitle": "项目可见性",
@@ -2250,7 +2252,8 @@
 				"membersNote": "负责人按邮箱与 {{workspace}} 的成员对应。建议先邀请团队成员，这样任务能保留负责人。",
 				"membersNoteTrello": "负责人按邮箱与 {{workspace}} 的成员对应，Trello 也可以按姓名匹配。建议先邀请团队成员，这样任务能保留负责人。",
 				"selectAll": "全选",
-				"membersNoteJira": "负责人按邮箱与 {{workspace}} 的成员对应，Jira 隐藏邮箱时按姓名匹配。建议先邀请团队成员，这样任务能保留负责人。"
+				"membersNoteJira": "负责人按邮箱与 {{workspace}} 的成员对应，Jira 隐藏邮箱时按姓名匹配。建议先邀请团队成员，这样任务能保留负责人。",
+				"membersNoteAsana": "Assignees are matched to members of {{workspace}} by email, or by full name. Invite your team first so their tasks stay assigned."
 			},
 			"sources": {
 				"connect": "连接",
@@ -2281,6 +2284,10 @@
 				"jira": {
 					"description": "项目、议题、子任务、链接和评论。支持云端和 Data Center。",
 					"intro": "每个 Jira 项目会变成这里的一个项目，其工作流状态成为看板列。"
+				},
+				"asana": {
+					"description": "Projects, sections and tasks from an Asana JSON export.",
+					"intro": "Each Asana project becomes a project here, with its sections as columns. Completed tasks go to a final column."
 				}
 			},
 			"status": {
@@ -2370,6 +2377,12 @@
 				"urlDescription": "从浏览器地址栏复制即可，Data Center 也可以。",
 				"urlLabel": "Jira 站点地址",
 				"urlPlaceholder": "https://your-site.atlassian.net"
+			},
+			"asana": {
+				"fileDescription": "The JSON file exported from Asana.",
+				"fileLabel": "Asana export",
+				"fileTooLarge": "This file is too large to import.",
+				"sectionDescription": "Kaneo reads this file for this import and does not store it."
 			}
 		},
 		"chatIntegrations": {
@@ -2789,6 +2802,24 @@
 			"title": "Webhooks",
 			"url": "URL",
 			"save": "Save"
+		},
+		"teamsIntegration": {
+			"connect": "Connect Teams",
+			"toast": {
+				"disabled": "Teams notifications paused",
+				"enabled": "Teams notifications enabled",
+				"removed": "Teams integration removed successfully",
+				"removeError": "Failed to remove Teams integration",
+				"saved": "Teams integration saved successfully",
+				"saveError": "Failed to save Teams integration",
+				"updateError": "Failed to update Teams integration"
+			},
+			"update": "Update Teams",
+			"validation": {
+				"webhookInvalid": "Enter a valid Teams webhook URL"
+			},
+			"webhookHint": "In Teams, create a “Send webhook alerts to a channel” workflow and paste its HTTP URL here.",
+			"webhookPlaceholder": "https://prod-00.westus.logic.azure.com/workflows/..."
 		}
 	},
 	"navigation": {
@@ -3342,7 +3373,27 @@
 				"saved": "已保存",
 				"saving": "正在保存…",
 				"saveFailed": "更改保存失败",
-				"retrySave": "重试"
+				"retrySave": "重试",
+				"toolbar": {
+					"blockquote": "Quote",
+					"bold": "Bold",
+					"bulletList": "Bulleted list",
+					"code": "Code",
+					"codeBlock": "Code block",
+					"heading": "Heading",
+					"insert": "Insert",
+					"italic": "Italic",
+					"link": "Link",
+					"more": "More formatting",
+					"orderedList": "Numbered list",
+					"paragraph": "Normal text",
+					"redo": "Redo",
+					"strike": "Strikethrough",
+					"table": "Table",
+					"taskList": "Task list",
+					"underline": "Underline",
+					"undo": "Undo"
+				}
 			}
 		},
 		"entity": {
@@ -3595,7 +3646,11 @@
 			"collapseSubtasks": "隐藏 {{title}} 的子任务",
 			"expandSubtasks": "显示 {{title}} 的子任务",
 			"subtaskLevel": "子任务，第 {{level}} 层",
-			"subtasksLoadError": "无法加载子任务，因此任务以无层级的方式显示。"
+			"subtasksLoadError": "无法加载子任务，因此任务以无层级的方式显示。",
+			"addTaskRow": "Add a task",
+			"assignThisTask": "Assign this task",
+			"setDueDate": "Set a due date",
+			"taskNamePlaceholder": "Write a task name"
 		},
 		"kanban": {
 			"addTask": "添加任务",

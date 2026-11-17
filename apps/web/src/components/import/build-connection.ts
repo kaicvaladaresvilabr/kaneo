@@ -1,3 +1,4 @@
+import { ASANA_EXPORT_MAX_CHARS } from "@/components/import/asana-export-limit";
 import type { ImportConnectValues } from "@/components/import/connect-values";
 import type { ImportSourceId } from "@/components/import/import-source-definitions";
 import type { ImportConnection } from "@/fetchers/import/list-import-source-projects";
@@ -41,6 +42,17 @@ export function buildConnection(
         : null;
     case "kaneo":
       return url && apiKey ? { source, url, apiKey } : null;
+    case "asana": {
+      const document = values.document.trim();
+      if (
+        !document ||
+        values.documentTooLarge ||
+        document.length > ASANA_EXPORT_MAX_CHARS
+      ) {
+        return null;
+      }
+      return { source, document };
+    }
     default:
       return null;
   }

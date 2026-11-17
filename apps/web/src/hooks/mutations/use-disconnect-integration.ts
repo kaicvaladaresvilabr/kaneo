@@ -7,6 +7,7 @@ import deleteGithubIntegration from "@/fetchers/github-integration/delete-github
 import deleteGitlabIntegration from "@/fetchers/gitlab-integration/delete-gitlab-integration";
 import deleteMattermostIntegration from "@/fetchers/mattermost-integration/delete-mattermost-integration";
 import deleteSlackIntegration from "@/fetchers/slack-integration/delete-slack-integration";
+import deleteTeamsIntegration from "@/fetchers/teams-integration/delete-teams-integration";
 import deleteTelegramIntegration from "@/fetchers/telegram-integration/delete-telegram-integration";
 
 const disconnect = {
@@ -14,6 +15,7 @@ const disconnect = {
   gitea: deleteGiteaIntegration,
   gitlab: deleteGitlabIntegration,
   slack: deleteSlackIntegration,
+  teams: deleteTeamsIntegration,
   discord: deleteDiscordIntegration,
   mattermost: deleteMattermostIntegration,
   telegram: deleteTelegramIntegration,

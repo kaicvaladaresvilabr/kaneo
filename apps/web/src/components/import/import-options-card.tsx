@@ -58,9 +58,13 @@ export function ImportOptionsCard({
                 ? t("settings:workspaceImport.select.membersNoteJira", {
                     workspace: workspaceName,
                   })
-                : t("settings:workspaceImport.select.membersNote", {
-                    workspace: workspaceName,
-                  })}
+                : sourceId === "asana"
+                  ? t("settings:workspaceImport.select.membersNoteAsana", {
+                      workspace: workspaceName,
+                    })
+                  : t("settings:workspaceImport.select.membersNote", {
+                      workspace: workspaceName,
+                    })}
           </p>
         </div>
         <Button

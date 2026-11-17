@@ -15,6 +15,7 @@ const fetchers = vi.hoisted(() => ({
   gitea: vi.fn(),
   gitlab: vi.fn(),
   slack: vi.fn(),
+  teams: vi.fn(),
   discord: vi.fn(),
   mattermost: vi.fn(),
   telegram: vi.fn(),
@@ -31,6 +32,9 @@ vi.mock("@/fetchers/gitlab-integration/get-gitlab-integration", () => ({
 }));
 vi.mock("@/fetchers/slack-integration/get-slack-integration", () => ({
   default: fetchers.slack,
+}));
+vi.mock("@/fetchers/teams-integration/get-teams-integration", () => ({
+  default: fetchers.teams,
 }));
 vi.mock("@/fetchers/discord-integration/get-discord-integration", () => ({
   default: fetchers.discord,

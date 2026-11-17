@@ -4125,6 +4125,66 @@
           "updatedAt"
         ]
       },
+      "TeamsIntegration": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "projectId": {
+            "type": "string"
+          },
+          "channelName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "webhookConfigured": {
+            "type": "boolean"
+          },
+          "maskedWebhookUrl": {
+            "type": "string",
+            "description": "The webhook URL with its secret path segment masked, or an empty string when none is set."
+          },
+          "events": {
+            "$ref": "#/components/schemas/GenericWebhookEvents"
+          },
+          "dueDateReminderLeadTimeMinutes": {
+            "type": "number",
+            "description": "How long before a due date the dueDateReminder event fires, in minutes."
+          },
+          "isActive": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "projectId",
+          "channelName",
+          "webhookConfigured",
+          "maskedWebhookUrl",
+          "events",
+          "dueDateReminderLeadTimeMinutes",
+          "isActive",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
       "TelegramIntegration": {
         "type": [
           "object",
@@ -5046,6 +5106,9 @@
           },
           {
             "$ref": "#/components/schemas/KaneoImportConnection"
+          },
+          {
+            "$ref": "#/components/schemas/AsanaImportConnection"
           }
         ],
         "discriminator": {
@@ -5056,7 +5119,8 @@
             "linear": "#/components/schemas/LinearImportConnection",
             "jira": "#/components/schemas/JiraImportConnection",
             "trello": "#/components/schemas/TrelloImportConnection",
-            "kaneo": "#/components/schemas/KaneoImportConnection"
+            "kaneo": "#/components/schemas/KaneoImportConnection",
+            "asana": "#/components/schemas/AsanaImportConnection"
           }
         },
         "description": "Where to import from and how to sign in. Credentials are used only for this request and the import it starts; they are never stored, logged, or returned."
@@ -5248,6 +5312,27 @@
           "apiKey"
         ]
       },
+      "AsanaImportConnection": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "enum": [
+              "asana"
+            ]
+          },
+          "document": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8000000,
+            "description": "Asana task export JSON. Used only for this import and never stored or logged."
+          }
+        },
+        "required": [
+          "source",
+          "document"
+        ]
+      },
       "ImportRunEnvelope": {
         "type": "object",
         "properties": {
@@ -5276,7 +5361,8 @@
               "linear",
               "jira",
               "trello",
-              "kaneo"
+              "kaneo",
+              "asana"
             ]
           },
           "status": {
@@ -22418,6 +22504,428 @@
           },
           "404": {
             "description": "Project or Slack integration not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiKeyRateLimited"
+          }
+        }
+      }
+    },
+    "/teams-integration/project/{projectId}": {
+      "get": {
+        "operationId": "getTeamsIntegration",
+        "tags": [
+          "Teams"
+        ],
+        "summary": "Get Teams integration",
+        "description": "Get the Microsoft Teams integration for a project, or null when none is configured.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "projectId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Teams integration details, or null",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamsIntegration"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access to the project, or missing project:read permission",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiKeyRateLimited"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createTeamsIntegration",
+        "tags": [
+          "Teams"
+        ],
+        "summary": "Create Teams integration",
+        "description": "Create or replace the Teams integration for a project. The webhook URL is checked for shape only; delivery failures surface later.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "projectId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "webhookUrl": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "channelName": {
+                    "type": "string"
+                  },
+                  "events": {
+                    "type": "object",
+                    "properties": {
+                      "taskCreated": {
+                        "type": "boolean"
+                      },
+                      "taskStatusChanged": {
+                        "type": "boolean"
+                      },
+                      "taskPriorityChanged": {
+                        "type": "boolean"
+                      },
+                      "taskTitleChanged": {
+                        "type": "boolean"
+                      },
+                      "taskDescriptionChanged": {
+                        "type": "boolean"
+                      },
+                      "taskCommentCreated": {
+                        "type": "boolean"
+                      },
+                      "taskDeleted": {
+                        "type": "boolean"
+                      },
+                      "taskMoved": {
+                        "type": "boolean"
+                      },
+                      "taskDueDateChanged": {
+                        "type": "boolean"
+                      },
+                      "taskAssigneeChanged": {
+                        "type": "boolean"
+                      },
+                      "taskUnassigned": {
+                        "type": "boolean"
+                      },
+                      "dueDateReminder": {
+                        "type": "boolean"
+                      }
+                    }
+                  },
+                  "dueDateReminderLeadTimeMinutes": {
+                    "type": "integer",
+                    "minimum": 5,
+                    "maximum": 43200,
+                    "description": "Between 5 minutes and 30 days."
+                  }
+                },
+                "required": [
+                  "webhookUrl"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The stored integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamsIntegration"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The webhook URL failed validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access to the project, or missing workspace:manage_settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiKeyRateLimited"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateTeamsIntegration",
+        "tags": [
+          "Teams"
+        ],
+        "summary": "Update Teams integration",
+        "description": "Update the Teams integration. Omitted fields keep their current value, and event toggles are merged into the existing set.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "projectId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "webhookUrl": {
+                    "type": "string"
+                  },
+                  "channelName": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "isActive": {
+                    "type": "boolean"
+                  },
+                  "events": {
+                    "type": "object",
+                    "properties": {
+                      "taskCreated": {
+                        "type": "boolean"
+                      },
+                      "taskStatusChanged": {
+                        "type": "boolean"
+                      },
+                      "taskPriorityChanged": {
+                        "type": "boolean"
+                      },
+                      "taskTitleChanged": {
+                        "type": "boolean"
+                      },
+                      "taskDescriptionChanged": {
+                        "type": "boolean"
+                      },
+                      "taskCommentCreated": {
+                        "type": "boolean"
+                      },
+                      "taskDeleted": {
+                        "type": "boolean"
+                      },
+                      "taskMoved": {
+                        "type": "boolean"
+                      },
+                      "taskDueDateChanged": {
+                        "type": "boolean"
+                      },
+                      "taskAssigneeChanged": {
+                        "type": "boolean"
+                      },
+                      "taskUnassigned": {
+                        "type": "boolean"
+                      },
+                      "dueDateReminder": {
+                        "type": "boolean"
+                      }
+                    }
+                  },
+                  "dueDateReminderLeadTimeMinutes": {
+                    "type": "integer",
+                    "minimum": 5,
+                    "maximum": 43200,
+                    "description": "Between 5 minutes and 30 days."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamsIntegration"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The resulting config failed validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access to the project, or missing workspace:manage_settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project or Teams integration not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiKeyRateLimited"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteTeamsIntegration",
+        "tags": [
+          "Teams"
+        ],
+        "summary": "Delete Teams integration",
+        "description": "Remove the Teams integration from a project.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "projectId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The integration was removed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "success"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access to the project, or missing workspace:manage_settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project or Teams integration not found",
             "content": {
               "application/json": {
                 "schema": {

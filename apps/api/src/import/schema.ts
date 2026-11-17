@@ -1,3 +1,4 @@
+import { ASANA_EXPORT_MAX_CHARS } from "@kaneo/importers";
 import { z } from "../openapi";
 
 const NEVER_STORED = "Used only for this import and never stored or logged.";
@@ -106,6 +107,16 @@ const kaneoConnection = z
   })
   .openapi("KaneoImportConnection");
 
+const asanaConnection = z
+  .object({
+    source: z.literal("asana"),
+    document: z.string().trim().min(1).max(ASANA_EXPORT_MAX_CHARS).openapi({
+      description:
+        "Asana task export JSON. Used only for this import and never stored or logged.",
+    }),
+  })
+  .openapi("AsanaImportConnection");
+
 export const importConnectionSchema = z
   .discriminatedUnion("source", [
     plankaConnection,
@@ -114,6 +125,7 @@ export const importConnectionSchema = z
     jiraConnection,
     trelloConnection,
     kaneoConnection,
+    asanaConnection,
   ])
   .openapi("ImportConnection", {
     description: `Where to import from and how to sign in. Credentials are used only for this request and the import it starts; they are never stored, logged, or returned.`,

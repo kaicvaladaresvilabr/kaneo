@@ -53,12 +53,13 @@ export function ImportConnectStep({
       >
         <SettingsSectionHeader
           title={t("settings:workspaceImport.connect.sectionTitle")}
-          description={t(
-            "settings:workspaceImport.connect.sectionDescription",
-            {
-              source: source.name,
-            },
-          )}
+          description={
+            source.id === "asana"
+              ? t("settings:workspaceImport.asana.sectionDescription")
+              : t("settings:workspaceImport.connect.sectionDescription", {
+                  source: source.name,
+                })
+          }
         />
         <Form
           values={values}

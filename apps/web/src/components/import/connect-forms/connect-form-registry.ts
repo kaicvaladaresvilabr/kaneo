@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
 import type { ConnectFormProps } from "@/components/import/connect-forms/connect-form-props";
+import { AsanaConnectForm } from "@/components/import/connect-forms/asana-connect-form";
 import { JiraConnectForm } from "@/components/import/connect-forms/jira-connect-form";
 import { KaneoConnectForm } from "@/components/import/connect-forms/kaneo-connect-form";
 import { LinearConnectForm } from "@/components/import/connect-forms/linear-connect-form";
@@ -18,4 +19,5 @@ export const CONNECT_FORMS: Record<
   plane: PlaneConnectForm,
   planka: PlankaConnectForm,
   kaneo: KaneoConnectForm,
+  asana: AsanaConnectForm,
 };

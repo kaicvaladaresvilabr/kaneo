@@ -1,9 +1,17 @@
-import { act, fireEvent, render, waitFor } from "@testing-library/react";
+import {
+  act,
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { Extension } from "@tiptap/core";
 import TaskItem from "@tiptap/extension-task-item";
 import { EditorView } from "@tiptap/pm/view";
 import type { Editor } from "@tiptap/react";
 import {
+  afterEach,
   beforeAll,
   beforeEach,
   describe,
@@ -132,6 +140,10 @@ beforeAll(() => {
     top: 0,
     bottom: 0,
   });
+});
+
+afterEach(() => {
+  cleanup();
 });
 
 beforeEach(() => {
@@ -316,6 +328,34 @@ describe("CommentEditor image upload insertion", () => {
 
     expect(toastError).toHaveBeenCalledWith(
       "activity:comment.editor.failedToUploadFile",
+    );
+  });
+
+  it("shows the formatting bar while the comment is focused", async () => {
+    render(<CommentEditor value="oi" onChange={() => {}} taskId="task-1" />);
+    await waitFor(() => expect(latestEditor()?.isDestroyed).toBe(false));
+    expect(
+      screen.queryByRole("button", {
+        name: "tasks:detail.editor.toolbar.undo",
+      }),
+    ).toBeNull();
+
+    latestEditor().commands.focus();
+
+    expect(
+      await screen.findByRole("button", {
+        name: "tasks:detail.editor.toolbar.undo",
+      }),
+    ).toBeInTheDocument();
+
+    latestEditor().commands.blur();
+
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("button", {
+          name: "tasks:detail.editor.toolbar.undo",
+        }),
+      ).toBeNull(),
     );
   });
 });

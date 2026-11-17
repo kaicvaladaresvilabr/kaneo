@@ -1,4 +1,4 @@
-import type { Control } from "react-hook-form";
+import type { Control, FieldPath, FieldValues } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
   FormControl,
@@ -13,17 +13,20 @@ import {
   MIN_LEAD_TIME_HOURS,
 } from "./generic-webhook-form-values";
 
-type ReminderLeadTimeRowProps = {
-  control: Control<GenericWebhookFormValues>;
+type ReminderLeadTimeRowProps<T extends FieldValues> = {
+  control: Control<T>;
 };
 
-export function ReminderLeadTimeRow({ control }: ReminderLeadTimeRowProps) {
+export function ReminderLeadTimeRow<
+  T extends FieldValues &
+    Pick<GenericWebhookFormValues, "dueDateReminderLeadTimeHours">,
+>({ control }: ReminderLeadTimeRowProps<T>) {
   const { t } = useTranslation();
 
   return (
     <FormField
       control={control}
-      name="dueDateReminderLeadTimeHours"
+      name={"dueDateReminderLeadTimeHours" as FieldPath<T>}
       render={({ field }) => (
         <FormItem className="space-y-1.5 ps-6.5">
           <div className="flex flex-wrap items-center gap-2.5 text-sm text-muted-foreground">

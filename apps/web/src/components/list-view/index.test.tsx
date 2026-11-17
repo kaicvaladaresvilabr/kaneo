@@ -56,6 +56,12 @@ vi.mock("@/store/project", () => ({
 }));
 // This view groups subtasks under their parents, so it reads the project's
 // relations. The suite mounts ListView without a QueryClientProvider.
+vi.mock("@/hooks/use-workspace-permission", () => ({
+  useWorkspacePermission: () => ({
+    canCreateTasks: () => false,
+    canAssignTasks: () => false,
+  }),
+}));
 vi.mock("@/hooks/queries/task-relation/use-get-project-task-relations", () => ({
   default: () => ({ ...m.relations, refetch: m.refetchRelations }),
 }));
@@ -126,7 +132,11 @@ it("blocks archive-all during pagination or errors, including an already-open co
   const { rerender } = render(<ListView project={project} />, {
     wrapper: Providers,
   });
-  fireEvent.click(screen.getByTitle(/archiveAllTooltip/));
+  const archiveButton = () =>
+    screen.getByRole("button", {
+      name: /Archive all completed tasks|tasks:listView.archiveAllTooltip/,
+    });
+  fireEvent.click(archiveButton());
   const complete = {
     ...project,
     columns: [
@@ -137,9 +147,7 @@ it("blocks archive-all during pagination or errors, including an already-open co
     ],
   } as unknown as ProjectWithTasks;
   rerender(<ListView project={complete} disableCollectionActions />);
-  expect(screen.getByTitle(/archiveAllTooltip/).hasAttribute("disabled")).toBe(
-    true,
-  );
+  expect(archiveButton().hasAttribute("disabled")).toBe(true);
   expect(m.archive.disabled).toBe(true);
   act(() => m.archive.onConfirm?.());
   expect(m.mutate).not.toHaveBeenCalled();

@@ -6,6 +6,7 @@ import { gitlabPlugin } from "./gitlab";
 import { mattermostPlugin } from "./mattermost";
 import { initializeEventSubscriptions, registerPlugin } from "./registry";
 import { slackPlugin } from "./slack";
+import { teamsPlugin } from "./teams";
 import { telegramPlugin } from "./telegram";
 
 export const integrationPlugins = [
@@ -13,6 +14,7 @@ export const integrationPlugins = [
   giteaPlugin,
   gitlabPlugin,
   slackPlugin,
+  teamsPlugin,
   mattermostPlugin,
   discordPlugin,
   genericWebhookPlugin,

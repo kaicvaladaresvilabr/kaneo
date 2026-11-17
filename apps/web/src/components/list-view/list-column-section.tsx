@@ -7,12 +7,14 @@ import { AnimatePresence, motion } from "motion/react";
 import { Archive, ChevronRight, Plus } from "lucide-react";
 import { memo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useWorkspacePermission } from "@/hooks/use-workspace-permission";
 import { cn } from "@/lib/cn";
 import { getColumnIcon } from "@/lib/column";
 import { resolveColumnColor } from "@/lib/column-color";
 import { EASE_OUT } from "@/lib/motion";
 import type { SubtaskRow } from "@/lib/subtask-tree";
 import type { ProjectWithTasks } from "@/types/project";
+import { SectionAddTask } from "./section-add-task";
 import TaskRow from "./task-row";
 
 type Column = ProjectWithTasks["columns"][number];
@@ -20,12 +22,13 @@ type ColumnTask = Column["tasks"][number];
 
 type ListColumnSectionProps = {
   column: Column;
+  projectId: string;
+  workspaceId: string;
   projectSlug: string;
   isExpanded: boolean;
   showDropIndicator: boolean;
   disableCollectionActions: boolean;
   onToggle: (columnId: string) => void;
-  onAddTask: (columnId: string) => void;
   onArchive: (column: Column) => void;
   /**
    * The section's rows in display order. A subtask keeps its own row and is
@@ -39,12 +42,13 @@ type ListColumnSectionProps = {
 
 const ListColumnSection = memo(function ListColumnSection({
   column,
+  projectId,
+  workspaceId,
   projectSlug,
   isExpanded,
   showDropIndicator,
   disableCollectionActions,
   onToggle,
-  onAddTask,
   onArchive,
   rows,
   onToggleTaskExpanded,
@@ -52,7 +56,11 @@ const ListColumnSection = memo(function ListColumnSection({
   draggingTaskId,
 }: ListColumnSectionProps) {
   const { t } = useTranslation();
+  const { canCreateTasks, canAssignTasks } = useWorkspacePermission();
+  const canCreate = canCreateTasks();
   const [animateExpand, setAnimateExpand] = useState(false);
+  const [composing, setComposing] = useState(false);
+  const [focusTick, setFocusTick] = useState(0);
   const { setNodeRef } = useDroppable({
     id: column.id,
     data: { type: "column", column },
@@ -108,15 +116,24 @@ const ListColumnSection = memo(function ListColumnSection({
         </button>
 
         <div className="flex items-center gap-1 pointer-coarse:gap-6">
-          <button
-            type="button"
-            onClick={() => onAddTask(column.id)}
-            className="touch-hitbox relative p-1 hover:bg-accent rounded text-muted-foreground hover:text-foreground transition-colors"
-            title={t("tasks:listView.addTask")}
-            aria-label={t("tasks:listView.addTask")}
-          >
-            <Plus className="w-3 h-3" />
-          </button>
+          {canCreate && (
+            <button
+              type="button"
+              onClick={() => {
+                if (!isExpanded) {
+                  setAnimateExpand(true);
+                  onToggle(column.id);
+                }
+                setComposing(true);
+                setFocusTick((tick) => tick + 1);
+              }}
+              className="touch-hitbox relative p-1 hover:bg-accent rounded text-muted-foreground hover:text-foreground transition-colors"
+              title={t("tasks:listView.addTask")}
+              aria-label={t("tasks:listView.addTask")}
+            >
+              <Plus className="w-3 h-3" />
+            </button>
+          )}
 
           {column.isFinal && column.tasks.length > 0 && (
             <button
@@ -173,10 +190,25 @@ const ListColumnSection = memo(function ListColumnSection({
             </AnimatePresence>
           </SortableContext>
 
-          {column.tasks.length === 0 && (
+          {column.tasks.length === 0 && !canCreate && (
             <div className="py-6 px-4 text-center text-xs text-muted-foreground">
               {t("tasks:listView.noTasks")}
             </div>
+          )}
+          {canCreate && (
+            <SectionAddTask
+              projectId={projectId}
+              workspaceId={workspaceId}
+              status={column.slug}
+              canAssign={canAssignTasks()}
+              composing={composing}
+              focusTick={focusTick}
+              onOpen={() => {
+                setComposing(true);
+                setFocusTick((tick) => tick + 1);
+              }}
+              onClose={() => setComposing(false)}
+            />
           )}
         </div>
       )}

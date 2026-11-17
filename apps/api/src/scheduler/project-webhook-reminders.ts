@@ -12,6 +12,11 @@ import {
 } from "../plugins/generic-webhook/config";
 import { sendDueDateReminder } from "../plugins/generic-webhook/events";
 import {
+  type TeamsConfig,
+  normalizeTeamsConfig,
+} from "../plugins/teams/config";
+import { sendTeamsDueDateReminder } from "../plugins/teams/events";
+import {
   DUE_DATE_DURATION_MS,
   REMINDER_WINDOW_MINUTES,
 } from "./reminder-timing";
@@ -19,9 +24,65 @@ import { activeIntegrationCondition } from "../plugins/active-integration-condit
 
 const MINUTE_MS = 60 * 1000;
 
-export async function checkProjectWebhookReminders(): Promise<{
-  degraded: boolean;
-}> {
+type ReminderDelivery = {
+  type: string;
+  claimPrefix: string;
+  prepare: (raw: string) => {
+    leadTimeMinutes: number;
+    send: (
+      projectId: string,
+      taskId: string,
+      dueDate: Date,
+    ) => Promise<boolean>;
+  } | null;
+};
+
+const reminderSources: ReminderDelivery[] = [
+  {
+    type: "generic-webhook",
+    claimPrefix: "generic_webhook",
+    prepare: (raw) => {
+      const config = normalizeGenericWebhookConfig(
+        JSON.parse(raw) as GenericWebhookConfig,
+      );
+      if (!config.events?.dueDateReminder) return null;
+      const leadTimeMinutes = config.dueDateReminderLeadTimeMinutes ?? 1440;
+      return {
+        leadTimeMinutes,
+        send: (projectId, taskId, dueDate) =>
+          sendDueDateReminder(
+            config,
+            taskId,
+            projectId,
+            leadTimeMinutes,
+            dueDate,
+          ),
+      };
+    },
+  },
+  {
+    type: "teams",
+    claimPrefix: "teams",
+    prepare: (raw) => {
+      const config = normalizeTeamsConfig(JSON.parse(raw) as TeamsConfig);
+      if (!config.events?.dueDateReminder) return null;
+      const leadTimeMinutes = config.dueDateReminderLeadTimeMinutes ?? 1440;
+      return {
+        leadTimeMinutes,
+        send: (projectId, taskId, dueDate) =>
+          sendTeamsDueDateReminder(
+            config,
+            taskId,
+            projectId,
+            leadTimeMinutes,
+            dueDate,
+          ),
+      };
+    },
+  },
+];
+
+async function deliverReminders(source: ReminderDelivery): Promise<boolean> {
   const now = new Date();
   const integrations = await db
     .select({
@@ -31,21 +92,16 @@ export async function checkProjectWebhookReminders(): Promise<{
     })
     .from(integrationTable)
     .where(
-      and(
-        eq(integrationTable.type, "generic-webhook"),
-        activeIntegrationCondition(),
-      ),
+      and(eq(integrationTable.type, source.type), activeIntegrationCondition()),
     );
   let degraded = false;
 
   for (const integration of integrations) {
     try {
-      const config = normalizeGenericWebhookConfig(
-        JSON.parse(integration.config) as GenericWebhookConfig,
-      );
-      if (!config.events?.dueDateReminder) continue;
+      const prepared = source.prepare(integration.config);
+      if (!prepared) continue;
 
-      const leadTimeMinutes = config.dueDateReminderLeadTimeMinutes ?? 1440;
+      const { leadTimeMinutes } = prepared;
       // Count back from expiration while keeping the indexed due date unmodified.
       const windowEnd = new Date(
         now.getTime() + leadTimeMinutes * MINUTE_MS - DUE_DATE_DURATION_MS,
@@ -53,7 +109,7 @@ export async function checkProjectWebhookReminders(): Promise<{
       const windowStart = new Date(
         windowEnd.getTime() - REMINDER_WINDOW_MINUTES * MINUTE_MS,
       );
-      const reminderType = `generic_webhook:${integration.id}`;
+      const reminderType = `${source.claimPrefix}:${integration.id}`;
       const tasks = await db
         .select({ id: taskTable.id, dueDate: taskTable.dueDate })
         .from(taskTable)
@@ -91,11 +147,9 @@ export async function checkProjectWebhookReminders(): Promise<{
           .returning({ id: taskReminderSentTable.id });
         if (!sentRecord) continue;
 
-        const delivered = await sendDueDateReminder(
-          config,
-          task.id,
+        const delivered = await prepared.send(
           integration.projectId,
-          leadTimeMinutes,
+          task.id,
           task.dueDate,
         );
 
@@ -115,5 +169,15 @@ export async function checkProjectWebhookReminders(): Promise<{
     }
   }
 
+  return degraded;
+}
+
+export async function checkProjectWebhookReminders(): Promise<{
+  degraded: boolean;
+}> {
+  let degraded = false;
+  for (const source of reminderSources) {
+    if (await deliverReminders(source)) degraded = true;
+  }
   return { degraded };
 }

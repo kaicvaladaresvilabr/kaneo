@@ -1116,7 +1116,9 @@
 			"connect": "Verbinden",
 			"configure": "Konfigurieren",
 			"done": "Fertig",
-			"turnedOffByAdmin": "Turned off by an administrator"
+			"turnedOffByAdmin": "Turned off by an administrator",
+			"teamsSectionSubtitle": "Send project task updates into a Microsoft Teams channel with a workflow webhook.",
+			"teamsSectionTitle": "Teams Integration"
 		},
 		"projectVisibility": {
 			"pageTitle": "Projektsichtbarkeit",
@@ -2273,7 +2275,8 @@
 				"membersNote": "Zugewiesene Personen werden anhand ihrer E-Mail-Adresse den Mitgliedern von {{workspace}} zugeordnet. Lade zuerst dein Team ein, damit die Aufgaben zugewiesen bleiben.",
 				"membersNoteTrello": "Zugewiesene Personen werden anhand ihrer E-Mail-Adresse, bei Trello auch anhand ihres vollständigen Namens, den Mitgliedern von {{workspace}} zugeordnet. Lade zuerst dein Team ein, damit die Aufgaben zugewiesen bleiben.",
 				"selectAll": "Alle auswählen",
-				"membersNoteJira": "Zugewiesene Personen werden anhand ihrer E-Mail-Adresse den Mitgliedern von {{workspace}} zugeordnet. Wenn Jira die E-Mail-Adresse ausblendet, wird der vollständige Name verwendet. Lade zuerst dein Team ein, damit die Aufgaben zugewiesen bleiben."
+				"membersNoteJira": "Zugewiesene Personen werden anhand ihrer E-Mail-Adresse den Mitgliedern von {{workspace}} zugeordnet. Wenn Jira die E-Mail-Adresse ausblendet, wird der vollständige Name verwendet. Lade zuerst dein Team ein, damit die Aufgaben zugewiesen bleiben.",
+				"membersNoteAsana": "Assignees are matched to members of {{workspace}} by email, or by full name. Invite your team first so their tasks stay assigned."
 			},
 			"sources": {
 				"connect": "Verbinden",
@@ -2304,6 +2307,10 @@
 				"jira": {
 					"description": "Projekte, Issues, Unteraufgaben, Verknüpfungen und Kommentare. Cloud oder Data Center.",
 					"intro": "Jedes Jira-Projekt wird hier zu einem Projekt, dessen Workflow als Spalten übernommen wird."
+				},
+				"asana": {
+					"description": "Projects, sections and tasks from an Asana JSON export.",
+					"intro": "Each Asana project becomes a project here, with its sections as columns. Completed tasks go to a final column."
 				}
 			},
 			"status": {
@@ -2412,6 +2419,12 @@
 				"urlDescription": "Kopiere sie aus deinem Browser. Data Center wird ebenfalls unterstützt.",
 				"urlLabel": "URL der Jira-Website",
 				"urlPlaceholder": "https://deine-website.atlassian.net"
+			},
+			"asana": {
+				"fileDescription": "The JSON file exported from Asana.",
+				"fileLabel": "Asana export",
+				"fileTooLarge": "This file is too large to import.",
+				"sectionDescription": "Kaneo reads this file for this import and does not store it."
 			}
 		},
 		"chatIntegrations": {
@@ -2838,6 +2851,24 @@
 			"title": "Webhooks",
 			"url": "URL",
 			"save": "Save"
+		},
+		"teamsIntegration": {
+			"connect": "Connect Teams",
+			"toast": {
+				"disabled": "Teams notifications paused",
+				"enabled": "Teams notifications enabled",
+				"removed": "Teams integration removed successfully",
+				"removeError": "Failed to remove Teams integration",
+				"saved": "Teams integration saved successfully",
+				"saveError": "Failed to save Teams integration",
+				"updateError": "Failed to update Teams integration"
+			},
+			"update": "Update Teams",
+			"validation": {
+				"webhookInvalid": "Enter a valid Teams webhook URL"
+			},
+			"webhookHint": "In Teams, create a “Send webhook alerts to a channel” workflow and paste its HTTP URL here.",
+			"webhookPlaceholder": "https://prod-00.westus.logic.azure.com/workflows/..."
 		}
 	},
 	"navigation": {
@@ -3396,7 +3427,27 @@
 				"saved": "Gespeichert",
 				"saving": "Wird gespeichert…",
 				"saveFailed": "Speichern fehlgeschlagen",
-				"retrySave": "Erneut speichern"
+				"retrySave": "Erneut speichern",
+				"toolbar": {
+					"blockquote": "Quote",
+					"bold": "Bold",
+					"bulletList": "Bulleted list",
+					"code": "Code",
+					"codeBlock": "Code block",
+					"heading": "Heading",
+					"insert": "Insert",
+					"italic": "Italic",
+					"link": "Link",
+					"more": "More formatting",
+					"orderedList": "Numbered list",
+					"paragraph": "Normal text",
+					"redo": "Redo",
+					"strike": "Strikethrough",
+					"table": "Table",
+					"taskList": "Task list",
+					"underline": "Underline",
+					"undo": "Undo"
+				}
 			}
 		},
 		"entity": {
@@ -3636,7 +3687,11 @@
 			"collapseSubtasks": "Teilaufgaben von {{title}} ausblenden",
 			"expandSubtasks": "Teilaufgaben von {{title}} anzeigen",
 			"subtaskLevel": "Teilaufgabe, Ebene {{level}}",
-			"subtasksLoadError": "Teilaufgaben konnten nicht geladen werden, daher werden Aufgaben ohne Hierarchie angezeigt."
+			"subtasksLoadError": "Teilaufgaben konnten nicht geladen werden, daher werden Aufgaben ohne Hierarchie angezeigt.",
+			"addTaskRow": "Add a task",
+			"assignThisTask": "Assign this task",
+			"setDueDate": "Set a due date",
+			"taskNamePlaceholder": "Write a task name"
 		},
 		"kanban": {
 			"addTask": "Aufgabe hinzufügen",
