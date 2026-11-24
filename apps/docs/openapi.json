@@ -10835,6 +10835,10 @@
                   },
                   "slug": {
                     "type": "string"
+                  },
+                  "locale": {
+                    "type": "string",
+                    "description": "Language of the person creating the project. pt-BR names the default columns in Portuguese. Any other value keeps the English names."
                   }
                 },
                 "required": [

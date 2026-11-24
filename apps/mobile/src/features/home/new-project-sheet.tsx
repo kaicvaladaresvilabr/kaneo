@@ -46,7 +46,7 @@ function NewProjectForm({
   workspaceId: string;
   onCreated: (project: Project) => void;
 }) {
-  const { t } = useTranslation(["mobile"]);
+  const { t, i18n } = useTranslation(["mobile"]);
   const [name, setName] = useState("");
   const [key, setKey] = useState<string | null>(null);
   const { run, busy } = useAction();
@@ -96,6 +96,7 @@ function NewProjectForm({
               workspaceId,
               icon: "Layout",
               slug: effectiveKey,
+              locale: i18n.language,
             }),
           );
           if (project) onCreated(project);

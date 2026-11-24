@@ -1,6 +1,7 @@
 import createProject from "@/fetchers/project/create-project";
 import importTasks, { type TaskToImport } from "@/fetchers/task/import-tasks";
 import generateProjectSlug from "@/lib/generate-project-id";
+import { i18n } from "@/lib/i18n";
 
 export const FALLBACK_PROJECT_SLUG = "PRJ";
 
@@ -18,6 +19,7 @@ export async function createStarterProject({
     slug: generateProjectSlug(name) || FALLBACK_PROJECT_SLUG,
     workspaceId,
     icon: "Layout",
+    locale: i18n.resolvedLanguage ?? i18n.language,
   });
   await importTasks(project.id, tasks).catch(() => undefined);
   return project.id;

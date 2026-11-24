@@ -2,11 +2,14 @@ import { eq } from "drizzle-orm";
 import type db from "../../database";
 import { columnTable, projectTable } from "../../database/schema";
 import { grantProjectToRestrictedMember } from "../../project-access/grant-project-to-restricted-member";
+import { defaultProjectColumns } from "../default-project-columns";
 import {
   assertProjectKeyAvailable,
   lockProjectOrdering,
   nextProjectPosition,
 } from "./project-placement";
+
+export { DEFAULT_PROJECT_COLUMNS } from "../default-project-columns";
 
 type Transaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
@@ -16,6 +19,7 @@ export type NewProject = {
   icon: string;
   slug: string;
   userId: string;
+  locale?: string | null;
 };
 
 export type ProjectPlacement = {
@@ -24,39 +28,12 @@ export type ProjectPlacement = {
   slug: string;
 };
 
-export const DEFAULT_PROJECT_COLUMNS = [
-  {
-    name: "To Do",
-    slug: "to-do",
-    position: 0,
-    isFinal: false,
-    color: "blue",
-  },
-  {
-    name: "In Progress",
-    slug: "in-progress",
-    position: 1,
-    isFinal: false,
-    color: "blue",
-  },
-  {
-    name: "In Review",
-    slug: "in-review",
-    position: 2,
-    isFinal: false,
-    color: "blue",
-  },
-  {
-    name: "Done",
-    slug: "done",
-    position: 3,
-    isFinal: true,
-    color: "blue",
-  },
-] as const;
-
-async function seedDefaultColumns(tx: Transaction, projectId: string) {
-  for (const col of DEFAULT_PROJECT_COLUMNS) {
+async function seedDefaultColumns(
+  tx: Transaction,
+  projectId: string,
+  locale?: string | null,
+) {
+  for (const col of defaultProjectColumns(locale)) {
     await tx.insert(columnTable).values({
       projectId,
       name: col.name,
@@ -70,7 +47,7 @@ async function seedDefaultColumns(tx: Transaction, projectId: string) {
 
 export async function insertProject(
   tx: Transaction,
-  { workspaceId, name, icon, slug, userId }: NewProject,
+  { workspaceId, name, icon, slug, userId, locale }: NewProject,
 ) {
   // Serialize ordering writes per workspace: without this, two concurrent
   // creates can read the same max(position) and land on the same slot, and a
@@ -88,7 +65,7 @@ export async function insertProject(
     .returning();
 
   if (createdProject) {
-    await seedDefaultColumns(tx, createdProject.id);
+    await seedDefaultColumns(tx, createdProject.id, locale);
     await grantProjectToRestrictedMember(tx, {
       workspaceId,
       userId,
@@ -101,7 +78,7 @@ export async function insertProject(
 
 export async function insertUnplacedProject(
   tx: Transaction,
-  { workspaceId, name, icon, slug, userId }: NewProject,
+  { workspaceId, name, icon, slug, userId, locale }: NewProject,
 ) {
   const [createdProject] = await tx
     .insert(projectTable)
@@ -109,7 +86,7 @@ export async function insertUnplacedProject(
     .returning();
 
   if (createdProject) {
-    await seedDefaultColumns(tx, createdProject.id);
+    await seedDefaultColumns(tx, createdProject.id, locale);
     await grantProjectToRestrictedMember(tx, {
       workspaceId,
       userId,

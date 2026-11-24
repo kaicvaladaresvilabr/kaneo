@@ -167,6 +167,7 @@ export const api = {
     workspaceId: string;
     icon: string;
     slug: string;
+    locale?: string;
   }) => post<Project>("api/project", body),
   updateProject: (
     id: string,

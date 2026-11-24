@@ -362,6 +362,8 @@ function KanbanBoard({
               >
                 <Column
                   column={column}
+                  projectId={project.id}
+                  workspaceId={project.workspaceId}
                   activeTaskId={
                     activeId !== null &&
                     column.tasks.some((task) => task.id === activeId)

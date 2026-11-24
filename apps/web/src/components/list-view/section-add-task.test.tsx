@@ -26,9 +26,11 @@ vi.mock("@/lib/toast", () => ({
 function Harness({
   canAssign = true,
   status = "planejamento",
+  variant = "list",
 }: {
   canAssign?: boolean;
   status?: string;
+  variant?: "list" | "board";
 }) {
   const [composing, setComposing] = useState(false);
   const [focusTick, setFocusTick] = useState(0);
@@ -40,6 +42,7 @@ function Harness({
       canAssign={canAssign}
       composing={composing}
       focusTick={focusTick}
+      variant={variant}
       onOpen={() => {
         setComposing(true);
         setFocusTick((tick) => tick + 1);
@@ -52,6 +55,20 @@ function Harness({
 afterEach(() => {
   cleanup();
   m.createTask.mockClear();
+});
+
+it("opens the same draft from the board row under the cards", async () => {
+  render(<Harness variant="board" status="to-do" />);
+
+  fireEvent.click(screen.getByRole("button", { name: "Add a task" }));
+  const name = screen.getByRole("textbox", { name: "Write a task name" });
+  fireEvent.change(name, { target: { value: "Cobrar uso" } });
+  fireEvent.submit(name.closest("form") as HTMLFormElement);
+
+  await waitFor(() => expect(name).toHaveValue(""));
+  expect(m.createTask).toHaveBeenCalledWith(
+    expect.objectContaining({ title: "Cobrar uso", status: "to-do" }),
+  );
 });
 
 it("opens a name field from the row and keeps the row underneath", () => {

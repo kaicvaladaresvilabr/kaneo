@@ -1,6 +1,8 @@
 import { useDroppable } from "@dnd-kit/core";
 import { cva } from "class-variance-authority";
 import { memo, useState } from "react";
+import { SectionAddTask } from "@/components/list-view/section-add-task";
+import { useWorkspacePermission } from "@/hooks/use-workspace-permission";
 import { useBackgroundStore } from "@/store/background";
 import type { ProjectWithTasks } from "@/types/project";
 import ColumnDropzone from "./column-dropzone";
@@ -9,6 +11,8 @@ import { ColumnSortHint } from "./column-sort-hint";
 
 type ColumnProps = {
   column: ProjectWithTasks["columns"][number];
+  projectId: string;
+  workspaceId: string;
   activeTaskId: string | null;
   sortHint?: string;
   disableDragDrop?: boolean;
@@ -63,6 +67,8 @@ export const columnVariants = cva(
 
 function Column({
   column,
+  projectId,
+  workspaceId,
   activeTaskId,
   sortHint,
   disableDragDrop = false,
@@ -70,6 +76,9 @@ function Column({
   disableCollectionActions = false,
   animateEntries = true,
 }: ColumnProps) {
+  const { canCreateTasks, canAssignTasks } = useWorkspacePermission();
+  const [composing, setComposing] = useState(false);
+  const [focusTick, setFocusTick] = useState(0);
   const { setNodeRef, isOver } = useDroppable({
     id: column.id,
     data: { type: "column", column },
@@ -105,6 +114,22 @@ function Column({
           disableSorting={disableSorting}
           animateEntries={animateEntries}
         />
+        {canCreateTasks() && (
+          <SectionAddTask
+            projectId={projectId}
+            workspaceId={workspaceId}
+            status={column.slug}
+            canAssign={canAssignTasks()}
+            composing={composing}
+            focusTick={focusTick}
+            variant="board"
+            onOpen={() => {
+              setComposing(true);
+              setFocusTick((tick) => tick + 1);
+            }}
+            onClose={() => setComposing(false)}
+          />
+        )}
       </div>
       {sortHint && <ColumnSortHint label={sortHint} />}
     </div>

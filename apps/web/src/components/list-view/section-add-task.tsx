@@ -1,4 +1,4 @@
-import { Calendar, UserPlus } from "lucide-react";
+import { Calendar, Plus, UserPlus } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { OptionMenu } from "@/components/common/option-menu/option-menu";
@@ -24,6 +24,7 @@ type SectionAddTaskProps = {
   focusTick: number;
   onOpen: () => void;
   onClose: () => void;
+  variant?: "list" | "board";
 };
 
 const iconButtonClass =
@@ -38,6 +39,7 @@ export function SectionAddTask({
   focusTick,
   onOpen,
   onClose,
+  variant = "list",
 }: SectionAddTaskProps) {
   const { t } = useTranslation();
   const { mutateAsync: createTask } = useCreateTask();
@@ -148,11 +150,21 @@ export function SectionAddTask({
     }, 0);
   }
 
+  const board = variant === "board";
+
   return (
-    <div ref={rootRef} onBlur={(event) => dismissIfLeft(event.relatedTarget)}>
+    <div
+      ref={rootRef}
+      onBlur={(event) => dismissIfLeft(event.relatedTarget)}
+      className={board ? "mt-1.5 flex flex-col gap-1.5" : undefined}
+    >
       {composing && (
         <form
-          className="flex h-10 items-center gap-2 bg-accent/60 pr-2 pl-3.5"
+          className={
+            board
+              ? "flex h-10 items-center gap-2 rounded-[10px] border border-board-card-border bg-board-card px-3 shadow-board-card"
+              : "flex h-10 items-center gap-2 bg-accent/60 pr-2 pl-3.5"
+          }
           onSubmit={(event) => {
             event.preventDefault();
             void finish(true);
@@ -281,8 +293,13 @@ export function SectionAddTask({
           }
           onOpen();
         }}
-        className="flex h-10 w-full cursor-pointer items-center px-3.5 text-left text-sm text-muted-foreground transition-colors hover:bg-accent/40 hover:text-foreground"
+        className={
+          board
+            ? "flex h-9 w-full cursor-pointer items-center gap-1.5 rounded-[10px] px-3 text-left text-sm text-muted-foreground transition-colors hover:bg-board-card hover:text-foreground"
+            : "flex h-10 w-full cursor-pointer items-center px-3.5 text-left text-sm text-muted-foreground transition-colors hover:bg-accent/40 hover:text-foreground"
+        }
       >
+        {board && <Plus className="size-3.5 shrink-0" aria-hidden />}
         {t("tasks:listView.addTaskRow")}
       </button>
     </div>

@@ -16,6 +16,10 @@ export const createProjectBody = z.object({
   workspaceId: z.string(),
   icon: z.string(),
   slug: z.string(),
+  locale: z.string().optional().openapi({
+    description:
+      "Language of the person creating the project. pt-BR names the default columns in Portuguese. Any other value keeps the English names.",
+  }),
 });
 
 export const updateProjectBody = z.object({
