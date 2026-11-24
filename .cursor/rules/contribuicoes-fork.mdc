@@ -1,0 +1,12 @@
+---
+description: Atualizar o mapa de contribuições do fork sempre que surgir uma mudança nossa
+alwaysApply: true
+---
+
+# Mapa de contribuições
+
+Mudanças feitas neste fork, para ir depois uma a uma ao `usekaneo/kaneo`, ficam em `/home/kaic/Documents/kaneo-contribuicoes.md`. Esse arquivo fica fora do Git. Não copie o mapa para o repositório e não inclua esta regra num pull request upstream.
+
+Quando uma customização ficar pronta na branch `producao` (commit feito ou comportamento entregue), acrescente um item no fim desse mapa, no formato que já está lá: status, commit, dependência, o que faz, título sugerido do pull request, arquivos próprios, arquivos compartilhados e cuidado. Não misture a mudança nova num item antigo.
+
+Não envie a branch `producao` inteira ao projeto principal.

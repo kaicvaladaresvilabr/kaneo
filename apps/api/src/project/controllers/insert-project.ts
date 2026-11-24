@@ -41,6 +41,7 @@ async function seedDefaultColumns(
       position: col.position,
       isFinal: col.isFinal,
       color: col.color,
+      icon: col.icon,
     });
   }
 }

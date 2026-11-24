@@ -13,6 +13,13 @@ describe("defaultProjectColumns", () => {
     expect(defaultProjectColumns("de-DE").map((column) => column.name)).toEqual(
       ["To Do", "In Progress", "In Review", "Done"],
     );
+    expect(DEFAULT_PROJECT_COLUMNS.map((column) => column.icon)).toEqual([
+      "List",
+      "GitBranch",
+      "Search",
+      "CheckCircle2",
+    ]);
+    expect(DEFAULT_PROJECT_COLUMNS[3]?.color).toBe("green");
   });
 
   it("names a new pt-BR workflow in Portuguese and keeps the column keys", () => {
@@ -31,6 +38,13 @@ describe("defaultProjectColumns", () => {
       "done",
     ]);
     expect(columns[3]?.isFinal).toBe(true);
+    expect(columns.map((column) => column.icon)).toEqual([
+      "List",
+      "GitBranch",
+      "Search",
+      "CheckCircle2",
+    ]);
+    expect(columns[3]?.color).toBe("green");
   });
 
   it("accepts a Portuguese language tag that is not written as pt-BR", () => {

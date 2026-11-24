@@ -7,6 +7,7 @@ export const DEFAULT_PROJECT_COLUMNS = [
     position: 0,
     isFinal: false,
     color: "blue",
+    icon: "List",
   },
   {
     name: "In Progress",
@@ -14,6 +15,7 @@ export const DEFAULT_PROJECT_COLUMNS = [
     position: 1,
     isFinal: false,
     color: "blue",
+    icon: "GitBranch",
   },
   {
     name: "In Review",
@@ -21,13 +23,15 @@ export const DEFAULT_PROJECT_COLUMNS = [
     position: 2,
     isFinal: false,
     color: "blue",
+    icon: "Search",
   },
   {
     name: "Done",
     slug: "done",
     position: 3,
     isFinal: true,
-    color: "blue",
+    color: "green",
+    icon: "CheckCircle2",
   },
 ] as const;
 
