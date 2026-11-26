@@ -8850,6 +8850,150 @@
 						},
 						"update": {
 							"type": "string"
+						},
+						"card": {
+							"type": "object",
+							"additionalProperties": false,
+							"properties": {
+								"task": {
+									"type": "string"
+								},
+								"project": {
+									"type": "string"
+								},
+								"status": {
+									"type": "string"
+								},
+								"priority": {
+									"type": "string"
+								},
+								"by": {
+									"type": "string"
+								},
+								"openTask": {
+									"type": "string"
+								},
+								"unknown": {
+									"type": "string"
+								},
+								"none": {
+									"type": "string"
+								},
+								"deleted": {
+									"type": "string"
+								},
+								"someone": {
+									"type": "string"
+								},
+								"taskCreatedTitle": {
+									"type": "string"
+								},
+								"taskCreatedBody": {
+									"type": "string"
+								},
+								"statusChangedTitle": {
+									"type": "string"
+								},
+								"statusChangedBody": {
+									"type": "string"
+								},
+								"priorityChangedTitle": {
+									"type": "string"
+								},
+								"priorityChangedBody": {
+									"type": "string"
+								},
+								"titleChangedTitle": {
+									"type": "string"
+								},
+								"titleChangedBody": {
+									"type": "string"
+								},
+								"descriptionChangedTitle": {
+									"type": "string"
+								},
+								"descriptionChangedBody": {
+									"type": "string"
+								},
+								"descriptionChangedBodyWithPreview": {
+									"type": "string"
+								},
+								"commentTitle": {
+									"type": "string"
+								},
+								"deletedTitle": {
+									"type": "string"
+								},
+								"deletedBody": {
+									"type": "string"
+								},
+								"movedTitle": {
+									"type": "string"
+								},
+								"movedBody": {
+									"type": "string"
+								},
+								"dueChangedTitle": {
+									"type": "string"
+								},
+								"dueChangedBody": {
+									"type": "string"
+								},
+								"assigneeChangedTitle": {
+									"type": "string"
+								},
+								"assigneeChangedBody": {
+									"type": "string"
+								},
+								"unassignedTitle": {
+									"type": "string"
+								},
+								"unassignedBody": {
+									"type": "string"
+								},
+								"dueSoonTitle": {
+									"type": "string"
+								},
+								"dueSoonBody": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"task",
+								"project",
+								"status",
+								"priority",
+								"by",
+								"openTask",
+								"unknown",
+								"none",
+								"deleted",
+								"someone",
+								"taskCreatedTitle",
+								"taskCreatedBody",
+								"statusChangedTitle",
+								"statusChangedBody",
+								"priorityChangedTitle",
+								"priorityChangedBody",
+								"titleChangedTitle",
+								"titleChangedBody",
+								"descriptionChangedTitle",
+								"descriptionChangedBody",
+								"descriptionChangedBodyWithPreview",
+								"commentTitle",
+								"deletedTitle",
+								"deletedBody",
+								"movedTitle",
+								"movedBody",
+								"dueChangedTitle",
+								"dueChangedBody",
+								"assigneeChangedTitle",
+								"assigneeChangedBody",
+								"unassignedTitle",
+								"unassignedBody",
+								"dueSoonTitle",
+								"dueSoonBody"
+							]
 						}
 					},
 					"required": [
@@ -8858,7 +9002,8 @@
 						"webhookPlaceholder",
 						"webhookHint",
 						"connect",
-						"update"
+						"update",
+						"card"
 					]
 				},
 				"discordIntegration": {

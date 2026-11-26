@@ -30,6 +30,14 @@ const card = {
   status: "To Do",
   priority: "No Priority",
   actorName: "Kaic",
+  labels: {
+    task: "Task",
+    project: "Project",
+    status: "Status",
+    priority: "Priority",
+    by: "By",
+    openTask: "Open task",
+  },
 };
 
 describe("Teams webhook config", () => {

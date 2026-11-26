@@ -1,6 +1,7 @@
 import { and, eq } from "drizzle-orm";
 import db from "../../database";
 import {
+  columnTable,
   projectTable,
   taskTable,
   userTable,
@@ -21,6 +22,7 @@ import type {
   TaskTitleChangedEvent,
   TaskUnassignedEvent,
 } from "../types";
+import { teamsCardCopy } from "./card-copy";
 import { type TeamsCard, postToTeams } from "./client";
 import type { TeamsConfig, TeamsEventKey } from "./config";
 import { normalizeTeamsConfig } from "./config";
@@ -32,18 +34,13 @@ type TeamsEventData = {
   taskUrl: string | null;
   actorName: string | null;
   status: string | null;
+  columnName: string | null;
   priority: string | null;
+  locale: string | null;
 };
 
 function isEnabled(config: TeamsConfig, key: TeamsEventKey): boolean {
   return config.events?.[key] ?? false;
-}
-
-function toSentenceCase(value: string | null): string {
-  if (!value) return "Unknown";
-  return value
-    .replace(/[-_]+/g, " ")
-    .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
 function truncate(value: string, maxLength: number): string {
@@ -52,29 +49,24 @@ function truncate(value: string, maxLength: number): string {
   return `${compact.slice(0, maxLength - 1)}…`;
 }
 
-function formatDue(value: Date | string | null): string {
-  if (!value) return "None";
+function formatDue(value: Date | string | null, none: string): string {
+  if (!value) return none;
   const date = value instanceof Date ? value : new Date(value);
-  if (Number.isNaN(date.getTime())) return "None";
+  if (Number.isNaN(date.getTime())) return none;
   return date.toISOString().slice(0, 10);
 }
 
-function formatLeadTime(minutes: number): string {
-  if (minutes % 60 === 0) {
-    const hours = minutes / 60;
-    return `${hours} ${hours === 1 ? "hour" : "hours"}`;
-  }
-  return `${minutes} minutes`;
-}
-
-async function getActorName(userId: string | null): Promise<string | null> {
-  if (!userId) return null;
+async function getActor(userId: string | null): Promise<{
+  name: string | null;
+  locale: string | null;
+}> {
+  if (!userId) return { name: null, locale: null };
   const [user] = await db
-    .select({ name: userTable.name })
+    .select({ name: userTable.name, locale: userTable.locale })
     .from(userTable)
     .where(eq(userTable.id, userId))
     .limit(1);
-  return user?.name ?? null;
+  return { name: user?.name ?? null, locale: user?.locale ?? null };
 }
 
 async function getTeamsEventData(
@@ -91,38 +83,54 @@ async function getTeamsEventData(
       projectName: projectTable.name,
       projectId: projectTable.id,
       workspaceId: workspaceTable.id,
+      columnName: columnTable.name,
+      assigneeLocale: userTable.locale,
     })
     .from(taskTable)
     .innerJoin(projectTable, eq(taskTable.projectId, projectTable.id))
     .innerJoin(workspaceTable, eq(projectTable.workspaceId, workspaceTable.id))
+    .leftJoin(
+      columnTable,
+      and(
+        eq(columnTable.projectId, projectTable.id),
+        eq(columnTable.slug, taskTable.status),
+      ),
+    )
+    .leftJoin(userTable, eq(userTable.id, taskTable.userId))
     .where(and(eq(taskTable.id, taskId), eq(taskTable.projectId, projectId)))
     .limit(1);
 
   if (!taskRow) return null;
 
+  const actor = await getActor(userId);
   const clientUrl = process.env.KANEO_CLIENT_URL || "http://localhost:5173";
   return {
     taskTitle: taskRow.title,
     taskNumber: taskRow.number,
     projectName: taskRow.projectName,
     taskUrl: `${clientUrl}/dashboard/workspace/${taskRow.workspaceId}/project/${taskRow.projectId}/task/${taskId}`,
-    actorName: await getActorName(userId),
+    actorName: actor.name,
     status: taskRow.status,
+    columnName: taskRow.columnName,
     priority: taskRow.priority,
+    locale: (userId ? actor.locale : null) ?? taskRow.assigneeLocale,
   };
 }
 
 function toCard(title: string, body: string, data: TeamsEventData): TeamsCard {
-  const issueKey = data.taskNumber !== null ? `#${data.taskNumber}` : "Task";
+  const copy = teamsCardCopy(data.locale);
+  const issueKey =
+    data.taskNumber !== null ? `#${data.taskNumber}` : copy.labels.task;
   return {
     title,
     body,
     taskLabel: `${issueKey} ${data.taskTitle}`,
     taskUrl: data.taskUrl,
     projectName: data.projectName,
-    status: toSentenceCase(data.status),
-    priority: toSentenceCase(data.priority),
+    status: copy.status(data.status, data.columnName),
+    priority: copy.priority(data.priority),
     actorName: data.actorName,
+    labels: copy.labels,
   };
 }
 
@@ -147,13 +155,13 @@ async function deliver(
   taskId: string,
   projectId: string,
   userId: string | null,
-  title: string,
-  body: string,
+  message: (data: TeamsEventData) => { title: string; body: string },
 ): Promise<void> {
   const config = normalizeTeamsConfig(context.config as TeamsConfig);
   if (!isEnabled(config, key)) return;
   const data = await getTeamsEventData(taskId, projectId, userId);
   if (!data) return;
+  const { title, body } = message(data);
   await postCard(config, toCard(title, body, data));
 }
 
@@ -167,8 +175,13 @@ export async function handleTaskCreated(
     event.taskId,
     event.projectId,
     event.userId,
-    "New task created",
-    `A new task was added: ${event.title}`,
+    (data) => {
+      const copy = teamsCardCopy(data.locale);
+      return {
+        title: copy.taskCreatedTitle,
+        body: copy.taskCreatedBody(event.title),
+      };
+    },
   );
 }
 
@@ -182,8 +195,20 @@ export async function handleTaskStatusChanged(
     event.taskId,
     event.projectId,
     event.userId,
-    "Task status changed",
-    `${event.title} moved from ${toSentenceCase(event.oldStatus)} to ${toSentenceCase(event.newStatus)}.`,
+    (data) => {
+      const copy = teamsCardCopy(data.locale);
+      return {
+        title: copy.statusChangedTitle,
+        body: copy.statusChangedBody(
+          event.title,
+          copy.status(event.oldStatus, null),
+          copy.status(
+            event.newStatus,
+            data.status === event.newStatus ? data.columnName : null,
+          ),
+        ),
+      };
+    },
   );
 }
 
@@ -197,8 +222,17 @@ export async function handleTaskPriorityChanged(
     event.taskId,
     event.projectId,
     event.userId,
-    "Task priority changed",
-    `${event.title} changed from ${toSentenceCase(event.oldPriority)} to ${toSentenceCase(event.newPriority)}.`,
+    (data) => {
+      const copy = teamsCardCopy(data.locale);
+      return {
+        title: copy.priorityChangedTitle,
+        body: copy.priorityChangedBody(
+          event.title,
+          copy.priority(event.oldPriority),
+          copy.priority(event.newPriority),
+        ),
+      };
+    },
   );
 }
 
@@ -212,8 +246,16 @@ export async function handleTaskTitleChanged(
     event.taskId,
     event.projectId,
     event.userId,
-    "Task title changed",
-    `Task renamed from ${truncate(event.oldTitle, 120)} to ${truncate(event.newTitle, 120)}.`,
+    (data) => {
+      const copy = teamsCardCopy(data.locale);
+      return {
+        title: copy.titleChangedTitle,
+        body: copy.titleChangedBody(
+          truncate(event.oldTitle, 120),
+          truncate(event.newTitle, 120),
+        ),
+      };
+    },
   );
 }
 
@@ -221,17 +263,24 @@ export async function handleTaskDescriptionChanged(
   event: TaskDescriptionChangedEvent,
   context: PluginContext,
 ): Promise<void> {
-  const preview = event.newDescription
-    ? `: ${truncate(event.newDescription, 160)}`
-    : ".";
   await deliver(
     context,
     "taskDescriptionChanged",
     event.taskId,
     event.projectId,
     event.userId,
-    "Task description changed",
-    `The task description was updated${preview}`,
+    (data) => {
+      const copy = teamsCardCopy(data.locale);
+      const preview = event.newDescription
+        ? truncate(event.newDescription, 160)
+        : "";
+      return {
+        title: copy.descriptionChangedTitle,
+        body: preview
+          ? copy.descriptionChangedBodyWithPreview(preview)
+          : copy.descriptionChangedBody,
+      };
+    },
   );
 }
 
@@ -245,8 +294,10 @@ export async function handleTaskCommentCreated(
     event.taskId,
     event.projectId,
     event.userId,
-    "New task comment",
-    truncate(event.comment, 200),
+    (data) => ({
+      title: teamsCardCopy(data.locale).commentTitle,
+      body: truncate(event.comment, 200),
+    }),
   );
 }
 
@@ -264,15 +315,18 @@ export async function handleTaskDeleted(
     .limit(1);
   if (!project) return;
 
+  const actor = await getActor(event.userId);
+  const copy = teamsCardCopy(actor.locale);
   await postCard(config, {
-    title: "Task deleted",
-    body: `${event.title} was deleted.`,
+    title: copy.deletedTitle,
+    body: copy.deletedBody(event.title),
     taskLabel: event.title,
     taskUrl: null,
     projectName: project.name,
-    status: "Deleted",
-    priority: "Unknown",
-    actorName: await getActorName(event.userId),
+    status: copy.deleted,
+    priority: copy.unknown,
+    actorName: actor.name,
+    labels: copy.labels,
   });
 }
 
@@ -286,8 +340,13 @@ export async function handleTaskMoved(
     event.taskId,
     event.projectId,
     event.userId,
-    "Task moved",
-    `Moved from ${event.fromProjectName} to ${event.toProjectName}.`,
+    (data) => {
+      const copy = teamsCardCopy(data.locale);
+      return {
+        title: copy.movedTitle,
+        body: copy.movedBody(event.fromProjectName, event.toProjectName),
+      };
+    },
   );
 }
 
@@ -301,8 +360,17 @@ export async function handleTaskDueDateChanged(
     event.taskId,
     event.projectId,
     event.userId,
-    "Due date changed",
-    `${event.title} due date changed from ${formatDue(event.oldDueDate)} to ${formatDue(event.newDueDate)}.`,
+    (data) => {
+      const copy = teamsCardCopy(data.locale);
+      return {
+        title: copy.dueChangedTitle,
+        body: copy.dueChangedBody(
+          event.title,
+          formatDue(event.oldDueDate, copy.none),
+          formatDue(event.newDueDate, copy.none),
+        ),
+      };
+    },
   );
 }
 
@@ -310,15 +378,22 @@ export async function handleTaskAssigneeChanged(
   event: TaskAssigneeChangedEvent,
   context: PluginContext,
 ): Promise<void> {
-  const assignee = event.newAssignee ?? "someone";
   await deliver(
     context,
     "taskAssigneeChanged",
     event.taskId,
     event.projectId,
     event.userId,
-    "Assignee changed",
-    `${event.title} was assigned to ${assignee}.`,
+    (data) => {
+      const copy = teamsCardCopy(data.locale);
+      return {
+        title: copy.assigneeChangedTitle,
+        body: copy.assigneeChangedBody(
+          event.title,
+          event.newAssignee ?? copy.someone,
+        ),
+      };
+    },
   );
 }
 
@@ -332,8 +407,13 @@ export async function handleTaskUnassigned(
     event.taskId,
     event.projectId,
     event.userId,
-    "Task unassigned",
-    `${event.title} no longer has an assignee.`,
+    (data) => {
+      const copy = teamsCardCopy(data.locale);
+      return {
+        title: copy.unassignedTitle,
+        body: copy.unassignedBody(event.title),
+      };
+    },
   );
 }
 
@@ -348,11 +428,12 @@ export async function sendTeamsDueDateReminder(
   if (!isEnabled(normalized, "dueDateReminder")) return false;
   const data = await getTeamsEventData(taskId, projectId, null);
   if (!data) return false;
+  const copy = teamsCardCopy(data.locale);
   return postCard(
     normalized,
     toCard(
-      "Task due soon",
-      `${data.taskTitle} is due in ${formatLeadTime(leadTimeMinutes)}.`,
+      copy.dueSoonTitle,
+      copy.dueSoonBody(data.taskTitle, copy.leadTime(leadTimeMinutes)),
       data,
     ),
   );

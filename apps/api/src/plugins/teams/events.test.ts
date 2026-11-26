@@ -17,6 +17,7 @@ function selectChain(rows: unknown[]) {
   const chain = {
     from: () => chain,
     innerJoin: () => chain,
+    leftJoin: () => chain,
     where: () => chain,
     limit: async () => rows,
   };

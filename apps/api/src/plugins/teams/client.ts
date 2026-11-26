@@ -1,5 +1,6 @@
 import * as Sentry from "@sentry/node";
 import { sendOutboundRequest } from "../../utils/outbound-request";
+import type { TeamsCardLabels } from "./card-copy";
 import { isOfficeConnectorUrl } from "./config";
 
 export type TeamsCard = {
@@ -11,6 +12,7 @@ export type TeamsCard = {
   status: string;
   priority: string;
   actorName: string | null;
+  labels: TeamsCardLabels;
 };
 
 type AdaptiveCard = {
@@ -23,12 +25,12 @@ type AdaptiveCard = {
 
 function facts(card: TeamsCard) {
   return [
-    { title: "Task", value: card.taskLabel },
-    { title: "Project", value: card.projectName },
-    { title: "Status", value: card.status },
-    { title: "Priority", value: card.priority },
+    { title: card.labels.task, value: card.taskLabel },
+    { title: card.labels.project, value: card.projectName },
+    { title: card.labels.status, value: card.status },
+    { title: card.labels.priority, value: card.priority },
     {
-      title: "By",
+      title: card.labels.by,
       value: card.actorName ?? "Kaneo",
     },
   ];
@@ -62,7 +64,7 @@ function adaptiveCard(card: TeamsCard): AdaptiveCard {
     content.actions = [
       {
         type: "Action.OpenUrl",
-        title: "Open task",
+        title: card.labels.openTask,
         url: card.taskUrl,
       },
     ];
@@ -80,17 +82,17 @@ function messageCard(card: TeamsCard) {
     text: [
       card.body,
       "",
-      `Task: ${card.taskLabel}`,
-      `Project: ${card.projectName}`,
-      `Status: ${card.status}`,
-      `Priority: ${card.priority}`,
-      `By: ${card.actorName ?? "Kaneo"}`,
+      `${card.labels.task}: ${card.taskLabel}`,
+      `${card.labels.project}: ${card.projectName}`,
+      `${card.labels.status}: ${card.status}`,
+      `${card.labels.priority}: ${card.priority}`,
+      `${card.labels.by}: ${card.actorName ?? "Kaneo"}`,
     ].join("\n"),
     potentialAction: card.taskUrl
       ? [
           {
             "@type": "OpenUri",
-            name: "Open task",
+            name: card.labels.openTask,
             targets: [{ os: "default", uri: card.taskUrl }],
           },
         ]
